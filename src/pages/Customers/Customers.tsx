@@ -9,9 +9,13 @@ import IconLayoutGrid from '../../components/Icon/IconLayoutGrid';
 import IconSearch from '../../components/Icon/IconSearch';
 import IconUser from '../../components/Icon/IconUser';
 import IconX from '../../components/Icon/IconX';
+import env from '../../store/env';
+import Cookies from 'universal-cookie';
+import axiosClient from '../../store/axiosClient';
 
 const Contacts = () => {
     const dispatch = useDispatch();
+    
     useEffect(() => {
         dispatch(setPageTitle('Contacts'));
     });
@@ -42,153 +46,20 @@ const Contacts = () => {
 
     const [search, setSearch] = useState<any>('');
     const [customers, setCustomers] = useState<any>([
-        {
-            id: 1,
-            path: 'profile-35.png',
-            name: 'Alan Green',
-            role: 'Web Developer',
-            email: 'alan@mail.com',
-            location: 'Boston, USA',
-            phone: '+1 202 555 0197',
-            posts: 25,
-            followers: '5K',
-            following: 500,
-        },
-        {
-            id: 2,
-            path: 'profile-35.png',
-            name: 'Linda Nelson',
-            role: 'Web Designer',
-            email: 'linda@mail.com',
-            location: 'Sydney, Australia',
-            phone: '+1 202 555 0170',
-            posts: 25,
-            followers: '21.5K',
-            following: 350,
-        },
-        {
-            id: 3,
-            path: 'profile-35.png',
-            name: 'Lila Perry',
-            role: 'UX/UI Designer',
-            email: 'lila@mail.com',
-            location: 'Miami, USA',
-            phone: '+1 202 555 0105',
-            posts: 20,
-            followers: '21.5K',
-            following: 350,
-        },
-        {
-            id: 4,
-            path: 'profile-35.png',
-            name: 'Andy King',
-            role: 'Project Lead',
-            email: 'andy@mail.com',
-            location: 'Tokyo, Japan',
-            phone: '+1 202 555 0194',
-            posts: 25,
-            followers: '21.5K',
-            following: 300,
-        },
-        {
-            id: 5,
-            path: 'profile-35.png',
-            name: 'Jesse Cory',
-            role: 'Web Developer',
-            email: 'jesse@mail.com',
-            location: 'Edinburgh, UK',
-            phone: '+1 202 555 0161',
-            posts: 30,
-            followers: '20K',
-            following: 350,
-        },
-        {
-            id: 6,
-            path: 'profile-35.png',
-            name: 'Xavier',
-            role: 'UX/UI Designer',
-            email: 'xavier@mail.com',
-            location: 'New York, USA',
-            phone: '+1 202 555 0155',
-            posts: 25,
-            followers: '21.5K',
-            following: 350,
-        },
-        {
-            id: 7,
-            path: 'profile-35.png',
-            name: 'Susan',
-            role: 'Project Manager',
-            email: 'susan@mail.com',
-            location: 'Miami, USA',
-            phone: '+1 202 555 0118',
-            posts: 40,
-            followers: '21.5K',
-            following: 350,
-        },
-        {
-            id: 8,
-            path: 'profile-35.png',
-            name: 'Raci Lopez',
-            role: 'Web Developer',
-            email: 'traci@mail.com',
-            location: 'Edinburgh, UK',
-            phone: '+1 202 555 0135',
-            posts: 25,
-            followers: '21.5K',
-            following: 350,
-        },
-        {
-            id: 9,
-            path: 'profile-35.png',
-            name: 'Steven Mendoza',
-            role: 'HR',
-            email: 'sokol@verizon.net',
-            location: 'Monrovia, US',
-            phone: '+1 202 555 0100',
-            posts: 40,
-            followers: '21.8K',
-            following: 300,
-        },
-        {
-            id: 10,
-            path: 'profile-35.png',
-            name: 'James Cantrell',
-            role: 'Web Developer',
-            email: 'sravani@comcast.net',
-            location: 'Michigan, US',
-            phone: '+1 202 555 0134',
-            posts: 100,
-            followers: '28K',
-            following: 520,
-        },
-        {
-            id: 11,
-            path: 'profile-35.png',
-            name: 'Reginald Brown',
-            role: 'Web Designer',
-            email: 'drhyde@gmail.com',
-            location: 'Entrimo, Spain',
-            phone: '+1 202 555 0153',
-            posts: 35,
-            followers: '25K',
-            following: 500,
-        },
-        {
-            id: 12,
-            path: 'profile-35.png',
-            name: 'Stacey Smith',
-            role: 'Chief technology officer',
-            email: 'maikelnai@optonline.net',
-            location: 'Lublin, Poland',
-            phone: '+1 202 555 0115',
-            posts: 21,
-            followers: '5K',
-            following: 200,
-        },
+        
     ]);
 
     const [filteredItems, setFilteredItems] = useState<any>(customers);
+
+    useEffect(()=>{
+      axiosClient.get('/customers')
+         .then((res)=>{
+            if(res.status == 200){
+                
+                setCustomers(res.data);
+            }
+         });
+    },[]);
 
     useEffect(() => {
         setFilteredItems(() => {
@@ -216,13 +87,13 @@ const Contacts = () => {
     return (
         <div>
             <div className="flex items-center justify-between flex-wrap gap-4">
-                <h2 className="text-xl">Contacts</h2>
+                <h2 className="text-xl">Customers</h2>
                 <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                     <div className="flex gap-3">
                         <div>
                             <button type="button" className="btn btn-primary" onClick={() => editUser()}>
                                 <IconUserPlus className="ltr:mr-2 rtl:ml-2" />
-                                Add Contact
+                                Add Customer
                             </button>
                         </div>
                         <div>
@@ -251,9 +122,9 @@ const Contacts = () => {
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Phone</th>
                                     <th>Email</th>
                                     <th>Location</th>
-                                    <th>Phone</th>
                                     <th className="!text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -263,25 +134,13 @@ const Contacts = () => {
                                         <tr key={customer.id}>
                                             <td>
                                                 <div className="flex items-center w-max">
-                                                    {customer.path && (
-                                                        <div className="w-max">
-                                                            <img src={`/assets/images/${customer.path}`} className="h-8 w-8 rounded-full object-cover ltr:mr-2 rtl:ml-2" alt="avatar" />
-                                                        </div>
-                                                    )}
-                                                    {!customer.path && customer.name && (
-                                                        <div className="grid place-content-center h-8 w-8 ltr:mr-2 rtl:ml-2 rounded-full bg-primary text-white text-sm font-semibold"></div>
-                                                    )}
-                                                    {!customer.path && !customer.name && (
-                                                        <div className="border border-gray-300 dark:border-gray-800 rounded-full p-2 ltr:mr-2 rtl:ml-2">
-                                                            <IconUser className="w-4.5 h-4.5" />
-                                                        </div>
-                                                    )}
-                                                    <div>{customer.name}</div>
+                                                    { /* <div className="grid place-content-center h-8 w-8 ltr:mr-2 rtl:ml-2 rounded-full bg-primary text-white text-sm font-semibold"></div> */}
+                                                    <div className='font-bold'>{customer.name}</div>
                                                 </div>
                                             </td>
-                                            <td>{customer.email}</td>
-                                            <td className="whitespace-nowrap">{customer.location}</td>
-                                            <td className="whitespace-nowrap">{customer.phone}</td>
+                                            <td>{customer.phone}</td>
+                                            <td className="whitespace-nowrap">{customer.email}</td>
+                                            <td className="whitespace-nowrap">{customer.address[0].full}</td>
                                             <td>
                                                 <div className="flex gap-4 items-center justify-center">
                                                     <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => editUser(customer)}>
@@ -305,14 +164,14 @@ const Contacts = () => {
                 <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 mt-5 w-full">
                     {filteredItems.map((customer: any) => {
                         return (
-                            <div className="bg-white dark:bg-[#1c232f] rounded-md overflow-hidden shadow" key={customer.id}>
+                            <div className="bg-white dark:bg-[#1a294166] rounded-md overflow-hidden shadow" key={customer.id}>
                                  <div className="p-2">
                                     <div className='user-info flex'>
-                                       <div className='last-visit w-1/4'>last<br /> visit</div>
-                                       <div className='user-name w-3/4 font-bold'>{customer.name}</div>
+                                       
+                                       <div className='user-name w-3/4 font-bold dark:text-white'>{customer.name}</div>
                                     </div>
                                     <div className='user-address mt-3 ml-1'>
-                                       {customer.location}
+                                       {customer.address[0].full}
                                     </div>
                                  </div>
                             </div>

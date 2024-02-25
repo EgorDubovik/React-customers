@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../store'; 
 import { setPageTitle } from '../../store/themeConfigSlice';
+import AppointmentsScheduler from '../../components/plugin/AppointmentsScheduler';
 
 
 const Schedule = () => {
@@ -13,22 +14,30 @@ const Schedule = () => {
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
 
     const [loading] = useState(false);
-
+    const appointments = [
+        {
+           title: 'Yahor Dubovik 1',
+           start: '2024-02-28 07:00',
+           end: '2024-02-28 09:00',
+        },
+        {
+           title: 'Yahor Dubovik 2',
+           start: '2024-02-28 07:00',
+           end: '2024-02-28 09:00',
+        },
+        {
+           title: 'Yahor Dubovik 3',
+           start: '2024-02-28 09:00',
+           end: '2024-02-28 11:00',
+        }
+     ];
     return (
         <div>
-            <ul className="flex space-x-2 rtl:space-x-reverse">
-                <li>
-                    <Link to="/" className="text-primary hover:underline">
-                        Dashboard
-                    </Link>
-                </li>
-                <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
-                    <span>Schedule</span>
-                </li>
-            </ul>
-
-            <div className="pt-5">
-               Schedule
+           <div className="flex items-center justify-between flex-wrap gap-4">
+                <h2 className="text-xl">Schedule</h2>
+            </div>
+            <div className='py-4'>
+                <AppointmentsScheduler  appointments={appointments} />
             </div>
         </div>
     );
