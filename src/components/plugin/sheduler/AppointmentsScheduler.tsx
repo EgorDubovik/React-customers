@@ -13,8 +13,11 @@ const AppointmentsScheduler = (props:any) => {
    const blockHeight = 50;
    
    const onClickHandler = props.onClickHandler || null;
+   const [curentDate, setcurentDate] = useState(moment());
 
    const appointments = props.appointments || [];
+   // const [appointmentList, setAppointments] = useState([]);
+   const [appointmentForCurentDate, setAppointmentForCurentDate] = useState([]);
    const dayInnerRef = useRef(null);
    let dayInnerHeight = useRef(0);
    let dayInnerOffsettop = useRef(0);
@@ -97,7 +100,7 @@ const AppointmentsScheduler = (props:any) => {
       return returnAppointments;
    }
 
-   const [curentDate, setcurentDate] = useState(moment());
+   
 
    const prevWeekHandle = () => {
       setcurentDate(curentDate.clone().subtract(1, 'week'));
@@ -117,14 +120,20 @@ const AppointmentsScheduler = (props:any) => {
    const timesArray = helper.getTimesArray();
    
    // get Appointment in view range
-   let currentAppointments = getAppointmentsByCurrentDate(appointments);
+   useEffect(() => {
+      let currentAppointments = getAppointmentsByCurrentDate(appointments);
 
-   // group appointments by time
-   let groupedAppointment = groupAppointmentsByTime(currentAppointments);
+      setAppointmentForCurentDate(currentAppointments);
+      // group appointments by time
+      
+   }, [curentDate]);
 
-   // mesuring appointments position
-   const appointmentList = fetchAppointments(groupedAppointment);
+   let groupedAppointment = groupAppointmentsByTime(appointmentForCurentDate);
+   
+   let appointmentList = fetchAppointments(groupedAppointment);
 
+      // mesuring appointments position
+   console.log('rerender');
    const isDragging = useRef(false);
    const startPosition = useRef(0);
    const appointmentOffsetTop = useRef(0);
@@ -183,6 +192,7 @@ const AppointmentsScheduler = (props:any) => {
       isDragging.current = false;
 
       appointmentRef.current.style.zIndex = '1';
+      setAppointmentForCurentDate(appointmentList);
    }
 
    return (
@@ -222,6 +232,7 @@ const AppointmentsScheduler = (props:any) => {
                               <div className="appointments-list absolute h-full left-0 top-0 right-0" onMouseUp={handleMouseUp} onMouseMove={handleMouseMove}>
                                  { appointmentList.map((appointment:any, aindex:number) => 
                                     {
+                                       
                                        if(appointment.start.weekday() === index) {
                                           return (
                                              <div key={appointment.title+"-"+aindex+appointment.top} onMouseDown={(e)=>{handleMouseDown(e,aindex)}}  className={"appointment text-[.8em]  absolute p-[2px] cursor-pointer"} style={{ height: appointment.height+'%', width: appointment.width+'%', left: appointment.left+'%', top: appointment.top+'%' }}>

@@ -30,7 +30,13 @@ const Schedule = () => {
             start: '2024-02-28 09:00',
             end: '2024-02-28 11:00',
             bg: 'green',
-        }
+        },
+        {
+            title: 'Yahor Dubovik 4',
+            start: '2024-02-18 09:00',
+            end: '2024-02-18 11:00',
+            bg: 'green',
+        },
      ];
     
     const viewAppointments = (data:any) => {
