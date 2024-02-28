@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
 import { co } from '@fullcalendar/core/internal-common';
+import { ref } from 'yup';
 
 const AppointmentsScheduler = (props:any) => {
    const startTime = moment('07:00', 'HH:mm');
    const endTime = moment('18:00', 'HH:mm');
+   const defaultBackgroundColor = props.eventDefoultBgColor || '#1565c0';
    const endTimeCopy = endTime.clone().add(1, 'hour');
    const totalDuration = moment.duration(endTimeCopy.diff(startTime));
    const daysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
    const blockHeight = 50;
+   
+   const onClickHandler = props.onClickHandler || null;
+
    const appointments = props.appointments || [];
+   const [appointmentsList, setAppointmentsList] = useState();
+   const dayInnerRef = useRef(null);
+   let dayInnerHeight = useRef(0);
+   let dayInnerOffsettop = useRef(0);
 
    const helper = {
       calculateTimePercentage : (time:any) => {
@@ -26,7 +35,11 @@ const AppointmentsScheduler = (props:any) => {
             start.add(interval, 'minutes');
          }
          return times;
-      }
+      },
+      procentToMinutes: function (procent:number) {
+         var minutes = Math.round((totalDuration.asMinutes() * procent) / 100);
+         return minutes;
+      },
    }
 
    const getAppointmentsByCurrentDate = (appointments:any) => {
@@ -36,6 +49,7 @@ const AppointmentsScheduler = (props:any) => {
       let returnAppointments = appointments.filter((appointment:any) => {
          appointment.start = moment(appointment.start);
          appointment.end = moment(appointment.end);
+         appointment.bg = appointment.bg || defaultBackgroundColor;
          return (
             appointment.start.isBetween(selectedStartDay,selectedEndDay ) ||  
             appointment.end.isBetween( selectedStartDay, selectedEndDay ) ||
@@ -66,8 +80,6 @@ const AppointmentsScheduler = (props:any) => {
       return groups;
    }
 
-   
-
    const fetchAppointments = (appointmentsGroup:any) => {
       let returnAppointments:any = [];
       appointmentsGroup.forEach((group:any) => {
@@ -96,21 +108,90 @@ const AppointmentsScheduler = (props:any) => {
    const todayHandle = () => {
       setcurentDate(moment());
    }
+   const onAppointmentClick = (appointment:any) => {
+      if(onClickHandler) {
+         onClickHandler(appointment);
+      }
+   }
 
    const timesArray = helper.getTimesArray();
    
    // get Appointment in view range
    let appointmentsByCurrentDate = getAppointmentsByCurrentDate(appointments);
-   
+   setAppointmentsList(appointmentsByCurrentDate);
    // group appointments by time
    let groupedAppointments = groupAppointmentsByTime(appointmentsByCurrentDate);
 
    // mesuring appointments position
    const appointmentList = fetchAppointments(groupedAppointments);
 
-   console.log(appointmentList);
+   
+   const isDragging = useRef(false);
+   const startPosition = useRef(0);
+   const appointmentOffsetTop = useRef(0);
+   const appointmentOffsetInner = useRef(0);
+   const appointmentRef = useRef(null);
+   const appointmentProcentHeightRef = useRef(0);
+   const appointmentPxHeightRef = useRef(0);
+   const appointmentIndex = useRef(0);
+   const newProcentTop = useRef(0);
+   const deltaProcent = (15 * 100) / totalDuration.asMinutes();
+   const deltaPx = useRef(0);
+   
+   const handleMouseDown = (e:any,index:number) => {
+      
+      appointmentIndex.current = index;
+      appointmentRef.current = e.currentTarget;
+      const appointmentElement = e.currentTarget;
+      const dayInnerElement = e.currentTarget.closest('.day-inner');
+
+      dayInnerHeight.current = dayInnerElement.getBoundingClientRect().height;
+      dayInnerOffsettop.current = dayInnerElement.getBoundingClientRect().top;
+      appointmentOffsetTop.current = appointmentElement.getBoundingClientRect().top;
+      
+      appointmentOffsetInner.current = appointmentOffsetTop.current - dayInnerOffsettop.current;
+      appointmentProcentHeightRef.current = helper.calculateTimePercentage(appointmentList[index].end) - helper.calculateTimePercentage(appointmentList[index].start);
+      appointmentPxHeightRef.current = appointmentElement.getBoundingClientRect().height;
+      startPosition.current = e.clientY;
+
+      deltaPx.current = (deltaProcent * dayInnerHeight.current) / 100;
+      appointmentElement.style.zIndex = '100';
+      appointmentElement.style.width = '100%';
+      appointmentElement.style.left = '0%';
+
+      isDragging.current = true;
+   }
+   
+   const handleMouseMove = (e:any) => {
+      if(!isDragging.current) return;
+
+      let changedPosition = e.clientY - startPosition.current;
+      let newTopPosition = appointmentOffsetInner.current+changedPosition; // new position of appointment in px from top of dayInner
+      if(newTopPosition >= 0 && appointmentPxHeightRef.current+newTopPosition <= dayInnerHeight.current){
+         
+         let t = Math.round(newTopPosition / deltaPx.current);
+         newTopPosition = t * deltaPx.current;
+         newProcentTop.current = (newTopPosition / dayInnerHeight.current) * 100;
+         appointmentRef.current.style.top = newProcentTop.current + '%';
+      }
+   }
+
+   const handleMouseUp = () => {
+      if(!isDragging.current) return;
+
+      appointmentList[appointmentIndex.current].start = moment(appointmentList[appointmentIndex.current].start.format('YYYY-MM-DD')+' '+startTime.format('HH:mm')).add(helper.procentToMinutes(newProcentTop.current), 'minutes');
+      appointmentList[appointmentIndex.current].end = moment(appointmentList[appointmentIndex.current].end.format('YYYY-MM-DD')+' '+startTime.format('HH:mm')).add(helper.procentToMinutes(newProcentTop.current+appointmentProcentHeightRef.current), 'minutes');
+      isDragging.current = false;
+
+      appointmentRef.current.style.zIndex = '1';
+
+      // console.log(appointmentList);
+      setAppointmentsList(appointmentList);
+   }
+
    return (
       <div className='select-none'>
+         
          <div className="scheduler-container rounded bg-white dark:bg-gray-800 p-4">
             <div className="scheduler-header flex justify-between">
                <div className="scheduler-date text-base">{curentDate.format('MMMM YYYY')}</div>
@@ -125,7 +206,7 @@ const AppointmentsScheduler = (props:any) => {
                   <div className="first-item w-10"></div>
                   <div className="weekdays text-center grid grid-cols-7 w-full">
                      {daysArray.map((day, index) => (
-                        <div key={index} className="weekday">{day} {curentDate.weekday(index).format('DD')}</div>
+                        <div key={index} className="weekday">{day} {curentDate.clone().weekday(index).format('DD')}</div>
                      ))}
                      
                   </div>
@@ -141,15 +222,16 @@ const AppointmentsScheduler = (props:any) => {
                   <div className="dates grid grid-cols-7 w-full">
                      {daysArray.map((day, index) => (
                         <div className="date pt-2 first:border-0 border-l dark:border-gray-600 border-gray-300" key={index}>
-                           <div className='day-inner relative h-full'>
-                              <div className="appointments-list absolute h-full left-0 top-0 right-0">
+                           <div className='day-inner relative h-full' ref={dayInnerRef}>
+                              <div className="appointments-list absolute h-full left-0 top-0 right-0" onMouseUp={handleMouseUp} onMouseMove={handleMouseMove}>
                                  { appointmentList.map((appointment:any, aindex:number) => 
                                     {
                                        if(appointment.start.weekday() === index) {
                                           return (
-                                             <div key={aindex} className={"appointment text-[.9em]  absolute p-[2px] cursor-pointer"} style={{ height: appointment.height+'%', width: appointment.width+'%', left: appointment.left+'%', top: appointment.top+'%' }}>
-                                                <div className="appointment-conteiner w-full h-full  bg-blue-800 rounded text-white">
-                                                   <div className="appointment-title px-2 pt-1 ">{appointment.title}</div>
+                                             <div key={appointment.title+"-"+aindex+appointment.top} onMouseDown={(e)=>{handleMouseDown(e,aindex)}}  className={"appointment text-[.8em]  absolute p-[2px] cursor-pointer"} style={{ height: appointment.height+'%', width: appointment.width+'%', left: appointment.left+'%', top: appointment.top+'%' }}>
+                                                <div className="appointment-conteiner rounded absolute opacity-90" style={{ background:appointment.bg,inset:'1px' }}></div>
+                                                <div className='text-white sticky'>
+                                                   <div className="appointment-title px-2 pt-1 hover:underline " onClick={()=>{onAppointmentClick(appointment)}}>{appointment.title}</div>
                                                    <div className="appointment-time px-2">{appointment.start.format('hh:mm A')} - {appointment.end.format('hh:mm A')}</div>
                                                 </div>
                                              </div>

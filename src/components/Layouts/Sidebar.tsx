@@ -110,6 +110,12 @@ const Sidebar = () => {
                                         <span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Settings</span>
                                     </div>
                                 </NavLink>
+                                <NavLink to="/calendar" className="group">
+                                    <div className="flex items-center">
+                                        <IconMenuWidgets className="group-hover:!text-primary shrink-0" />
+                                        <span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Calendar</span>
+                                    </div>
+                                </NavLink>
                             </li>
                         </ul>
                     </PerfectScrollbar>

@@ -10,7 +10,7 @@ import AuthPrivetRoute from '../middleware/AuthPrivetRoute';
 import Customers from '../pages/Customers/Customers';
 import Services from '../pages/Customers/Services';
 import Schedule from '../pages/Customers/Schedule';
-import Contacts from '../pages/Apps/Contacts';
+import Calendar from '../pages/Apps/Calendar';
 
 
 const routes = [
