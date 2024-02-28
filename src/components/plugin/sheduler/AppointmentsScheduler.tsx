@@ -15,7 +15,6 @@ const AppointmentsScheduler = (props:any) => {
    const onClickHandler = props.onClickHandler || null;
 
    const appointments = props.appointments || [];
-   const [appointmentsList, setAppointmentsList] = useState();
    const dayInnerRef = useRef(null);
    let dayInnerHeight = useRef(0);
    let dayInnerOffsettop = useRef(0);
@@ -56,7 +55,8 @@ const AppointmentsScheduler = (props:any) => {
             (appointment.start.isBefore(selectedStartDay) && appointment.end.isAfter(selectedEndDay))
          );
       });
-      return returnAppointments.sort((a:any, b:any) => a.start - b.start);
+      let sortedAppointments = returnAppointments.sort((a:any, b:any) => a.start - b.start);
+      return sortedAppointments;
    }
 
    const groupAppointmentsByTime = (appointments:any) => {
@@ -117,15 +117,14 @@ const AppointmentsScheduler = (props:any) => {
    const timesArray = helper.getTimesArray();
    
    // get Appointment in view range
-   let appointmentsByCurrentDate = getAppointmentsByCurrentDate(appointments);
-   setAppointmentsList(appointmentsByCurrentDate);
+   let currentAppointments = getAppointmentsByCurrentDate(appointments);
+
    // group appointments by time
-   let groupedAppointments = groupAppointmentsByTime(appointmentsByCurrentDate);
+   let groupedAppointment = groupAppointmentsByTime(currentAppointments);
 
    // mesuring appointments position
-   const appointmentList = fetchAppointments(groupedAppointments);
+   const appointmentList = fetchAppointments(groupedAppointment);
 
-   
    const isDragging = useRef(false);
    const startPosition = useRef(0);
    const appointmentOffsetTop = useRef(0);
@@ -184,9 +183,6 @@ const AppointmentsScheduler = (props:any) => {
       isDragging.current = false;
 
       appointmentRef.current.style.zIndex = '1';
-
-      // console.log(appointmentList);
-      setAppointmentsList(appointmentList);
    }
 
    return (

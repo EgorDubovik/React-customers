@@ -67,7 +67,7 @@ const Grids = (props:any) => {
    }
 
    return (
-      <div>
+      <div className="dates grid grid-cols-7 w-full">
       {daysArray.map((day:any, index:number) => (
          <div className="date pt-2 first:border-0 border-l dark:border-gray-600 border-gray-300" key={index}>
             <div className='day-inner relative h-full' ref={dayInnerRef}>
