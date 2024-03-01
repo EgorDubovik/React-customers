@@ -32,7 +32,7 @@ const Appointment = () => {
       setLoadingStatus('loading');
       axiosClient.get(`/appointment/${id}`)
          .then((res) => {
-            console.log(res.data.appointment);
+            // console.log(res.data.appointment);
             setAppointment(res.data.appointment);
             setLoadingStatus('success');
          })

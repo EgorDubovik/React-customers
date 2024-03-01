@@ -1,13 +1,34 @@
-import React,{Fragment} from 'react'
+import React,{Fragment, useState} from 'react'
 import IconTrashLines from '../../../../components/Icon/IconTrashLines'
 import IconPlus from '../../../../components/Icon/IconPlus'
 import { Dialog, Transition } from '@headlessui/react'
+import { useSelector } from 'react-redux'
+import { IRootState } from '../../../../store'
+import axiosClient from '../../../../store/axiosClient'
 
 const TechBlock = (preps:any) => {
-   const  techs  = preps.techs || [];
+   const [techs, setTechs]  = useState(preps.techs || []);
+   const appointmentId = preps.appointmentId || 0;
    const [modal, setModal] = React.useState(false);
-   
-   
+   const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
+   const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
+   const [removeTechStatus, setRemovingTechStatus] = React.useState(0);
+   const removeTech = (techId:number) => {
+      setRemovingTechStatus(techId);
+      axiosClient.delete(`appointment/tech/${appointmentId}/${techId}`)
+         .then((res) => {
+            if(res.status === 200){
+               setTechs(techs.filter((tech:any) => tech.id !== techId));
+            }
+         })
+         .catch((err) => {
+            alert('Something went wrong. Please try again later');
+            console.log(err);
+         })
+         .finally(() => {
+            setRemovingTechStatus(0);
+         });
+   }
    return (
       <div className='panel p-4'>
          <h3 className="font-semibold text-lg dark:text-white-light">Technical</h3>
@@ -23,13 +44,21 @@ const TechBlock = (preps:any) => {
                         <p className="font-semibold">{tech.phone}</p>
                      </div>
                      <div className='mr-4'>
-                        <span className="badge badge-outline-primary ml-2">Tech</span>
-                        <span className="badge badge-outline-success ml-2">Admin</span>
+                        {
+                           tech.roles.map((role:any, roleIndex:number) => (
+                              <span key={roleIndex} className={`badge badge-outline-${rolesColor[role.role]} ml-2`}>{rolesTitle[role.role]}</span>
+                           ))
+                        }
                      </div>
                      <div className=''>
-                        <button type="button">
-                           <IconTrashLines />
-                        </button>
+                        {
+                           removeTechStatus === tech.id ? <span className='text-danger'>Removing...</span> 
+                           : 
+                           <button type="button" onClick={()=>removeTech(tech.id)}>
+                              <IconTrashLines />
+                           </button>
+                        }
+                        
                      </div>
                   </li>
                ))
