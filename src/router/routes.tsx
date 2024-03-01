@@ -9,8 +9,9 @@ import BlankLayout from '../components/Layouts/BlankLayout';
 import AuthPrivetRoute from '../middleware/AuthPrivetRoute';
 import Customers from '../pages/Customers/Customers';
 import Services from '../pages/Customers/Services';
-import Schedule from '../pages/Customers/Schedule';
-import Calendar from '../pages/Apps/Calendar';
+import Schedule from '../pages/Apps/Schedule/Schedule';
+import Appointment from '../pages/Apps/Schedule/Appointment';
+import Error404 from '../pages/Pages/Error404';
 
 
 const routes = [
@@ -35,6 +36,10 @@ const routes = [
                 path: '/services',
                 element : <DefaultLayout> <Services /></DefaultLayout>,
             },
+            {
+                path: '/appointment/:id',
+                element : <DefaultLayout> <Appointment /></DefaultLayout>,
+            },
             
         ]
     },
@@ -55,7 +60,7 @@ const routes = [
     
     {
         path: '*',
-        element: <BlankLayout><Error /></BlankLayout>,
+        element: <BlankLayout><Error404 /></BlankLayout>,
     },
 ];
 

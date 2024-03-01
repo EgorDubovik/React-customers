@@ -18,16 +18,17 @@ const Services = () => {
     useEffect(() => {
         dispatch(setPageTitle('Services'));
     });
-    const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
+    
 
     const [loading,setLoading] = useState(false);
     const [loadingRequest,setLoadingRequest] = useState(false);
     const [error,setError] = useState(false);
-    const [services,setServices] = useState([]);
+    const [services,setServices] = useState<any[]>([]);
     const [addContactModal, setAddContactModal] = useState(false);
     const [service, setService] = useState({id: null, title:'',description:'',price:''});
     const [emptyTitle,setEmptyTitle] = useState(false);
     const [emptyPrice,setEmptyPrice] = useState(false);
+    const [userRole, setUserRole] = useState<String[]>([]);
     const [updateService, setUpdateService] = useState({
         id: null,
         title: '',
@@ -38,6 +39,7 @@ const Services = () => {
         setLoading(true);
         axiosClient.get('company/settings/services')
         .then((response)=>{
+            setUserRole(response.data.userRols);
             setServices(response.data.services);
         })
         .catch((error)=>{
@@ -122,7 +124,8 @@ const Services = () => {
                 axiosClient.post('company/settings/services',service)
                 .then((response)=>{
                     setAddContactModal(false);
-                    fetchServices();
+                    services.unshift(response.data.service);
+                    setServices([...services]);
                 })
                 .catch((error)=>{
                     console.error('Error:', error);
@@ -135,7 +138,7 @@ const Services = () => {
         }
     }
 
-    const editService = (id) => {
+    const editService = (id:number) => {
         for(let i=0; i<services.length; i++){
             if(services[i].id === id){
                 setService(services[i]);
@@ -145,7 +148,7 @@ const Services = () => {
         setAddContactModal(true);
     }
 
-    const deleteService = (id) => {
+    const deleteService = (id:number) => {
         axiosClient.delete('company/settings/services/'+id)
         .then((response)=>{
             for(let i=0; i<services.length; i++){
@@ -166,19 +169,15 @@ const Services = () => {
                 <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                     <div className="flex gap-3">
                         <div>
-                            <button type="button" className="btn btn-primary" onClick={() => addservice()}>
-                                <IconPlus className="ltr:mr-2 rtl:ml-2" />
-                                Add New service
-                            </button>
+                            { (userRole.includes('Admin') || userRole.includes('Dispatcher')) &&
+                                <button type="button" className="btn btn-primary" onClick={() => addservice()}>
+                                    <IconPlus className="ltr:mr-2 rtl:ml-2" />
+                                    Add New service
+                                </button>
+                            }
                         </div>
                         
                     </div>
-                    {/* <div className="relative">
-                        <input type="text" placeholder="Search Contacts" className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
-                        <button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
-                            <IconSearch className="mx-auto" />
-                        </button>
-                    </div> */}
                 </div>
             </div>
             {
@@ -231,14 +230,22 @@ const Services = () => {
                                                 <td className="whitespace-nowrap">${service.price}</td>
                                                 
                                                 <td>
-                                                    <div className="flex gap-4 items-center justify-center">
-                                                        <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => editService(service.id)}>
-                                                            Edit
-                                                        </button>
-                                                        <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteService(service.id)}>
-                                                            Delete
-                                                        </button>
-                                                    </div>
+                                                    
+                                                    {(userRole.includes('Admin') || userRole.includes('Dispatcher')) 
+                                                        ?
+                                                        (
+                                                            <div className="flex gap-4 items-center justify-center">
+                                                                <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => editService(service.id)}>
+                                                                    Edit
+                                                                </button>
+                                                                <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteService(service.id)}>
+                                                                    Delete
+                                                                </button>
+                                                            </div>
+                                                        )
+                                                        :    
+                                                            <div className='text-gray-400 text-center'>No action</div>
+                                                    }
                                                 </td>
                                             </tr>
                                         );

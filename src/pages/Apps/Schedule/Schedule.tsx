@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { IRootState } from '../../store'; 
-import { setPageTitle } from '../../store/themeConfigSlice';
-import AppointmentsScheduler from '../../components/plugin/sheduler/AppointmentsScheduler';
+import { IRootState } from '../../../store'; 
+import { setPageTitle } from '../../../store/themeConfigSlice';
+import AppointmentsScheduler from '../../../components/plugin/sheduler/AppointmentsScheduler';
 
 
 const Schedule = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     useEffect(() => {
         dispatch(setPageTitle('Schedule'));
     });
@@ -40,7 +41,9 @@ const Schedule = () => {
      ];
     
     const viewAppointments = (data:any) => {
+
         console.log(data);
+        navigate('/appointment/5');
     }
 
     return (
@@ -52,6 +55,8 @@ const Schedule = () => {
                 <AppointmentsScheduler 
                     appointments={appointments}
                     onClickHandler={viewAppointments}
+                    startTime={'05:00'}
+                    endTime={'20:00'}
                 />
             </div>
         </div>

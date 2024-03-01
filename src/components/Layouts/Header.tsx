@@ -209,7 +209,7 @@ const Header = () => {
                                 offset={[0, 8]}
                                 placement="bottom-end"
                                 btnClassName="relative group block"
-                                button={<img className="w-9 h-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/user-profile.jpeg" alt="userProfile" />}
+                                button={<span className="flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-danger text-base">ED</span>}
                             >
                                 <ul className="text-dark dark:text-white-dark !py-0 w-[230px] font-semibold dark:text-white-light/90">
                                     <li>

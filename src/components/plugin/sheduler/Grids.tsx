@@ -41,25 +41,26 @@ const Grids = (props:any) => {
    const deltaPx = useRef(0);
    const isMoving = useRef(false);
    const handleMouseDown = (e:any,index:number) => {
-      
+
+      if(e.target.className.indexOf('appointment-title') != -1) return;
       appointmentIndex.current = index;
       appointmentRef.current = e.currentTarget;
-      const appointmentElement = e.currentTarget;
+
       const dayInnerElement = e.currentTarget.closest('.day-inner');
 
       dayInnerHeight.current = dayInnerElement.getBoundingClientRect().height;
       dayInnerOffsettop.current = dayInnerElement.getBoundingClientRect().top;
-      appointmentOffsetTop.current = appointmentElement.getBoundingClientRect().top;
+      appointmentOffsetTop.current = appointmentRef.current.getBoundingClientRect().top;
       
       appointmentOffsetInner.current = appointmentOffsetTop.current - dayInnerOffsettop.current;
       appointmentProcentHeightRef.current = calculateTimePercentage(appointmentList[index].end) - calculateTimePercentage(appointmentList[index].start);
-      appointmentPxHeightRef.current = appointmentElement.getBoundingClientRect().height;
+      appointmentPxHeightRef.current = appointmentRef.current.getBoundingClientRect().height;
       startPosition.current = e.clientY;
 
       deltaPx.current = (deltaProcent * dayInnerHeight.current) / 100;
-      appointmentElement.style.zIndex = '100';
-      appointmentElement.style.width = '100%';
-      appointmentElement.style.left = '0%';
+      appointmentRef.current.style.zIndex = '100';
+      appointmentRef.current.style.width = '100%';
+      appointmentRef.current.style.left = '0%';
 
       isDragging.current = true;
    }

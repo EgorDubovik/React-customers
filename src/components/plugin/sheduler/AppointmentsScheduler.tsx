@@ -3,8 +3,8 @@ import moment from 'moment';
 import Grids from './Grids';
 
 const AppointmentsScheduler = (props:any) => {
-   const startTime = props.startTime || moment('07:00', 'HH:mm');
-   const endTime = props.endTime || moment('18:00', 'HH:mm');
+   const startTime = moment(props.startTime || '00:00', 'HH:mm');
+   const endTime = moment(props.endTime || '23:00', 'HH:mm');
    const defaultBackgroundColor = props.eventDefoultBgColor || '#1565c0';
    const endTimeCopy = endTime.clone().add(1, 'hour');
    const totalDuration = moment.duration(endTimeCopy.diff(startTime));
