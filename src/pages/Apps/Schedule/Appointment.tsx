@@ -13,6 +13,8 @@ import IconArrowBackward from '../../../components/Icon/IconArrowBackward';
 import IconPencil from '../../../components/Icon/IconPencil';
 import IconTrashLines from '../../../components/Icon/IconTrashLines';
 import TechBlock from './Appointment/TechBlock';
+import NotesBlock from './Appointment/NotesBlock';
+import ServicesBlock from './Appointment/ServicesBlock';
 
 const Appointment = () => {
 
@@ -132,49 +134,17 @@ const Appointment = () => {
                            </div>
                         </div>
                         {/* Tech */}
-                        <TechBlock techs={appointment?.techs} />
+                        <TechBlock techs={appointment?.techs} appointmentId = {appointment.id} />
                      </div>
                      {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
                      <div className='grid grid-flow-row gap-5'>
                         {/* Services */}
-                        <div className='panel'>
-                           <h3 className="font-semibold text-lg dark:text-white-light">Services</h3>
-                           <div className="mt-5">
-                              <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
-                                 <table className="whitespace-nowrap">
-                                    
-                                    <tbody className="dark:text-white-dark">
-                                       {
-                                          appointment?.services?.map((service:any, index:number) => (
-                                             <tr key={index}>
-                                                <td>{service.title}</td>
-                                                <td> {service.description} </td>
-                                                <td className="text-danger">${ service.price}</td>
-                                                <td className="p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-center">
-                                                   
-                                                      <button type="button">
-                                                         <IconPencil className="ltr:mr-2 rtl:ml-2" />
-                                                      </button>
-                                                   
-                                                   
-                                                         <button type="button">
-                                                            <IconTrashLines />
-                                                         </button>
-                                                   
-                                                </td>
-                                             </tr>
-                                          ))
-                                       }
-                                          
-                                          
-                                    </tbody>
-                                 </table>
-                              </div>
-                           </div>
-                        </div>
+                        <ServicesBlock services={appointment?.services} appointmentId = {appointment.id}/>
                         {/* Notes */}
+                        <NotesBlock appointmentId = {appointment.id}/>
+                        {/* Images */}
                         <div className='panel p-4'>
-                           <h3 className="font-semibold text-lg dark:text-white-light">Notes</h3>
+                           <h3 className="font-semibold text-lg dark:text-white-light">Images</h3>
                         </div>
                      </div>
                   </div>
