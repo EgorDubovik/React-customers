@@ -3,12 +3,14 @@ import IconPencil from '../../../../components/Icon/IconPencil';
 import IconTrashLines from '../../../../components/Icon/IconTrashLines';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import axiosClient from '../../../../store/axiosClient';
+import { Button } from '@mantine/core';
+import ButtonLoading from '../../../components/ButtonLoading';
 const NotesBlock = (props:any) => {
    
    const [notes, setNotes] = useState<any[]>(props.notes || []);
    const appointmentId = props.appointmentId;
    const [newNote, setNewNote] = useState<string>('');
-   
+   const [loadingSaveNote, setLoadingSaveNote] = useState<boolean>(false);
 
    const handleChange = (event:any) => {
       setNewNote(event.target.value);
@@ -20,6 +22,7 @@ const NotesBlock = (props:any) => {
    };
 
    const handelSaveNote = () => {
+      setLoadingSaveNote(true);
       axiosClient.post(`appointment/notes/${appointmentId}`, {text:newNote})
          .then((res) => {
             if(res.status === 200){
@@ -33,7 +36,7 @@ const NotesBlock = (props:any) => {
             console.log(err);
          })
          .finally(() => {
-            
+            setLoadingSaveNote(false);
          });
    }
 
@@ -64,6 +67,7 @@ const NotesBlock = (props:any) => {
             <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
                <table className="whitespace-nowrap">
                   <tbody className="dark:text-white">
+                     {notes.length === 0 && <div className='text-center dark:text-gray-700 text-gray-400 mt-4'>Create first note...</div> }
                      {
                         notes.map((note:any, index:number) => (
                            <tr key={index}>
@@ -95,10 +99,15 @@ const NotesBlock = (props:any) => {
                rows={1} 
                value={newNote}
                onChange={handleChange}
+               placeholder="Type note here..."
                className="form-textarea ltr:rounded-r-none rtl:rounded-l-none"
             ></textarea>
             <button onClick={handelSaveNote} type="button" className="btn btn-secondary ltr:rounded-l-none rtl:rounded-r-none">
-               Save
+               {
+                  loadingSaveNote ? <ButtonLoading />
+                  : 'Save'
+               }
+               
             </button>
         </div>
       </div>

@@ -8,13 +8,14 @@ const AppointmentsScheduler = (props:any) => {
    const defaultBackgroundColor = props.eventDefoultBgColor || '#1565c0';
    const endTimeCopy = endTime.clone().add(1, 'hour');
    const totalDuration = moment.duration(endTimeCopy.diff(startTime));
-   const daysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+   const [daysArray, setDaysArray] = useState<any>([]);
+   const [viewType, setViewType] = useState(props.viewType || "week"); // week | day 
 
    const blockHeight = props.blockHeight || 50;
    const onClickHandler = props.onClickHandler || null;
    const appointments = props.appointments || [];
 
-   const [currentDate, setCurrentDate] = useState(moment());
+   const [currentDate, setCurrentDate] = useState(moment(props.currentDate) || moment());
    const [appointmentForCurentDate, setAppointmentForCurentDate] = useState([]);
 
    const helper = {
@@ -37,12 +38,23 @@ const AppointmentsScheduler = (props:any) => {
          var minutes = Math.round((totalDuration.asMinutes() * procent) / 100);
          return minutes;
       },
+      getDaysArray: function () {
+         if(viewType === 'week') {
+            for (let i = 0; i < 7; i++) {
+               daysArray[i] = currentDate.clone().weekday(i).format('ddd') + ' ' + currentDate.clone().weekday(i).format('DD');
+            }
+         } else if(viewType === 'day') {
+            daysArray[0] = currentDate.format('ddd') + ' ' + currentDate.format('DD');
+         }
+         return daysArray;
+      }
+
    }
 
    const getAppointmentsByCurrentDate = (appointmentsArray:any) => {
       let selectedStartDay = currentDate.clone().startOf('week');
       let selectedEndDay = currentDate.clone().endOf('week');
-      console.log(appointmentsArray);
+      
       let returnAppointments = appointmentsArray.filter((appointment:any) => {
          appointment.start = moment(appointment.start);
          appointment.end = moment(appointment.end);
@@ -105,19 +117,26 @@ const AppointmentsScheduler = (props:any) => {
    
    useEffect(() => {
       let currentAppointments = getAppointmentsByCurrentDate(appointments);
+      
       setAppointmentForCurentDate(currentAppointments);
+      setDaysArray(helper.getDaysArray());
 
    }, [currentDate]);
 
    let groupedAppointment = groupAppointmentsByTime(appointmentForCurentDate);
    
    let appointmentList = fetchAppointments(groupedAppointment);
-
    const prevWeekHandle = () => {
-      setCurrentDate(currentDate.clone().subtract(1, 'week'));
+      if(viewType === 'week')
+         setCurrentDate(currentDate.clone().subtract(1, 'week'));
+      if(viewType === 'day')
+         setCurrentDate(currentDate.clone().subtract(1, 'days'));
    }
    const nextWeekHandle = () => {
-      setCurrentDate(currentDate.clone().add(1, 'week'));
+      if(viewType === 'week')
+         setCurrentDate(currentDate.clone().add(1, 'week'));
+      if(viewType === 'day')
+         setCurrentDate(currentDate.clone().add(1, 'days'));
    }
    const todayHandle = () => {
       setCurrentDate(moment());
@@ -139,9 +158,9 @@ const AppointmentsScheduler = (props:any) => {
             <div className="scheduler-body">
                <div className="scheduler-weekdays flex pt-4 pb-4 border-b dark:border-gray-600 border-gray-300">
                   <div className="first-item w-10"></div>
-                  <div className="weekdays text-center grid grid-cols-7 w-full">
-                     {daysArray.map((day, index) => (
-                        <div key={index} className="weekday">{day} {currentDate.clone().weekday(index).format('DD')}</div>
+                  <div className={"weekdays text-center grid grid-cols-"+daysArray.length+" w-full"}>
+                     {daysArray.map((day:string, index:number) => (
+                        <div key={index} className="weekday">{day}</div>
                      ))}
                      
                   </div>
@@ -149,7 +168,7 @@ const AppointmentsScheduler = (props:any) => {
                <div className="scheduler-dates flex relative">
                   <div className={"times text-[0.8em] w-10 pt-2"}>
                      {timesArray.map((time, index) => (
-                        <div key={index} className={"time h-["+(blockHeight)+"px] border-t border-transparent"}>
+                        <div key={index} className={"time  border-t border-transparent"} style={{ height:blockHeight+"px" }}>
                            <div className="time-title  -mt-2">{time}</div>
                         </div>
                      ))}
@@ -159,10 +178,12 @@ const AppointmentsScheduler = (props:any) => {
                      startTime={startTime}
                      endTime={endTime}
                      timesArray={timesArray}
+                     daysArray={daysArray}
                      appointmentList={appointmentList}
                      setAppointmentForCurentDate={setAppointmentForCurentDate}
                      onAppointmentClick={onAppointmentClick}
                      totalDuration={totalDuration}
+
                   />
                   
                </div>   

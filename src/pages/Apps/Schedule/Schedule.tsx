@@ -41,7 +41,6 @@ const Schedule = () => {
      ];
     
     const viewAppointments = (data:any) => {
-
         console.log(data);
         navigate('/appointment/5');
     }
@@ -55,6 +54,7 @@ const Schedule = () => {
                 <AppointmentsScheduler 
                     appointments={appointments}
                     onClickHandler={viewAppointments}
+                    viewType={'week'}
                     startTime={'05:00'}
                     endTime={'20:00'}
                 />

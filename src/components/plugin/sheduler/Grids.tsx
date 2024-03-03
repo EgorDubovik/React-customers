@@ -3,8 +3,7 @@ import moment from 'moment';
 
 const Grids = (props:any) => {
    const appointmentList = props.appointmentList || [];
-
-   const daysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+   const daysArray = props.daysArray || [];
    const startTime = props.startTime || null;
    const endTime = props.endTime || null;
    const timesArray = props.timesArray || [];
@@ -92,7 +91,7 @@ const Grids = (props:any) => {
    }
 
    return (
-      <div className="dates grid grid-cols-7 w-full">
+      <div className={"dates grid grid-cols-"+daysArray.length+" w-full"}>
       {daysArray.map((day:any, index:number) => (
          <div className="date pt-2 first:border-0 border-l dark:border-gray-600 border-gray-300" key={index}>
             <div className='day-inner relative h-full' ref={dayInnerRef}>
@@ -100,11 +99,12 @@ const Grids = (props:any) => {
                   
                   { appointmentList.map((appointment:any, aindex:number) => 
                      {
-                        if(appointment.start.weekday() === index) {
-                           
+                        
+                        if(appointment.start.format('ddd DD') === day) {
+
                            return (
                               <div key={appointment.title+"-"+aindex+appointment.top} onMouseDown={(e)=>{handleMouseDown(e,aindex)}}  className={"appointment text-[.8em]  absolute p-[2px] cursor-pointer"} style={{ height: appointment.height+'%', width: appointment.width+'%', left: appointment.left+'%', top: appointment.top+'%' }}>
-                                 <div className="appointment-conteiner rounded absolute opacity-90" style={{ background:appointment.bg,inset:'1px' }}></div>
+                                 <div className={"appointment-conteiner rounded absolute"} style={{ background:appointment.bg,inset:'1px',opacity:appointment.opacity ?? 0.8 }}></div>
                                  <div className='text-white sticky'>
                                     <div className="appointment-title px-2 pt-1 hover:underline " onClick={()=>{onAppointmentClick(appointment)}}>{appointment.title}</div>
                                     <div className="appointment-time px-2">{appointment.start.format('hh:mm A')} - {appointment.end.format('hh:mm A')}</div>
@@ -117,7 +117,7 @@ const Grids = (props:any) => {
                   
                </div>
                { timesArray.map((time:string, index:number) => (
-                  <div key={index} className={"date-time h-["+(blockHeight)+"px] dark:border-gray-600 border-gray-300 border-t"}></div>
+                  <div key={index} className={"date-time dark:border-gray-600 border-gray-300 border-t"} style={{ height:blockHeight+'px' }}></div>
                ))}
             </div>
          </div>

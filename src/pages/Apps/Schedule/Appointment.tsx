@@ -10,11 +10,10 @@ import axiosClient from '../../../store/axiosClient';
 import IconChecks from '../../../components/Icon/IconChecks';
 import IconCreditCard from '../../../components/Icon/IconCreditCard';
 import IconArrowBackward from '../../../components/Icon/IconArrowBackward';
-import IconPencil from '../../../components/Icon/IconPencil';
-import IconTrashLines from '../../../components/Icon/IconTrashLines';
 import TechBlock from './Appointment/TechBlock';
 import NotesBlock from './Appointment/NotesBlock';
 import ServicesBlock from './Appointment/ServicesBlock';
+import AppointmentsScheduler from '../../../components/plugin/sheduler/AppointmentsScheduler';
 
 const Appointment = () => {
 
@@ -22,6 +21,7 @@ const Appointment = () => {
    const [appointment, setAppointment] = useState<any>({});
    const dispatch = useDispatch();
    const [loadingStatus, setLoadingStatus] = useState<string>('loading');
+   const [selectedAppointment, setSelectedAppointment] = useState<any[]>([]);
 
    useEffect(() => {
       dispatch(setPageTitle('Schedule'));
@@ -32,8 +32,18 @@ const Appointment = () => {
       setLoadingStatus('loading');
       axiosClient.get(`/appointment/${id}`)
          .then((res) => {
-            // console.log(res.data.appointment);
+            
+            const selectedAppointment = {
+               'start': res.data.appointment.start,
+               'end': res.data.appointment.end,
+               'bg': res.data.appointment.techs.length > 0 ?  res.data.appointment.techs[0].color : "#1565C0",
+               'title': res.data.appointment.customer.name,
+               
+            }
+            
+            setSelectedAppointment([selectedAppointment]);
             setAppointment(res.data.appointment);
+            
             setLoadingStatus('success');
          })
          .catch((err) => {
@@ -83,8 +93,16 @@ const Appointment = () => {
             
             <div className='py-4'>
                <div className='grid grid-cols-1 md:grid-cols-4 gap-5'>
-                  <div className='panel p-4 h-[700px]'>
+                  <div className='panel p-4'>
                      <h3 className="font-semibold text-lg dark:text-white-light">Calendar</h3>
+                     <AppointmentsScheduler 
+                        appointments={selectedAppointment}
+                        currentDate={selectedAppointment[0].start}
+                        viewType={'day'}
+                        startTime={'06:00'}
+                        endTime={'19:00'}
+                        blockHeight={40}
+                     />
                   </div>
                   <div className='md:col-span-3 grid grid-cols-1 xl:grid-cols-2 gap-5'>
                      {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
