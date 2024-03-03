@@ -1,11 +1,32 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import IconTrashLines from '../../../../components/Icon/IconTrashLines'
 import IconPencil from '../../../../components/Icon/IconPencil'
-import IconPencilPaper from '../../../../components/Icon/IconPencilPaper'
-import IconPlusCircle from '../../../../components/Icon/IconPlusCircle'
 import IconPlus from '../../../../components/Icon/IconPlus'
+
 const ServicesBlock = (props:any) => {
+   const [tax, setTax] = React.useState<number>(0);
+   const [total, setTotal] = React.useState<number>(0);
    const services = props.services || [];
+
+   const calculateTaxTotal = () => {
+      let tax = 0;
+      let total = 0;
+      services.forEach((service:any) => {
+         console.log(service)
+         const price = parseFloat(service.price);
+         if(service.taxable)
+            tax += price * 0.0825;
+         total += price;
+         
+      });
+      setTax(tax);
+      setTotal(total + tax);
+   }
+
+   useEffect(() => {
+      calculateTaxTotal();
+   },[]);
+
    return (
       <div className='panel'>
          <div className="flex items-center justify-between">
@@ -45,11 +66,23 @@ const ServicesBlock = (props:any) => {
                   <tbody className="dark:text-white-dark">
                      <tr>
                         <td  style={{textAlign:'right'}}>Tax</td>
-                        <td width={'20%'} className='text-danger'  style={{textAlign:'right'}}>$5.00 </td>
+                        <td width={'20%'} className='text-danger'  style={{textAlign:'right'}}>
+                           {tax.toLocaleString('en-US', {
+                                 style: 'currency',
+                                 currency: 'USD',
+                                 minimumFractionDigits: 2
+                           })} 
+                        </td>
                      </tr>
                      <tr>
                         <td  style={{textAlign:'right'}}>TOTAL</td>
-                        <td className='text-success'  style={{textAlign:'right'}}>$5.00 </td>
+                        <td className='text-success'  style={{textAlign:'right'}}>
+                           {total.toLocaleString('en-US', {
+                              style: 'currency',
+                              currency: 'USD',
+                              minimumFractionDigits: 2
+                           })} 
+                        </td>
                      </tr>
                   </tbody>
                </table>

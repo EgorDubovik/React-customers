@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const plugin = require('tailwindcss/plugin');
+const colors = require('tailwindcss/colors');
 const rotateX = plugin(function ({ addUtilities }) {
     addUtilities({
         '.rotate-y-180': {
@@ -61,6 +62,7 @@ module.exports = {
                     light: '#e0e6ed',
                     dark: '#888ea8',
                 },
+                green: colors.green,
             },
             fontFamily: {
                 nunito: ['Nunito', 'sans-serif'],
@@ -95,6 +97,7 @@ module.exports = {
             strategy: 'class',
         }),
         require('@tailwindcss/typography'),
+        // require('@tailwindcss/colors'),
         rotateX,
     ],
 };

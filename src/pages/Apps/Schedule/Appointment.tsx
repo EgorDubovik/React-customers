@@ -141,7 +141,7 @@ const Appointment = () => {
                         {/* Services */}
                         <ServicesBlock services={appointment?.services} appointmentId = {appointment.id}/>
                         {/* Notes */}
-                        <NotesBlock appointmentId = {appointment.id}/>
+                        <NotesBlock notes={appointment.notes} appointmentId = {appointment.id}/>
                         {/* Images */}
                         <div className='panel p-4'>
                            <h3 className="font-semibold text-lg dark:text-white-light">Images</h3>
