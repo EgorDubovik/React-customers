@@ -20,11 +20,28 @@ const NotesBlock = (props:any) => {
    };
 
    const handelSaveNote = () => {
-      axiosClient.post(`appointment/note/${appointmentId}`, {text:newNote})
+      axiosClient.post(`appointment/notes/${appointmentId}`, {text:newNote})
          .then((res) => {
             if(res.status === 200){
-               setNotes([...notes, res.data.note]);
+               notes.unshift(res.data.note);
+               setNotes(notes);
                setNewNote('');
+            }
+         })
+         .catch((err) => {
+            alert('Something went wrong. Please try again later');
+            console.log(err);
+         })
+         .finally(() => {
+            
+         });
+   }
+
+   const handleRemoveNote = (noteId:number) => {
+      axiosClient.delete(`appointment/notes/${appointmentId}/${noteId}`)
+         .then((res) => {
+            if(res.status === 200){
+               setNotes(notes.filter((note) => note.id !== noteId));
             }
          })
          .catch((err) => {
@@ -54,16 +71,14 @@ const NotesBlock = (props:any) => {
                                  <div className='creator dark:text-gray-600 text-gray-400'>
                                     Yahor Dubovik ({new Date(note.created_at).toLocaleString('en-US',{month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})})
                                  </div>
-                                 <div className='note mt-1 ml-3 dark:text-gray-300 text-gray-500'  dangerouslySetInnerHTML={{ __html: note.text }}>
+                                 <div className='note mt-1 ml-3 dark:text-gray-300 text-gray-500'  dangerouslySetInnerHTML={{ __html: note.text.replace(/\n/g, '<br>') }}>
                                     
                                  </div>
                               </td> 
                               <td className="p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-right">
                                  <div className='text-right'>
-                                    <button type="button">
-                                       <IconPencil className="ltr:mr-2 rtl:ml-2" />
-                                    </button>
-                                    <button type="button" className='ml-4'>
+                                    
+                                    <button onClick={()=>handleRemoveNote(note.id)} type="button" className='ml-4'>
                                        <IconTrashLines />
                                     </button>
                                  </div>
@@ -82,7 +97,7 @@ const NotesBlock = (props:any) => {
                onChange={handleChange}
                className="form-textarea ltr:rounded-r-none rtl:rounded-l-none"
             ></textarea>
-            <button type="button" className="btn btn-secondary ltr:rounded-l-none rtl:rounded-r-none">
+            <button onClick={handelSaveNote} type="button" className="btn btn-secondary ltr:rounded-l-none rtl:rounded-r-none">
                Save
             </button>
         </div>
