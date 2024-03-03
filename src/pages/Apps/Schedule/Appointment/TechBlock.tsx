@@ -91,7 +91,7 @@ const TechBlock = (preps:any) => {
          });
    }
    return (
-      <div className='panel p-4'>
+      <div className=''>
          <h3 className="font-semibold text-lg dark:text-white-light">Technical</h3>
          <ul className='mt-2'>
             {

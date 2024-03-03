@@ -10,6 +10,7 @@ const AppointmentsScheduler = (props:any) => {
    const totalDuration = moment.duration(endTimeCopy.diff(startTime));
    const [daysArray, setDaysArray] = useState<any>([]);
    const [viewType, setViewType] = useState(props.viewType || "week"); // week | day 
+   const scheduleBgClass = props.scheduleBgClass || 'bg-white dark:bg-gray-800';
 
    const blockHeight = props.blockHeight || 50;
    const onClickHandler = props.onClickHandler || null;
@@ -145,7 +146,7 @@ const AppointmentsScheduler = (props:any) => {
    return (
       <div className='select-none'>
          
-         <div className="scheduler-container rounded bg-white dark:bg-gray-800 p-4">
+         <div className={"scheduler-container rounded "+scheduleBgClass+" p-4"}>
             <div className="scheduler-header flex justify-between">
                <div className="scheduler-date text-base">{currentDate.format('MMMM YYYY')}</div>
                <div className="scheduler-nav flex gap-4">

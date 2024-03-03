@@ -4,60 +4,83 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../../store'; 
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import AppointmentsScheduler from '../../../components/plugin/sheduler/AppointmentsScheduler';
+import axiosClient from '../../../store/axiosClient';
 
 
 const Schedule = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [appointments, setAppointments] = useState<any[]>([]);
+    const [viewType, setViewType] = useState('week');
     useEffect(() => {
         dispatch(setPageTitle('Schedule'));
     });
 
     const [loading, setLoading] = useState(false);
-    const appointments = [
-        {
-           title: 'Yahor Dubovik 1',
-           start: '2024-02-28 07:00',
-           end: '2024-02-28 09:00',
-        },
-        {
-           title: 'Yahor Dubovik 2',
-           start: '2024-02-28 07:00',
-           end: '2024-02-28 09:00',
-           bg:'red'
-        },
-        {
-            title: 'Yahor Dubovik 3',
-            start: '2024-02-28 09:00',
-            end: '2024-02-28 11:00',
-            bg: 'green',
-        },
-        {
-            title: 'Yahor Dubovik 4',
-            start: '2024-02-18 09:00',
-            end: '2024-02-18 11:00',
-            bg: 'green',
-        },
-     ];
-    
-    const viewAppointments = (data:any) => {
-        console.log(data);
-        navigate('/appointment/5');
-    }
 
+    useEffect(() => {
+        setLoading(true);
+        axiosClient.get('/appointment')
+            .then((res) => {
+                console.log(res.data.appointments);
+                setAppointments(res.data.appointments);
+                setLoading(false);
+            })
+            .catch((err) => {
+               
+                console.log(err); 
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
+    
+    useEffect(() => {
+        const handleResize = () => {
+          // Check window width and update viewType state accordingly
+          
+          if (window.innerWidth < 768) {
+            console.log('day');
+            setViewType('day');
+          } else {
+            console.log('week');
+            setViewType('week');
+          }
+        };
+    
+        // Add event listener for window resize
+        window.addEventListener('resize', handleResize);
+    
+        // Call handleResize once to set initial viewType
+        handleResize();
+    
+        // Cleanup function to remove event listener
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
+
+    const viewAppointments = (data:any) => {
+        navigate('/appointment/'+data.id);
+    }
+    console.log(viewType);
     return (
         <div>
            <div className="flex items-center justify-between flex-wrap gap-4">
                 <h2 className="text-xl">Schedule</h2>
             </div>
             <div className='py-4'>
-                <AppointmentsScheduler 
-                    appointments={appointments}
-                    onClickHandler={viewAppointments}
-                    viewType={'week'}
-                    startTime={'05:00'}
-                    endTime={'20:00'}
-                />
+                {loading 
+                    ? <div className='text-center'><span className="animate-spin border-4 border-primary border-l-transparent rounded-full w-10 h-10 inline-block align-middle m-auto mb-10"></span></div>
+                    :
+                    <AppointmentsScheduler 
+                        appointments={appointments}
+                        onClickHandler={viewAppointments}
+                        viewType={viewType}
+                        startTime={'05:00'}
+                        endTime={'20:00'}
+                    />
+                }
             </div>
         </div>
     );

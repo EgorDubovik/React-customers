@@ -14,7 +14,9 @@ import TechBlock from './Appointment/TechBlock';
 import NotesBlock from './Appointment/NotesBlock';
 import ServicesBlock from './Appointment/ServicesBlock';
 import AppointmentsScheduler from '../../../components/plugin/sheduler/AppointmentsScheduler';
-
+import moment from 'moment';
+import IconClock from '../../../components/Icon/IconClock';
+import CustomerInfoBlock from './Appointment/CustomerInfoBlock';
 const Appointment = () => {
 
    const { id } = useParams();
@@ -38,11 +40,13 @@ const Appointment = () => {
                'end': res.data.appointment.end,
                'bg': res.data.appointment.techs.length > 0 ?  res.data.appointment.techs[0].color : "#1565C0",
                'title': res.data.appointment.customer.name,
-               
             }
             
             setSelectedAppointment([selectedAppointment]);
-            setAppointment(res.data.appointment);
+            let appointment = res.data.appointment;
+            appointment.start = moment(appointment.start);
+            appointment.end = moment(appointment.end);
+            setAppointment(appointment);
             
             setLoadingStatus('success');
          })
@@ -66,7 +70,7 @@ const Appointment = () => {
          {loadingStatus === 'success' &&
          (<div>
             
-            <div className="flex gap-3 justify-end">
+            <div className="flex gap-3 md:justify-end justify-around">
                <div>
                   {
                      appointment?.status === 0 && 
@@ -85,6 +89,12 @@ const Appointment = () => {
                </div>
                <div>
                   <button type="button" className="btn btn-primary h-full">
+                     <IconClock className='mr-2'/>
+                     Start job
+                  </button>
+               </div>
+               <div>
+                  <button type="button" className="btn btn-primary h-full">
                      <IconCreditCard className='mr-2'/>
                      Pay
                   </button>
@@ -94,65 +104,47 @@ const Appointment = () => {
             <div className='py-4'>
                <div className='grid grid-cols-1 md:grid-cols-4 gap-5'>
                   <div className='panel p-4'>
-                     <h3 className="font-semibold text-lg dark:text-white-light">Calendar</h3>
-                     <AppointmentsScheduler 
-                        appointments={selectedAppointment}
-                        currentDate={selectedAppointment[0].start}
-                        viewType={'day'}
-                        startTime={'06:00'}
-                        endTime={'19:00'}
-                        blockHeight={40}
-                     />
+                     <div className="flex items-center justify-between pb-4">
+                        <h3 className="font-semibold text-lg dark:text-white-light">Appointment time</h3>
+                        <Link to="/users/user-account-settings" className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
+                           <IconPencilPaper className='w-4 h-4'/>
+                        </Link>
+                     </div>
+                     <div className='hidden md:block'>
+                        <AppointmentsScheduler 
+                           appointments={selectedAppointment}
+                           currentDate={selectedAppointment[0].start}
+                           viewType={'day'}
+                           startTime={'06:00'}
+                           endTime={'19:00'}
+                           blockHeight={40}
+                           scheduleBgClass={'bg-none'}
+                        />
+                     </div>
+                     <div className='md:hidden'>
+                        <div className='dark:bg-gray-950 rounded'>
+                           <div className='p-4'>
+                              <div className='flex justify-between items-center'>
+                                 <h4 className='font-semibold dark:text-white-light'>{appointment?.start.format('ddd, MMM DD')}</h4>
+                                 <p className='font-semibold dark:text-white-light'>{appointment?.start.format('hh:mm A')} - {appointment?.end.format('hh:mm A')}</p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
                   </div>
                   <div className='md:col-span-3 grid grid-cols-1 xl:grid-cols-2 gap-5'>
                      {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
                      <div className='grid grid-flow-row gap-5'>
                         {/* Customer infor */}
-                        <div className="panel p-0">
-                           <div className="flex items-center justify-between p-4">
-                                 <h3 className="font-semibold text-lg dark:text-white-light">Customer</h3>
-                                 <Link to="/users/user-account-settings" className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
-                                    <IconPencilPaper className='w-4 h-4'/>
-                                 </Link>
-                           </div>
-                           <div className="mb-1">
-                              <div className="flex flex-col justify-center items-center ">
-                                 <div className='w-full h-[200px] rounded text-center dark:bg-gray-800 bg-gray-200'>
-                                    MAP
-                                 </div>
-                                 
-                                 <p className="font-semibold text-primary text-lg mt-4">
-                                    <Link to={'/customer/'+appointment?.customer?.id} className="hover:underline">
-                                       {appointment?.customer?.name}
-                                    </Link>
-                                 </p>
-
-                              </div>
-                              <div className='px-4 pb-4'>
-                                 <ul className="mt-5 flex flex-col m-auto space-y-4 font-semibold text-white-dark">
-                                    <li className="flex items-center gap-2">
-                                       <IconMapPin className="shrink-0" />
-                                       {appointment?.address?.full}
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                       <IconPhone />
-                                       <span className="whitespace-nowrap" dir="ltr">
-                                          {appointment?.customer?.phone}
-                                       </span>
-                                    </li>
-                                    <li>
-                                       <button className="flex gap-2">
-                                          <IconMail className="w-5 h-5 shrink-0" />
-                                          <span className="text-primary truncate">{ appointment?.customer?.email }</span>
-                                          
-                                       </button>
-                                    </li>
-                                 </ul>
-                              </div>
-                           </div>
+                        <CustomerInfoBlock customer={appointment?.customer} address={appointment?.address} />
+                        {/* Tech for web*/}
+                        <div className='panel p-4 hidden md:block'>
+                           <TechBlock techs={appointment?.techs} appointmentId = {appointment.id} />
                         </div>
-                        {/* Tech */}
-                        <TechBlock techs={appointment?.techs} appointmentId = {appointment.id} />
+                        {/* Images for web*/}
+                        <div className='panel p-4 hidden md:block'>
+                           <h3 className="font-semibold text-lg dark:text-white-light">Images</h3>
+                        </div>
                      </div>
                      {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
                      <div className='grid grid-flow-row gap-5'>
@@ -160,8 +152,15 @@ const Appointment = () => {
                         <ServicesBlock services={appointment?.services} appointmentId = {appointment.id}/>
                         {/* Notes */}
                         <NotesBlock notes={appointment.notes} appointmentId = {appointment.id}/>
-                        {/* Images */}
-                        <div className='panel p-4'>
+
+                        {/* Tech for mobile */}
+                        
+                        <div className='panel p-4 block md:hidden'>
+                           <TechBlock techs={appointment?.techs} appointmentId = {appointment.id} />
+                        </div>
+
+                        {/* Images for mobile*/}
+                        <div className='panel p-4 block md:hidden'>
                            <h3 className="font-semibold text-lg dark:text-white-light">Images</h3>
                         </div>
                      </div>
