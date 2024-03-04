@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import IconPencilPaper from '../../../../components/Icon/IconPencilPaper';
 import IconMapPin from '../../../../components/Icon/IconMapPin';

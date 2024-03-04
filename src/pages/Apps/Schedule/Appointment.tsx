@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import { useParams, Link } from 'react-router-dom';
 import IconPencilPaper from '../../../components/Icon/IconPencilPaper';
-import IconMapPin from '../../../components/Icon/IconMapPin';
-import IconPhone from '../../../components/Icon/IconPhone';
-import IconMail from '../../../components/Icon/IconMail';
 import axiosClient from '../../../store/axiosClient';
 import IconChecks from '../../../components/Icon/IconChecks';
 import IconCreditCard from '../../../components/Icon/IconCreditCard';
@@ -34,7 +31,7 @@ const Appointment = () => {
       setLoadingStatus('loading');
       axiosClient.get(`/appointment/${id}`)
          .then((res) => {
-            
+            console.log(res.data.appointment);
             const selectedAppointment = {
                'start': res.data.appointment.start,
                'end': res.data.appointment.end,
@@ -149,7 +146,11 @@ const Appointment = () => {
                      {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
                      <div className='grid grid-flow-row gap-5'>
                         {/* Services */}
-                        <ServicesBlock services={appointment?.services} appointmentId = {appointment.id}/>
+                        <ServicesBlock 
+                           services={appointment?.services} 
+                           appointmentId = {appointment.id}
+                           payments={appointment?.payments}
+                        />
                         {/* Notes */}
                         <NotesBlock notes={appointment.notes} appointmentId = {appointment.id}/>
 
