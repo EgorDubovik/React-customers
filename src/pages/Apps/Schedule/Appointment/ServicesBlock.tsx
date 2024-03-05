@@ -2,7 +2,8 @@ import { useEffect, useState, Fragment, useRef} from 'react'
 import IconTrashLines from '../../../../components/Icon/IconTrashLines'
 import IconPencil from '../../../../components/Icon/IconPencil'
 import IconPlus from '../../../../components/Icon/IconPlus'
-import {SmallDangerLoader} from '../../../../components/loading/SmallDangerLoader'
+import {SmallDangerLoader} from '../../../../components/loading/SmallCirculeLoader'
+import { ButtonLoader } from '../../../../components/loading/ButtonLoader'
 import moment from 'moment'
 import { Dialog, Transition } from '@headlessui/react'
 import axiosClient from '../../../../store/axiosClient'
@@ -16,6 +17,7 @@ const ServicesBlock = (props:any) => {
    const [serviceFormData, setServiceFormData] = useState<any>({});
    const [modal, setModal] = useState(false);
    const [removeServiceStatus, setRemoveServiceStatus] = useState(0);
+   const [serviceFormLoading, setServiceFormLoading] = useState(false);
    const appointmentId = props.appointmentId || 0;
    const priceInputRef = useRef<HTMLInputElement>(null);
    
@@ -77,20 +79,45 @@ const ServicesBlock = (props:any) => {
    }
 
    const handleSaveService = () => {
+      setServiceFormLoading(true);
       if(serviceFormData.id){ // update
-         const updatedServices = services.map((service) => {
-            if(service.id === serviceFormData.id){
-               return serviceFormData;
-            }
-            return service;
-         });
-         setServices(updatedServices);
+         axiosClient.put(`appointment/service/${appointmentId}/${serviceFormData.id}`, serviceFormData)
+            .then((res:any) => {
+               if(res.status === 200){
+                  const updatedServices = services.map((service) => {
+                     if(service.id === serviceFormData.id){
+                        return serviceFormData;
+                     }
+                     return service;
+                  });
+                  setServices(updatedServices);
+                  setModal(false);
+               }
+            })
+            .catch((err) => {
+               alert('Something went wrong. Please try again later');
+               console.log(err);
+            })
+            .finally(() => {
+               setServiceFormLoading(false);
+            });
       } else { // add
-         const newService = {...serviceFormData, id: Date.now()};
-         const updatedServices = [...services, newService];
-         setServices(updatedServices);
+         axiosClient.post(`appointment/service/${appointmentId}`, serviceFormData)
+            .then((res:any) => {
+               if(res.status === 200){
+                  setServices([...services, res.data.service]);
+                  setModal(false);
+               }
+            })
+            .catch((err) => {
+               alert('Something went wrong. Please try again later');
+               console.log(err);
+            })
+            .finally(() => {
+               setServiceFormLoading(false);
+            });
       }
-      setModal(false);
+      
    }
    
    const handleRemoveService = (serviceId:number) => {
@@ -266,6 +293,7 @@ const ServicesBlock = (props:any) => {
                                           </button>
                                           <button type="button" onClick={handleSaveService} className="btn btn-primary ltr:ml-4 rtl:mr-4">
                                              Save
+                                             {serviceFormLoading && <ButtonLoader />}
                                           </button>
                                        </div>
                                     </form>
