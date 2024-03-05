@@ -1,9 +1,11 @@
-import { useEffect, useState, Fragment} from 'react'
+import { useEffect, useState, Fragment, useRef} from 'react'
 import IconTrashLines from '../../../../components/Icon/IconTrashLines'
 import IconPencil from '../../../../components/Icon/IconPencil'
 import IconPlus from '../../../../components/Icon/IconPlus'
+import {SmallDangerLoader} from '../../../../components/loading/SmallDangerLoader'
 import moment from 'moment'
 import { Dialog, Transition } from '@headlessui/react'
+import axiosClient from '../../../../store/axiosClient'
 
 const ServicesBlock = (props:any) => {
    const [tax, setTax] = useState<number>(0);
@@ -11,8 +13,11 @@ const ServicesBlock = (props:any) => {
    const [remaining, setRemaining] = useState<number>(0);
    const [services, setServices] = useState<any[]>(props.services || []);
    const paymmets = props.payments || [];
-   const [updateService, setUpdateService] = useState<any>({});
+   const [serviceFormData, setServiceFormData] = useState<any>({});
    const [modal, setModal] = useState(false);
+   const [removeServiceStatus, setRemoveServiceStatus] = useState(0);
+   const appointmentId = props.appointmentId || 0;
+   const priceInputRef = useRef<HTMLInputElement>(null);
    
    const calculateTaxTotal = (services:any) => {
       let tax = 0;
@@ -46,11 +51,19 @@ const ServicesBlock = (props:any) => {
       setRemaining(remaining);
    },[paymmets, total])
    
-   const handleRemoveService = (serviceId:number) => {
-      setServices(services.filter((service) => service.id !== serviceId));
-   }
+   
    const editService = (service:any) => {
-      setUpdateService(service);
+      setServiceFormData(service);
+      setModal(true);
+   }
+
+   const handeCreateNewService = () => {
+      setServiceFormData({
+         title:'',
+         description:'',
+         price:'',
+         taxable:true
+      });
       setModal(true);
    }
 
@@ -58,21 +71,45 @@ const ServicesBlock = (props:any) => {
       if(event.target.name === 'price' && isNaN(event.target.value)) return;
 
       if(event.target.name === 'taxable')
-         setUpdateService({...updateService, [event.target.name]: event.target.checked});
+         setServiceFormData({...serviceFormData, [event.target.name]: event.target.checked});
       else 
-         setUpdateService({...updateService, [event.target.name]: event.target.value});
+         setServiceFormData({...serviceFormData, [event.target.name]: event.target.value});
    }
-   const handleUpdateService = () => {
-      const updatedServices = services.map((service) => {
-         if(service.id === updateService.id){
-            return updateService;
-         }
-         return service;
-      });
-      setServices(updatedServices);
+
+   const handleSaveService = () => {
+      if(serviceFormData.id){ // update
+         const updatedServices = services.map((service) => {
+            if(service.id === serviceFormData.id){
+               return serviceFormData;
+            }
+            return service;
+         });
+         setServices(updatedServices);
+      } else { // add
+         const newService = {...serviceFormData, id: Date.now()};
+         const updatedServices = [...services, newService];
+         setServices(updatedServices);
+      }
       setModal(false);
    }
    
+   const handleRemoveService = (serviceId:number) => {
+      setRemoveServiceStatus(serviceId);
+      axiosClient.delete(`appointment/service/${appointmentId}/${serviceId}`)
+         .then((res) => {
+            if(res.status === 200){
+               setServices(services.filter((service) => service.id !== serviceId));
+            }
+         })
+         .catch((err) => {
+            alert('Something went wrong. Please try again later');
+            console.log(err);
+         })
+         .finally(() => {
+            setRemoveServiceStatus(0);
+         });
+   }
+
    const viewCurrency = (amount:number) => {
       return amount.toLocaleString('en-US', {
          style: 'currency',
@@ -101,12 +138,16 @@ const ServicesBlock = (props:any) => {
                               <td className="">{viewCurrency(parseFloat(service.price))}</td>
                               <td className="p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-right">
                                  <div className='text-right'>
-                                    <button onClick={()=>editService(service)} type="button">
-                                       <IconPencil className="ltr:mr-2 rtl:ml-2" />
+                                    <button onClick={()=>editService(service)} type="button" className='mr-4' >
+                                       <IconPencil />
                                     </button>
-                                    <button onClick={()=>handleRemoveService(service.id)} type="button" className='ml-4'>
-                                       <IconTrashLines />
-                                    </button>
+                                    {
+                                       removeServiceStatus === service.id ? <SmallDangerLoader />
+                                       :   
+                                       <button onClick={()=>handleRemoveService(service.id)} type="button">
+                                          <IconTrashLines />
+                                       </button>
+                                    }
                                  </div>
                               </td>
                            </tr>
@@ -134,7 +175,7 @@ const ServicesBlock = (props:any) => {
                </table>
             </div>
             <div className='flex justify-center mt-4'>
-               <span className='flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2'>
+               <span className='flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2' onClick={handeCreateNewService}>
                   <IconPlus className='mr-2'/>
                   Add new Service
                </span>
@@ -147,7 +188,7 @@ const ServicesBlock = (props:any) => {
                               currency: 'USD',
                               minimumFractionDigits: 2
                            })}</span> }
-                  { remaining <= 0 && <span className='text-success ml-2'>Paid full</span>}
+                  { remaining <= 0 && services.length>0 && <span className='text-success ml-2'>Paid full</span>}
                </div>
                <button type="button" className="btn btn-outline-dark btn-sm">Issue refund</button>
             </div>
@@ -170,7 +211,12 @@ const ServicesBlock = (props:any) => {
             </div>
          </div>
          <Transition appear show={modal} as={Fragment}>
-            <Dialog as="div" open={modal} onClose={() => setModal(false)}>
+            <Dialog 
+               as="div" 
+               open={modal} 
+               onClose={() => setModal(false)}
+               initialFocus={serviceFormData.id ? priceInputRef : undefined}
+            >
                <Transition.Child
                   as={Fragment}
                   enter="ease-out duration-300"
@@ -200,17 +246,17 @@ const ServicesBlock = (props:any) => {
                               <div className="p-3">
                                     <form>
                                        <div className="relative mb-4">
-                                          <input type="text" placeholder="Title" className="form-input" name='title' onChange={handleChangeService} value={updateService.title} />
+                                          <input type="text" placeholder="Title" className="form-input" name='title' onChange={handleChangeService} value={serviceFormData.title} />
                                        </div>
                                        <div className="relative mb-4">
-                                          <input type="text" placeholder="Price" className="form-input" pattern="\d*\.?\d*" name='price' onChange={handleChangeService} value={updateService.price} />
+                                          <input type="text" ref={priceInputRef} placeholder='Price' className="form-input" pattern="\d*\.?\d*" name='price' onChange={handleChangeService} value={serviceFormData.price} onFocus={(e)=> e.target.select()}/>
                                        </div>
                                        <div className="relative mb-4">
-                                          <textarea placeholder="Description" className="form-textarea" name='description' onChange={handleChangeService} value={updateService.description}></textarea>
+                                          <textarea placeholder="Description" className="form-textarea" name='description' onChange={handleChangeService} value={serviceFormData.description}></textarea>
                                        </div>
                                        <div className="relative mb-4">
                                           <label className="inline-flex items-center text-sm">
-                                             <input type="checkbox" className="form-checkbox outline-primary" name='taxable' onChange={handleChangeService} checked={updateService.taxable}  />
+                                             <input type="checkbox" className="form-checkbox outline-primary" name='taxable' onChange={handleChangeService} checked={serviceFormData.taxable}  />
                                              <span className=" text-white-dark">Taxable</span>
                                           </label>
                                        </div>
@@ -218,7 +264,7 @@ const ServicesBlock = (props:any) => {
                                           <button type="button" onClick={() => setModal(false)} className="btn btn-outline-danger">
                                              Discard
                                           </button>
-                                          <button type="button" onClick={handleUpdateService} className="btn btn-primary ltr:ml-4 rtl:mr-4">
+                                          <button type="button" onClick={handleSaveService} className="btn btn-primary ltr:ml-4 rtl:mr-4">
                                              Save
                                           </button>
                                        </div>
