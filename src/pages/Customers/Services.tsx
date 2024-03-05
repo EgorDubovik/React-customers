@@ -7,9 +7,9 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import IconPlus from '../../components/Icon/IconPlus';
 import IconX from '../../components/Icon/IconX';
 import axiosClient from '../../store/axiosClient';
-import ButtonLoading from '../components/ButtonLoading';
+import { ButtonLoader } from '../../components/loading/ButtonLoader';
+import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
 import Swal from 'sweetalert2';
-import { s } from '@fullcalendar/core/internal-common';
 
 
 
@@ -29,6 +29,7 @@ const Services = () => {
     const [emptyTitle,setEmptyTitle] = useState(false);
     const [emptyPrice,setEmptyPrice] = useState(false);
     const [userRole, setUserRole] = useState<String[]>([]);
+    const [removeService, setRemoveService] = useState<number>(0);
     const [updateService, setUpdateService] = useState({
         id: null,
         title: '',
@@ -37,19 +38,19 @@ const Services = () => {
     });
     const fetchServices = () => {
         setLoading(true);
-        axiosClient.get('company/settings/services')
-        .then((response)=>{
-            setUserRole(response.data.userRols);
-            setServices(response.data.services);
-        })
-        .catch((error)=>{
-            console.error('Error:', error);
-            setError(true);
-        })
-        .finally(()=>{
-            setLoading(false);
-            
-        });
+        axiosClient.get("company/settings/services")
+            .then((response)=>{
+                setUserRole(response.data.userRols);
+                setServices(response.data.services);
+            })
+            .catch((error)=>{
+                console.error('Error:', error);
+                setError(true);
+            })
+            .finally(()=>{
+                setLoading(false);
+                
+            });
     }
 
     useEffect(()=>{
@@ -149,6 +150,7 @@ const Services = () => {
     }
 
     const deleteService = (id:number) => {
+        setRemoveService(id);
         axiosClient.delete('company/settings/services/'+id)
         .then((response)=>{
             for(let i=0; i<services.length; i++){
@@ -158,8 +160,14 @@ const Services = () => {
                     break;
                 }
             }
+        }).catch((error)=>{
+            alert('Somthing went wrong. Please try again.');
+            console.error('Error:', error);
         })
-        console.log('Delete Service' + id);
+        .finally(()=>{
+            setRemoveService(0);
+        });
+        
     }
     
     return (
@@ -238,9 +246,14 @@ const Services = () => {
                                                                 <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => editService(service.id)}>
                                                                     Edit
                                                                 </button>
-                                                                <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteService(service.id)}>
-                                                                    Delete
-                                                                </button>
+                                                                {
+                                                                    removeService === service.id
+                                                                        ? <SmallDangerLoader />
+                                                                        :
+                                                                        <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteService(service.id)}>
+                                                                            Delete
+                                                                        </button>
+                                                                }
                                                             </div>
                                                         )
                                                         :    
@@ -281,7 +294,7 @@ const Services = () => {
                                         <IconX />
                                     </button>
                                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                                        {true ? 'Add Service' : 'Edit Service'}
+                                        {service.id ? 'Edit Service' : 'Add Service'}
                                     </div>
                                     <div className="p-5">
                                         <form>
@@ -309,14 +322,8 @@ const Services = () => {
                                                     Cancel
                                                 </button>
                                                 <button type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4" onClick={saveService}>
-                                                    {loadingRequest ? 
-                                                        <div role='status'><ButtonLoading /></div>
-                                                        :
-                                                        
-                                                        (service.id ? 'Update' : 'Save')
-                                                        
-                                                    }
-                                                    
+                                                    { service.id ? 'Update' : 'Save'}
+                                                    {loadingRequest &&  <div role='status'><ButtonLoader /></div>}
                                                 </button>
                                             </div>
                                         </form>

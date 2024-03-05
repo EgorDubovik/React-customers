@@ -3,14 +3,15 @@ import IconPencil from '../../../../components/Icon/IconPencil';
 import IconTrashLines from '../../../../components/Icon/IconTrashLines';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import axiosClient from '../../../../store/axiosClient';
-import { Button } from '@mantine/core';
-import ButtonLoading from '../../../components/ButtonLoading';
+import { ButtonLoader } from '../../../../components/loading/ButtonLoader';
+import { SmallDangerLoader } from '../../../../components/loading/SmallCirculeLoader';
 const NotesBlock = (props:any) => {
    
    const [notes, setNotes] = useState<any[]>(props.notes || []);
    const appointmentId = props.appointmentId;
    const [newNote, setNewNote] = useState<string>('');
    const [loadingSaveNote, setLoadingSaveNote] = useState<boolean>(false);
+   const [loadingRemoveNote, setLoadingRemoveNote] = useState<number>(0);
 
    const handleChange = (event:any) => {
       setNewNote(event.target.value);
@@ -41,6 +42,7 @@ const NotesBlock = (props:any) => {
    }
 
    const handleRemoveNote = (noteId:number) => {
+      setLoadingRemoveNote(noteId);
       axiosClient.delete(`appointment/notes/${appointmentId}/${noteId}`)
          .then((res) => {
             if(res.status === 200){
@@ -52,7 +54,7 @@ const NotesBlock = (props:any) => {
             console.log(err);
          })
          .finally(() => {
-            
+            setLoadingRemoveNote(0);
          });
    }
 
@@ -81,10 +83,14 @@ const NotesBlock = (props:any) => {
                               </td> 
                               <td className="p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-right">
                                  <div className='text-right'>
+                                    {
+                                       loadingRemoveNote === note.id ? <SmallDangerLoader />
+                                       : 
+                                       <button onClick={()=>handleRemoveNote(note.id)} type="button" className='ml-4'>
+                                          <IconTrashLines />
+                                       </button>
+                                    }
                                     
-                                    <button onClick={()=>handleRemoveNote(note.id)} type="button" className='ml-4'>
-                                       <IconTrashLines />
-                                    </button>
                                  </div>
                               </td>
                            </tr>
@@ -104,7 +110,7 @@ const NotesBlock = (props:any) => {
             ></textarea>
             <button onClick={handelSaveNote} type="button" className="btn btn-secondary ltr:rounded-l-none rtl:rounded-r-none">
                {
-                  loadingSaveNote ? <ButtonLoading />
+                  loadingSaveNote ? <ButtonLoader />
                   : 'Save'
                }
                

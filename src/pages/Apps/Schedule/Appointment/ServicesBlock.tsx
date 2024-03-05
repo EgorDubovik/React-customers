@@ -149,9 +149,9 @@ const ServicesBlock = (props:any) => {
       <div className='panel'>
          <div className="flex items-center justify-between">
             <h3 className="font-semibold text-lg dark:text-white-light">Services</h3>
-            <a href="#" className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
+            <button className="btn btn-primary p-2 rounded-full" onClick={handeCreateNewService}>
                <IconPlus className='w-4 h-4'/>
-            </a>
+            </button>
          </div>
          <div className="mt-5">
             <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
