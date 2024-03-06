@@ -1,20 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../../store/themeConfigSlice';
-import { useParams, Link } from 'react-router-dom';
-import IconPencilPaper from '../../../components/Icon/IconPencilPaper';
+import { useParams} from 'react-router-dom';
 import axiosClient from '../../../store/axiosClient';
-import IconChecks from '../../../components/Icon/IconChecks';
-import IconCreditCard from '../../../components/Icon/IconCreditCard';
-import IconArrowBackward from '../../../components/Icon/IconArrowBackward';
-import TechBlock from './Appointment/TechBlock';
-import NotesBlock from './Appointment/NotesBlock';
-import ServicesBlock from './Appointment/ServicesBlock';
-import AppointmentsScheduler from '../../../components/plugin/sheduler/AppointmentsScheduler';
 import moment from 'moment';
-import IconClock from '../../../components/Icon/IconClock';
-import CustomerInfoBlock from './Appointment/CustomerInfoBlock';
-import { ButtonLoader } from '../../../components/loading/ButtonLoader';
+import Index from './Appointment/index';
+import { AppointmentProvider } from '../../../context/AppointmentContext';
 const Appointment = () => {
 
    const { id } = useParams();
@@ -22,31 +13,18 @@ const Appointment = () => {
    const dispatch = useDispatch();
    const [loadingStatus, setLoadingStatus] = useState<string>('loading');
    const [selectedAppointment, setSelectedAppointment] = useState<any[]>([]);
-   const [updateAppointmentLoading, setUpdateAppointmentLoading] = useState<boolean>(false);
 
    useEffect(() => {
-      dispatch(setPageTitle('Schedule'));
+      dispatch(setPageTitle('Appointment'));
    });
 
-   const handaleFinishOrActivateAppointment = () => {
-      setUpdateAppointmentLoading(true);
-      axiosClient.put(`appointment/${id}/status`)
-         .then((res) => {
-            setAppointment({...appointment,['status'] : appointment.status === 0 ? 1 : 0});
-         })
-         .catch((err) => {
-            console.log(err);
-         })
-         .finally(() => {
-            setUpdateAppointmentLoading(false);
-         });
-   }
+   
    
    useEffect(() => {
       setLoadingStatus('loading');
       axiosClient.get(`/appointment/${id}`)
          .then((res) => {
-            console.log(res.data.appointment);
+            
             const selectedAppointment = {
                'start': res.data.appointment.start,
                'end': res.data.appointment.end,
@@ -79,119 +57,12 @@ const Appointment = () => {
                   </span>
                </div>
             </div>}
-         {loadingStatus === 'success' &&
-         (<div>
-            
-            <div className="flex gap-3 md:justify-end justify-around">
-               <div>
-                  {
-                     appointment?.status === 0 && 
-                     <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-primary h-full">
-                        {
-                           updateAppointmentLoading 
-                              ? <ButtonLoader/> 
-                              : <IconChecks />
-                        }
-                        <span className='ml-2'>Finish Appointment</span>
-                     </button>   
-                  }
-                  {
-                     appointment?.status === 1 && 
-                     <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-outline-dark h-full">
-                        {
-                           updateAppointmentLoading 
-                              ? <ButtonLoader/> 
-                              : <IconArrowBackward/>
-                        }
-                        <span className='ml-2'>Back to Active</span>
-                     </button>   
-                  }
-               </div>
-               <div>
-                  <button type="button" className="btn btn-primary h-full">
-                     <IconClock className='mr-2'/>
-                     Start job
-                  </button>
-               </div>
-               <div>
-                  <button type="button" className="btn btn-primary h-full">
-                     <IconCreditCard className='mr-2'/>
-                     Pay
-                  </button>
-               </div>
-            </div>
-            
-            <div className='py-4'>
-               <div className='grid grid-cols-1 md:grid-cols-4 gap-5'>
-                  <div className='panel p-4'>
-                     <div className="flex items-center justify-between pb-4">
-                        <h3 className="font-semibold text-lg dark:text-white-light">Appointment time</h3>
-                        <Link to="/users/user-account-settings" className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
-                           <IconPencilPaper className='w-4 h-4'/>
-                        </Link>
-                     </div>
-                     <div className='hidden md:block'>
-                        <AppointmentsScheduler 
-                           appointments={selectedAppointment}
-                           currentDate={selectedAppointment[0].start}
-                           viewType={'day'}
-                           startTime={'06:00'}
-                           endTime={'19:00'}
-                           blockHeight={40}
-                           scheduleBgClass={'bg-none'}
-                        />
-                     </div>
-                     <div className='md:hidden'>
-                        <div className='dark:bg-gray-950 rounded'>
-                           <div className='p-4'>
-                              <div className='flex justify-between items-center'>
-                                 <h4 className='font-semibold dark:text-white-light'>{appointment?.start.format('ddd, MMM DD')}</h4>
-                                 <p className='font-semibold dark:text-white-light'>{appointment?.start.format('hh:mm A')} - {appointment?.end.format('hh:mm A')}</p>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div className='md:col-span-3 grid grid-cols-1 xl:grid-cols-2 gap-5'>
-                     {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
-                     <div className='grid grid-flow-row gap-5'>
-                        {/* Customer infor */}
-                        <CustomerInfoBlock customer={appointment?.customer} address={appointment?.address} />
-                        {/* Tech for web*/}
-                        <div className='panel p-4 hidden md:block'>
-                           <TechBlock techs={appointment?.techs} appointmentId = {appointment.id} />
-                        </div>
-                        {/* Images for web*/}
-                        <div className='panel p-4 hidden md:block'>
-                           <h3 className="font-semibold text-lg dark:text-white-light">Images</h3>
-                        </div>
-                     </div>
-                     {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
-                     <div className='grid grid-flow-row gap-5'>
-                        {/* Services */}
-                        <ServicesBlock 
-                           services={appointment?.services} 
-                           appointmentId = {appointment.id}
-                           payments={appointment?.payments}
-                        />
-                        {/* Notes */}
-                        <NotesBlock notes={appointment.notes} appointmentId = {appointment.id}/>
-
-                        {/* Tech for mobile */}
-                        
-                        <div className='panel p-4 block md:hidden'>
-                           <TechBlock techs={appointment?.techs} appointmentId = {appointment.id} />
-                        </div>
-
-                        {/* Images for mobile*/}
-                        <div className='panel p-4 block md:hidden'>
-                           <h3 className="font-semibold text-lg dark:text-white-light">Images</h3>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>)}
+         {loadingStatus === 'success' 
+            && 
+            <AppointmentProvider appointmentData={appointment}>
+               <Index selectedAppointment={selectedAppointment}/>
+            </AppointmentProvider>
+         }
       </div>
       
    );

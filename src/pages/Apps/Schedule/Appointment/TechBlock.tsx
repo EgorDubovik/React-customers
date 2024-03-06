@@ -8,6 +8,7 @@ import axiosClient from '../../../../store/axiosClient'
 import { use } from 'i18next'
 
 const TechBlock = (preps:any) => {
+   
    const [techs, setTechs]  = useState(preps.techs || []);
    const [techsIds, setTechsIds] = useState<Number[]>([]);
    const [companyTechs, setCompanyTechs] = useState([]);

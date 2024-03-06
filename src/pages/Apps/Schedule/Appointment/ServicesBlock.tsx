@@ -7,52 +7,50 @@ import { ButtonLoader } from '../../../../components/loading/ButtonLoader'
 import moment from 'moment'
 import { Dialog, Transition } from '@headlessui/react'
 import axiosClient from '../../../../store/axiosClient'
+import { useAppointmentContext } from '../../../../context/AppointmentContext'
+
+const calculateTaxTotal = (services:any) => {
+   let tax = 0;
+   let total = 0;
+   services.forEach((service:any) => {
+      const price = parseFloat(service.price);
+      total += price;
+      if(service.taxable) tax += (price * 0.0825);
+   });
+   total += tax;
+   return {tax, total};
+}
+
+const calculateRemaining = (payments:any, total:number) => {
+   const totalPaid = payments.reduce((acc:any, payment:any) => {
+      const amount = parseFloat(payment.amount);
+      return acc + amount;
+   }, 0);
+   const remaining = total - totalPaid;
+   return Math.round(remaining*100)/100;
+}
+
+const viewCurrency = (amount:number) => {
+   return amount.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+   });
+}
 
 const ServicesBlock = (props:any) => {
-   const [tax, setTax] = useState<number>(0);
-   const [total, setTotal] = useState<number>(0);
-   const [remaining, setRemaining] = useState<number>(0);
-   const [services, setServices] = useState<any[]>(props.services || []);
-   const paymmets = props.payments || [];
+   const {appointment, updateServices} = useAppointmentContext();
+   const payments = appointment?.payments || [];
+   const services = appointment?.services || [];
    const [serviceFormData, setServiceFormData] = useState<any>({});
    const [modal, setModal] = useState(false);
    const [removeServiceStatus, setRemoveServiceStatus] = useState(0);
    const [serviceFormLoading, setServiceFormLoading] = useState(false);
    const appointmentId = props.appointmentId || 0;
    const priceInputRef = useRef<HTMLInputElement>(null);
-   
-   const calculateTaxTotal = (services:any) => {
-      let tax = 0;
-      let total = 0;
-      services.forEach((service:any) => {
-         const price = parseFloat(service.price);
-         total += price;
-         if(service.taxable) tax += (price * 0.0825);
-      });
-      total += tax;
-      return {tax, total};
-   }
 
-   const calculateRemaining = (payments:any, total:number) => {
-      const totalPaid = payments.reduce((acc:any, payment:any) => {
-         const amount = parseFloat(payment.amount);
-         return acc + amount;
-      }, 0);
-      const remaining = total - totalPaid;
-      return Math.round(remaining*100)/100;
-   }
-
-   useEffect(()=>{
-      const {tax, total} = calculateTaxTotal(services);
-      setTax(tax);
-      setTotal(total);
-   },[services])
-
-   useEffect(()=>{
-      const remaining = calculateRemaining(paymmets, total);
-      setRemaining(remaining);
-   },[paymmets, total])
-   
+   const {tax, total} = calculateTaxTotal(services);
+   const remaining = calculateRemaining(payments, total);
    
    const editService = (service:any) => {
       setServiceFormData(service);
@@ -90,7 +88,7 @@ const ServicesBlock = (props:any) => {
                      }
                      return service;
                   });
-                  setServices(updatedServices);
+                  updateServices(updatedServices);
                   setModal(false);
                }
             })
@@ -105,7 +103,8 @@ const ServicesBlock = (props:any) => {
          axiosClient.post(`appointment/service/${appointmentId}`, serviceFormData)
             .then((res:any) => {
                if(res.status === 200){
-                  setServices([...services, res.data.service]);
+                  services.push(res.data.service);
+                  updateServices(services);
                   setModal(false);
                }
             })
@@ -125,7 +124,7 @@ const ServicesBlock = (props:any) => {
       axiosClient.delete(`appointment/service/${appointmentId}/${serviceId}`)
          .then((res) => {
             if(res.status === 200){
-               setServices(services.filter((service) => service.id !== serviceId));
+               updateServices(services.filter((service) => service.id !== serviceId));
             }
          })
          .catch((err) => {
@@ -135,14 +134,6 @@ const ServicesBlock = (props:any) => {
          .finally(() => {
             setRemoveServiceStatus(0);
          });
-   }
-
-   const viewCurrency = (amount:number) => {
-      return amount.toLocaleString('en-US', {
-         style: 'currency',
-         currency: 'USD',
-         minimumFractionDigits: 2
-      });
    }
 
    return (
@@ -223,7 +214,7 @@ const ServicesBlock = (props:any) => {
                <table className="whitespace-nowrap">
                   <tbody className="dark:text-white-dark">
                      {
-                        paymmets.map((payment:any, index:number) => (
+                        payments.map((payment:any, index:number) => (
                            <tr key={index}>
                               <td>#{payment.id}</td>
                               <td>{moment(payment.created_at).format('MMM DD YYYY h:mm A')}</td>

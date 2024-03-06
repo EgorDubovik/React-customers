@@ -5,10 +5,13 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import axiosClient from '../../../../store/axiosClient';
 import { ButtonLoader } from '../../../../components/loading/ButtonLoader';
 import { SmallDangerLoader } from '../../../../components/loading/SmallCirculeLoader';
-const NotesBlock = (props:any) => {
+import { useAppointmentContext } from '../../../../context/AppointmentContext';
+const NotesBlock = () => {
    
-   const [notes, setNotes] = useState<any[]>(props.notes || []);
-   const appointmentId = props.appointmentId;
+   const {appointment, updateNotes} = useAppointmentContext();
+   
+   const notes = appointment?.notes;
+   const appointmentId = appointment?.id;
    const [newNote, setNewNote] = useState<string>('');
    const [loadingSaveNote, setLoadingSaveNote] = useState<boolean>(false);
    const [loadingRemoveNote, setLoadingRemoveNote] = useState<number>(0);
@@ -27,8 +30,9 @@ const NotesBlock = (props:any) => {
       axiosClient.post(`appointment/notes/${appointmentId}`, {text:newNote})
          .then((res) => {
             if(res.status === 200){
-               notes.unshift(res.data.note);
-               setNotes(notes);
+               notes?.unshift(res.data.note);
+               
+               updateNotes(notes || []);
                setNewNote('');
             }
          })
@@ -46,7 +50,8 @@ const NotesBlock = (props:any) => {
       axiosClient.delete(`appointment/notes/${appointmentId}/${noteId}`)
          .then((res) => {
             if(res.status === 200){
-               setNotes(notes.filter((note) => note.id !== noteId));
+               // setNotes(notes?.filter((note) => note.id !== noteId));
+               updateNotes(notes?.filter((note) => note.id !== noteId) || []);
             }
          })
          .catch((err) => {
@@ -69,9 +74,9 @@ const NotesBlock = (props:any) => {
             <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
                <table className="whitespace-nowrap">
                   <tbody className="dark:text-white">
-                     {notes.length === 0 && <div className='text-center dark:text-gray-700 text-gray-400 mt-4'>Create first note...</div> }
+                     {notes?.length === 0 && <div className='text-center dark:text-gray-700 text-gray-400 mt-4'>Create first note...</div> }
                      {
-                        notes.map((note:any, index:number) => (
+                        notes?.map((note:any, index:number) => (
                            <tr key={index}>
                               <td>
                                  <div className='creator dark:text-gray-600 text-gray-400'>

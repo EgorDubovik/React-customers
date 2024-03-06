@@ -15,7 +15,6 @@ const AppointmentsScheduler = (props:any) => {
    const blockHeight = props.blockHeight || 50;
    const onClickHandler = props.onClickHandler || null;
    const appointments = props.appointments || [];
-
    const [currentDate, setCurrentDate] = useState(moment(props.currentDate) || moment());
    const [appointmentForCurentDate, setAppointmentForCurentDate] = useState([]);
 
@@ -92,6 +91,7 @@ const AppointmentsScheduler = (props:any) => {
    }
 
    const fetchAppointments = (appointmentsGroup:any) => {
+      
       let returnAppointments:any = [];
       appointmentsGroup.forEach((group:any) => {
          const groupAppointments = group.appointments;
@@ -105,6 +105,7 @@ const AppointmentsScheduler = (props:any) => {
             returnAppointments.push(appointment);
          });
       });
+      
       return returnAppointments;
    }
 
@@ -117,6 +118,7 @@ const AppointmentsScheduler = (props:any) => {
    const timesArray = helper.getTimesArray();
    
    useEffect(() => {
+      
       let currentAppointments = getAppointmentsByCurrentDate(appointments);
       
       setAppointmentForCurentDate(currentAppointments);
@@ -124,9 +126,11 @@ const AppointmentsScheduler = (props:any) => {
 
    }, [currentDate]);
 
+   console.log('currentDate',appointmentForCurentDate);
    let groupedAppointment = groupAppointmentsByTime(appointmentForCurentDate);
-   
    let appointmentList = fetchAppointments(groupedAppointment);
+
+
    const prevWeekHandle = () => {
       if(viewType === 'week')
          setCurrentDate(currentDate.clone().subtract(1, 'week'));
