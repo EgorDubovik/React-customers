@@ -9,6 +9,14 @@ interface Payments{
   updated_at: string,
   company_id: number,
 }
+interface Techs{
+  id: number,
+  name: string,
+  color: string,
+  created_at: string,
+  updated_at: string,
+  company_id: number,
+}
 
 interface Appointment {
   id : number;
@@ -20,7 +28,7 @@ interface Appointment {
   services : any[];
   customer : any;
   address : any;
-  techs: any[];
+  techs: Techs[];
 }
 
 interface AppointmentContextType {

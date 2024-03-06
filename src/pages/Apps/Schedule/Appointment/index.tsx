@@ -1,23 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setPageTitle } from '../../../../store/themeConfigSlice';
-import { useParams, Link } from 'react-router-dom';
-import IconPencilPaper from '../../../../components/Icon/IconPencilPaper';
+import { useState } from 'react';
 import axiosClient from '../../../../store/axiosClient';
-import IconChecks from '../../../../components/Icon/IconChecks';
-import IconCreditCard from '../../../../components/Icon/IconCreditCard';
-import IconArrowBackward from '../../../../components/Icon/IconArrowBackward';
 import TechBlock from './TechBlock';
 import NotesBlock from './NotesBlock';
 import ServicesBlock from './ServicesBlock';
-import AppointmentsScheduler from '../../../../components/plugin/sheduler/AppointmentsScheduler';
-import moment from 'moment';
-import IconClock from '../../../../components/Icon/IconClock';
 import CustomerInfoBlock from './CustomerInfoBlock';
-import { ButtonLoader } from '../../../../components/loading/ButtonLoader';
 import {useAppointmentContext} from '../../../../context/AppointmentContext';
 import CalendarBlock from './CalendarBlock';
-
+import Header from './Header';
 interface SelectedAppointment{
    start: string;
    end: string;
@@ -28,27 +17,13 @@ interface SelectedAppointment{
 const Index = (props:any) => {
 
    const {appointment, setAppointment,updateStatus, updatePayments} = useAppointmentContext();
-   const [selectedAppointment, setSelectedAppointment] = useState<SelectedAppointment[]>(props.selectedAppointment || []);
    const [updateAppointmentLoading, setUpdateAppointmentLoading] = useState<boolean>(false);
-   
-   useEffect(() => {
-
-   }, []);
-
-   // useEffect(() => {
-      
-   //    if(appointment)
-         
-   //       setSelectedAppointment([
-   //          ...selectedAppointment,
-   //          {
-   //          'start': appointment?.start,
-   //          'end': appointment?.end,
-   //          'bg': appointment?.techs?.length > 0 ?  appointment?.techs[0].color : "#1565C0",
-   //          'title': appointment?.customer.name,
-   //       }]);
-   // }, [appointment]);
-   
+   const [modal, setModal] = useState(false);
+   const [paymentsLoading, setPaymentsLoading] = useState(false);
+   const patmentsType = ['Credit', 'Transfer', 'Check','Cash'];
+   const [selectedPaymentType, setSelectedPaymentType] = useState<number>(0);
+   const [typeOfAmount, setTypeOfAmount] = useState<string>('full');
+   const [amountPay, setAmountPay] = useState<number>(0);
    const handaleFinishOrActivateAppointment = () => {
       setUpdateAppointmentLoading(true);
       axiosClient.put(`appointment/${appointment?.id}/status`)
@@ -63,12 +38,22 @@ const Index = (props:any) => {
          });
    }
 
+   const setAmount = (type:string) => {
+
+      if(type === 'full'){
+         setTypeOfAmount('full');
+      } else if(type === 'deposit'){
+         setAmountPay(100);
+         setTypeOfAmount('deposit');
+      }
+   }
+
    const addPayment = () => {
       const newPayment = {
          id: 1,
          appointment_id: 1,
-         amount: 100,
-         payment_type: 'cash',
+         amount: amountPay,
+         payment_type: patmentsType[selectedPaymentType],
          created_at: '2021-08-30T11:00:00',
          updated_at: '2021-08-30T11:00:00',
          company_id: 1,
@@ -80,44 +65,7 @@ const Index = (props:any) => {
 
    return (
       <div>
-            <div className="flex gap-3 md:justify-end justify-around">
-               <div>
-                  {
-                     appointment?.status === 0 && 
-                     <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-primary h-full">
-                        {
-                           updateAppointmentLoading 
-                              ? <ButtonLoader/> 
-                              : <IconChecks />
-                        }
-                        <span className='ml-2'>Finish Appointment</span>
-                     </button>   
-                  }
-                  {
-                     appointment?.status === 1 && 
-                     <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-outline-dark h-full">
-                        {
-                           updateAppointmentLoading 
-                              ? <ButtonLoader/> 
-                              : <IconArrowBackward/>
-                        }
-                        <span className='ml-2'>Back to Active</span>
-                     </button>   
-                  }
-               </div>
-               <div>
-                  <button type="button" className="btn btn-primary h-full">
-                     <IconClock className='mr-2'/>
-                     Start job
-                  </button>
-               </div>
-               <div>
-                  <button type="button" className="btn btn-primary h-full" onClick={addPayment}>
-                     <IconCreditCard className='mr-2'/>
-                     Pay
-                  </button>
-               </div>
-            </div>
+            <Header />
             
             <div className='py-4'>
                <div className='grid grid-cols-1 md:grid-cols-4 gap-5'>
@@ -159,6 +107,7 @@ const Index = (props:any) => {
                   </div>
                </div>
             </div>
+            
          </div>
    );
 }
