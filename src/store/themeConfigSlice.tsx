@@ -30,6 +30,13 @@ const initialState = {
     semidark: localStorage.getItem('semidark') || themeConfig.semidark,
     rolesTitle:['', 'Admin','Technician', 'Dispatcher'],
     rolesColor:['', 'success','danger', 'info'],
+    user :{
+        id: 0,
+        name: 'unknown',
+        email: '',
+        phone: '',
+        role: [0],
+    }
     
 };
 
@@ -37,6 +44,10 @@ const themeConfigSlice = createSlice({
     name: 'auth',
     initialState: initialState,
     reducers: {
+        setUserInformation(state, { payload }) {
+            payload = payload || state.user;
+            state.user = payload;
+        },
         toggleTheme(state, { payload }) {
             payload = payload || state.theme; // light | dark | system
             localStorage.setItem('theme', payload);
@@ -97,6 +108,6 @@ const themeConfigSlice = createSlice({
     },
 });
 
-export const { toggleTheme, toggleMenu, toggleLayout, toggleRTL, toggleAnimation, toggleNavbar, toggleSemidark, toggleSidebar, setPageTitle } = themeConfigSlice.actions;
+export const { toggleTheme, toggleMenu, toggleLayout, toggleRTL, toggleAnimation, toggleNavbar, toggleSemidark, toggleSidebar, setPageTitle, setUserInformation } = themeConfigSlice.actions;
 
 export default themeConfigSlice.reducer;

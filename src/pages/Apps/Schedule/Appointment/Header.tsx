@@ -101,18 +101,6 @@ const Header = () => {
          .finally(() => {
             setPaymentsLoading(false);
          });
-         // const newPayment = {
-         //    id: 1,
-         //    appointment_id: 1,
-         //    amount: amountPay,
-         //    payment_type: patmentsType[selectedPaymentType],
-         //    created_at: '2021-08-30T11:00:00',
-         //    updated_at: '2021-08-30T11:00:00',
-         //    company_id: 1,
-         // }
-         // const payments = appointment?.payments;
-         // payments?.push(newPayment);
-         // updatePayments(payments || []);
       } else {
          console.error('Enter valid amount');
          setAmountPay(0);

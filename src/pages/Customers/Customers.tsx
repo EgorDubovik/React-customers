@@ -17,7 +17,7 @@ const Contacts = () => {
     const dispatch = useDispatch();
     
     useEffect(() => {
-        dispatch(setPageTitle('Contacts'));
+        dispatch(setPageTitle('Customers'));
     });
     const [addContactModal, setAddContactModal] = useState<any>(false);
 
@@ -45,17 +45,13 @@ const Contacts = () => {
     };
 
     const [search, setSearch] = useState<any>('');
-    const [customers, setCustomers] = useState<any>([
-        
-    ]);
-
+    const [customers, setCustomers] = useState<any>([]);
     const [filteredItems, setFilteredItems] = useState<any>(customers);
 
     useEffect(()=>{
       axiosClient.get('/customers')
          .then((res)=>{
             if(res.status == 200){
-                
                 setCustomers(res.data);
             }
          });

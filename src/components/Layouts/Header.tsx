@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { IRootState } from '../../store';
-import { toggleTheme, toggleSidebar } from '../../store/themeConfigSlice';
+import { toggleTheme, toggleSidebar, setUserInformation } from '../../store/themeConfigSlice';
 import { useSignOut } from 'react-auth-kit';
 
 import Dropdown from '../Dropdown';
@@ -21,6 +21,7 @@ import axiosClient from '../../store/axiosClient';
 
 const Header = () => {
 
+    const dispatch = useDispatch();
     
     const [user, setUser] = useState<any>({
         name: '',
@@ -35,11 +36,19 @@ const Header = () => {
 
 
     function loadHeadData(){
-        console.log('loadHeadData');
         axiosClient.get('/user')
         .then((res)=>{
             if(res.status == 200){
-                setUser(res.data);
+                console.log(res.data);
+                const user = {
+                    id : res.data.user.id,
+                    name: res.data.user.name,
+                    email: res.data.user.email,
+                    phone: res.data.user.phone,
+                    roles: res.data.user.rolesArray,
+                }
+                dispatch(setUserInformation(user));
+                // setUser(res.data);
             }
         });
     }
@@ -51,7 +60,7 @@ const Header = () => {
     }
 
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
-    const dispatch = useDispatch();
+    const userInformation = useSelector((state: IRootState) => state.themeConfig.user);
 
     
 
@@ -209,18 +218,18 @@ const Header = () => {
                                 offset={[0, 8]}
                                 placement="bottom-end"
                                 btnClassName="relative group block"
-                                button={<span className="flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-danger text-base">ED</span>}
+                                button={<span className="flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-danger text-base">{userInformation.name.split(' ').map((n:string) => n[0]).join('')}</span>}
                             >
                                 <ul className="text-dark dark:text-white-dark !py-0 w-[230px] font-semibold dark:text-white-light/90">
                                     <li>
                                         <div className="flex items-center px-4 py-4">
                                             <div className="ltr:pl-4 rtl:pr-4 truncate">
                                                 <h4 className="text-base">
-                                                    {user.name}
+                                                    {userInformation.name}
                                                     <span className="text-xs bg-success-light rounded text-success px-1 ltr:ml-2 rtl:ml-2">Admin</span>
                                                 </h4>
                                                 <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
-                                                    {user.email}
+                                                    {userInformation.email}
                                                 </button>
                                             </div>
                                         </div>

@@ -6,6 +6,8 @@ import axiosClient from '../../../../store/axiosClient';
 import { ButtonLoader } from '../../../../components/loading/ButtonLoader';
 import { SmallDangerLoader } from '../../../../components/loading/SmallCirculeLoader';
 import { useAppointmentContext } from '../../../../context/AppointmentContext';
+import { useSelector } from 'react-redux';
+import { IRootState } from '../../../../store';
 const NotesBlock = () => {
    
    const {appointment, updateNotes} = useAppointmentContext();
@@ -15,7 +17,8 @@ const NotesBlock = () => {
    const [newNote, setNewNote] = useState<string>('');
    const [loadingSaveNote, setLoadingSaveNote] = useState<boolean>(false);
    const [loadingRemoveNote, setLoadingRemoveNote] = useState<number>(0);
-
+   const userInformation = useSelector((state: IRootState) => state.themeConfig.user);
+   console.log(notes);
    const handleChange = (event:any) => {
       setNewNote(event.target.value);
       const rowCount = (event.target.value.match(/\n/g) || []).length + 1;
@@ -50,7 +53,7 @@ const NotesBlock = () => {
       axiosClient.delete(`appointment/notes/${appointmentId}/${noteId}`)
          .then((res) => {
             if(res.status === 200){
-               // setNotes(notes?.filter((note) => note.id !== noteId));
+               
                updateNotes(notes?.filter((note) => note.id !== noteId) || []);
             }
          })
@@ -76,6 +79,7 @@ const NotesBlock = () => {
                   <tbody className="dark:text-white">
                      {notes?.length === 0 && <div className='text-center dark:text-gray-700 text-gray-400 mt-4'>Create first note...</div> }
                      {
+                        
                         notes?.map((note:any, index:number) => (
                            <tr key={index}>
                               <td>
@@ -90,7 +94,8 @@ const NotesBlock = () => {
                                  <div className='text-right'>
                                     {
                                        loadingRemoveNote === note.id ? <SmallDangerLoader />
-                                       : 
+                                       :
+                                       note.creator_id === userInformation.id &&
                                        <button onClick={()=>handleRemoveNote(note.id)} type="button" className='ml-4'>
                                           <IconTrashLines />
                                        </button>
