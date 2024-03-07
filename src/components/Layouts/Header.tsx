@@ -39,7 +39,6 @@ const Header = () => {
         axiosClient.get('/user')
         .then((res)=>{
             if(res.status == 200){
-                console.log(res.data);
                 const user = {
                     id : res.data.user.id,
                     name: res.data.user.name,

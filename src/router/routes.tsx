@@ -8,10 +8,11 @@ import DefaultLayout from '../components/Layouts/DefaultLayout';
 import BlankLayout from '../components/Layouts/BlankLayout';
 import AuthPrivetRoute from '../middleware/AuthPrivetRoute';
 import Customers from '../pages/Customers/Customers';
-import Services from '../pages/Customers/Services';
+import Services from '../pages/Services/Services';
 import Schedule from '../pages/Apps/Schedule/Schedule';
 import Appointment from '../pages/Apps/Schedule/Appointment';
 import Error404 from '../pages/Pages/Error404';
+import CreateCustomer from '../pages/Customers/CreateCustomer';
 
 
 const routes = [
@@ -31,6 +32,10 @@ const routes = [
             {
                 path: '/customers',
                 element : <DefaultLayout> <Customers /></DefaultLayout>,
+            },
+            {
+                path: '/customers/create',
+                element : <DefaultLayout> <CreateCustomer /></DefaultLayout>,
             },
             {
                 path: '/services',

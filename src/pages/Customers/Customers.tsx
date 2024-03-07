@@ -12,10 +12,11 @@ import IconX from '../../components/Icon/IconX';
 import env from '../../store/env';
 import Cookies from 'universal-cookie';
 import axiosClient from '../../store/axiosClient';
+import { useNavigate } from 'react-router-dom';
 
 const Contacts = () => {
     const dispatch = useDispatch();
-    
+    const navigator = useNavigate();
     useEffect(() => {
         dispatch(setPageTitle('Customers'));
     });
@@ -28,16 +29,8 @@ const Contacts = () => {
       setViewType(type);
     }
 
-    const changeValue = (e: any) => {
-        
-    };
-
-    const saveUser = () => {
-        
-    };
-
-    const editUser = (user: any = null) => {
-      setAddContactModal(true);
+    const addNewCustomer = () => {
+        navigator('/customers/create');
     };
 
     const deleteUser = (user: any = null) => {
@@ -87,7 +80,7 @@ const Contacts = () => {
                 <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                     <div className="flex gap-3">
                         <div>
-                            <button type="button" className="btn btn-primary" onClick={() => editUser()}>
+                            <button type="button" className="btn btn-primary" onClick={() => addNewCustomer()}>
                                 <IconUserPlus className="ltr:mr-2 rtl:ml-2" />
                                 Add Customer
                             </button>
@@ -176,7 +169,7 @@ const Contacts = () => {
                 </div>
             )}
 
-            <Transition appear show={addContactModal} as={Fragment}>
+            {/* <Transition appear show={addContactModal} as={Fragment}>
                 <Dialog as="div" open={addContactModal} onClose={() => setAddContactModal(false)} className="relative z-[51]">
                     <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
                         <div className="fixed inset-0 bg-[black]/60" />
@@ -246,7 +239,7 @@ const Contacts = () => {
                         </div>
                     </div>
                 </Dialog>
-            </Transition>
+            </Transition> */}
         </div>
     );
 };
