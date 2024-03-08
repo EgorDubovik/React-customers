@@ -42,11 +42,16 @@ const ServicesBlock = (props:any) => {
    const {appointment, updateServices} = useAppointmentContext();
    const payments = appointment?.payments || [];
    const services = appointment?.services || [];
-   const [serviceFormData, setServiceFormData] = useState<any>({});
+   const [serviceFormData, setServiceFormData] = useState<any>({
+      title:'',
+      description:'',
+      price:'',
+      taxable:true
+   });
    const [modal, setModal] = useState(false);
    const [removeServiceStatus, setRemoveServiceStatus] = useState(0);
    const [serviceFormLoading, setServiceFormLoading] = useState(false);
-   const appointmentId = props.appointmentId || 0;
+   const appointmentId = appointment?.id;
    const priceInputRef = useRef<HTMLInputElement>(null);
 
    const {tax, total} = calculateTaxTotal(services);

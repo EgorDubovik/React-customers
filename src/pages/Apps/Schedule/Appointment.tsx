@@ -12,7 +12,7 @@ const Appointment = () => {
    const [appointment, setAppointment] = useState<any>({});
    const dispatch = useDispatch();
    const [loadingStatus, setLoadingStatus] = useState<string>('loading');
-   const [selectedAppointment, setSelectedAppointment] = useState<any[]>([]);
+   
 
    useEffect(() => {
       dispatch(setPageTitle('Appointment'));
@@ -25,14 +25,6 @@ const Appointment = () => {
       axiosClient.get(`/appointment/${id}`)
          .then((res) => {
             
-            const selectedAppointment = {
-               'start': res.data.appointment.start,
-               'end': res.data.appointment.end,
-               'bg': res.data.appointment.techs.length > 0 ?  res.data.appointment.techs[0].color : "#1565C0",
-               'title': res.data.appointment.customer.name,
-            }
-            
-            setSelectedAppointment([selectedAppointment]);
             let appointment = res.data.appointment;
             appointment.start = moment(appointment.start);
             appointment.end = moment(appointment.end);
@@ -60,7 +52,7 @@ const Appointment = () => {
          {loadingStatus === 'success' 
             && 
             <AppointmentProvider appointmentData={appointment}>
-               <Index selectedAppointment={selectedAppointment}/>
+               <Index/>
             </AppointmentProvider>
          }
       </div>

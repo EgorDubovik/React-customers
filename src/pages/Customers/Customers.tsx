@@ -58,6 +58,10 @@ const Contacts = () => {
         });
     }, [search, customers]);    
 
+    const editUser = (customer: any = null) => {
+        navigator('/customer/'+customer.id);
+    }
+
     const showMessage = (msg = '', type = 'success') => {
         const toast: any = Swal.mixin({
             toast: true,

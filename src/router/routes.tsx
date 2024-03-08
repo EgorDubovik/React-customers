@@ -13,6 +13,8 @@ import Schedule from '../pages/Apps/Schedule/Schedule';
 import Appointment from '../pages/Apps/Schedule/Appointment';
 import Error404 from '../pages/Pages/Error404';
 import CreateCustomer from '../pages/Customers/CreateCustomer';
+import Create from '../pages/Invoice/Create';
+import Update from '../pages/Customers/Update';
 
 
 const routes = [
@@ -30,8 +32,20 @@ const routes = [
                 element : <DefaultLayout> <Schedule /></DefaultLayout>,
             },
             {
+                path: '/appointment/:id',
+                element : <DefaultLayout> <Appointment /></DefaultLayout>,
+            },
+            {
+                path: 'invoice/send/:appointmentId',
+                element : <DefaultLayout> <Create /></DefaultLayout>,
+            },
+            {
                 path: '/customers',
                 element : <DefaultLayout> <Customers /></DefaultLayout>,
+            },
+            {
+                path: '/customer/:id',
+                element : <DefaultLayout> <Update /></DefaultLayout>,
             },
             {
                 path: '/customers/create',
@@ -41,10 +55,7 @@ const routes = [
                 path: '/services',
                 element : <DefaultLayout> <Services /></DefaultLayout>,
             },
-            {
-                path: '/appointment/:id',
-                element : <DefaultLayout> <Appointment /></DefaultLayout>,
-            },
+            
             
         ]
     },
