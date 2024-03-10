@@ -15,6 +15,7 @@ import Error404 from '../pages/Pages/Error404';
 import CreateCustomer from '../pages/Customers/CreateCustomer';
 import Create from '../pages/Invoice/Create';
 import Update from '../pages/Customers/Update';
+import Invoices from '../pages/Invoice/Invoices';
 
 
 const routes = [
@@ -38,6 +39,10 @@ const routes = [
             {
                 path: 'invoice/send/:appointmentId',
                 element : <DefaultLayout> <Create /></DefaultLayout>,
+            },
+            {
+                path:'invoices',
+                element : <DefaultLayout> <Invoices /></DefaultLayout>,
             },
             {
                 path: '/customers',

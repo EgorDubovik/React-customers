@@ -1,0 +1,150 @@
+import { Link, NavLink } from 'react-router-dom';
+import { DataTable, DataTableSortStatus } from 'mantine-datatable';
+import { useState, useEffect } from 'react';
+import sortBy from 'lodash/sortBy';
+import { useDispatch, useSelector } from 'react-redux';
+import { IRootState } from '../../store';
+import { setPageTitle } from '../../store/themeConfigSlice';
+import IconTrashLines from '../../components/Icon/IconTrashLines';
+import IconPlus from '../../components/Icon/IconPlus';
+import IconEdit from '../../components/Icon/IconEdit';
+import IconEye from '../../components/Icon/IconEye';
+import moment from 'moment';
+import axiosClient from '../../store/axiosClient';
+
+const Invoice = () => {
+   const dispatch = useDispatch();
+   useEffect(() => {
+      dispatch(setPageTitle('Invoice List'));
+   });
+   const [items, setItems] = useState([]);
+
+   const [page, setPage] = useState(1);
+   const [totalRecords, setTotalRecords] = useState(0);
+   const PAGE_SIZES = [10, 20, 30, 50, 100];
+   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
+   const [initialRecords, setInitialRecords] = useState(sortBy(items, 'invoice'));
+   const [records, setRecords] = useState(initialRecords);
+
+   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
+      columnAccessor: 'firstName',
+      direction: 'asc',
+   });
+
+   useEffect(() => {
+      setPage(1);
+      /* eslint-disable react-hooks/exhaustive-deps */
+   }, [pageSize]);
+
+   useEffect(() => {
+      const from = (page - 1) * pageSize;
+      const to = from + pageSize;
+      setRecords([...initialRecords.slice(from, to)]);
+   }, [page, pageSize, initialRecords]);
+
+   useEffect(() => {
+      const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
+      setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
+      setPage(1);
+   }, [sortStatus]);
+
+   // load Ivocies
+   useEffect(() => {
+      axiosClient.get('invoice?page='+page+"&limit="+pageSize)
+      .then((res) => {
+         console.log(res.data.invoices);
+         setInitialRecords(res.data.invoices.data);
+         setTotalRecords(res.data.invoices.total);
+      })
+      .catch((err) => {
+         console.log(err);
+      });
+
+   }, [page, pageSize]);
+
+   return (
+      <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
+         <div className="invoice-table">
+            <div className="datatables pagination-padding">
+               <DataTable
+                  className="whitespace-nowrap table-hover invoice-table"
+                  records={records}
+                  columns={[
+                        {
+                           accessor: 'invoice',
+                           sortable: true,
+                           render: ({ id }) => (
+                              <NavLink to="/apps/invoice/preview">
+                                 <div className="text-primary underline hover:no-underline font-semibold">{`#Invoice${id}`}</div>
+                              </NavLink>
+                           ),
+                        },
+                        // {
+                        //    accessor: 'appointment',
+                        //    sortable: true,
+                        //    render: ({ appointment }) => (
+                        //       <NavLink to="/apps/invoice/preview">
+                        //          <div className="text-primary underline hover:no-underline font-semibold">{`#${appointment.id}`}</div>
+                        //       </NavLink>
+                        //    ),
+                        // },
+                        {
+                           accessor: 'name',
+                           sortable: true,
+                           render: ({ customer_name, customer_id }) => (
+                              <div className="flex items-center font-semibold">  
+                                    <div>{customer_name} ({customer_id})</div>
+                              </div>
+                           ),
+                        },
+                        {
+                           accessor: 'email',
+                           sortable: true,
+                        },
+                        {
+                           accessor: 'date',
+                           sortable: true,
+                           render: ({ date }) => (
+                              <div className="font-semibold">{moment(date).format('MMMM Do YYYY, h:mm:ss a')}</div>
+                           ),
+                        },
+                        {
+                           accessor: 'amount',
+                           sortable: true,
+                           titleClassName: 'text-left',
+                           render: ({ amount, id }) => <div className="text-left font-semibold">{`$${amount}`}</div>,
+                        },
+                        {
+                           accessor: 'action',
+                           title: 'Actions',
+                           sortable: false,
+                           textAlignment: 'center',
+                           render: ({ id }) => (
+                              <div className="flex gap-4 items-center w-max mx-auto">
+                                    
+                                    <NavLink to="/apps/invoice/preview" className="flex hover:text-primary">
+                                       <IconEye />
+                                    </NavLink>
+                                   
+                              </div>
+                           ),
+                        },
+                  ]}
+                  highlightOnHover
+                  totalRecords={totalRecords}
+                  recordsPerPage={pageSize}
+                  page={page}
+                  onPageChange={(p) => setPage(p)}
+                  recordsPerPageOptions={PAGE_SIZES}
+                  onRecordsPerPageChange={setPageSize}
+                  sortStatus={sortStatus}
+                  onSortStatusChange={setSortStatus}
+                  paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+               />
+            </div>
+         </div>
+      </div>
+    );
+};
+
+export default Invoice;
