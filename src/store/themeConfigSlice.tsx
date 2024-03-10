@@ -36,7 +36,9 @@ const initialState = {
         email: '',
         phone: '',
         role: [0],
-    }
+    },
+    
+    
     
 };
 
