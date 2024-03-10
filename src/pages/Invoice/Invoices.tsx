@@ -25,7 +25,7 @@ const Invoice = () => {
    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
    const [initialRecords, setInitialRecords] = useState(sortBy(items, 'invoice'));
    const [records, setRecords] = useState(initialRecords);
-
+   const [loadingStatus, setLoadingStatus] = useState('loading');
    const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
       columnAccessor: 'firstName',
       direction: 'asc',
@@ -50,15 +50,18 @@ const Invoice = () => {
 
    // load Ivocies
    useEffect(() => {
+      setLoadingStatus('loading');
       axiosClient.get('invoice?page='+page+"&limit="+pageSize)
       .then((res) => {
          console.log(res.data.invoices);
          setInitialRecords(res.data.invoices.data);
          setTotalRecords(res.data.invoices.total);
+         setLoadingStatus('succsess');
       })
       .catch((err) => {
+         setLoadingStatus('error');
          console.log(err);
-      });
+      })
 
    }, [page, pageSize]);
 
@@ -66,6 +69,18 @@ const Invoice = () => {
       <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
          <div className="invoice-table">
             <div className="datatables pagination-padding">
+               {loadingStatus === 'loading' && <div className='text-center mt-10'><span className="animate-spin border-4 border-primary border-l-transparent rounded-full w-10 h-10 inline-block align-middle m-auto mb-10"></span></div>}
+               {loadingStatus === 'error' && 
+                  <div>
+                     <div className="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light">
+                        <span className="ltr:pr-2 rtl:pl-2">
+                           <strong className="ltr:mr-1 rtl:ml-1">Woops!</strong>Something went wrong. Please try again or <a href="" onClick={()=>{window.location.reload(); }} className="underline">reload the page</a>
+                        </span>
+                     </div>
+                  </div>
+               }
+               {loadingStatus === 'succsess' && 
+               (
                <DataTable
                   className="whitespace-nowrap table-hover invoice-table"
                   records={records}
@@ -141,6 +156,7 @@ const Invoice = () => {
                   onSortStatusChange={setSortStatus}
                   paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
                />
+               )}
             </div>
          </div>
       </div>
