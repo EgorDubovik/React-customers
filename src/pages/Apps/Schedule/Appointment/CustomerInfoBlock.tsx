@@ -15,7 +15,7 @@ const CustomerInfoBlock = (props:any) => {
       <div className="panel p-0">
          <div className="flex items-center justify-between p-4">
                <h3 className="font-semibold text-lg dark:text-white-light">Customer</h3>
-               <Link to={"/customer/"+(customer.id ?? 0)} className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
+               <Link to={"/customer/"+(customer.id ?? 0)+"?redirectTo="+window.location.pathname} className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
                   <IconPencilPaper className='w-4 h-4'/>
                </Link>
          </div>

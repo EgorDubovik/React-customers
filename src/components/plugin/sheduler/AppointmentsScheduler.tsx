@@ -163,7 +163,7 @@ const AppointmentsScheduler = (props:any) => {
             <div className="scheduler-body">
                <div className="scheduler-weekdays flex pt-4 pb-4 border-b dark:border-gray-600 border-gray-300">
                   <div className="first-item w-10"></div>
-                  <div className={"weekdays text-center grid grid-cols-"+daysArray.length+" w-full"}>
+                  <div key={daysArray.length} className={"weekdays text-center grid grid-cols-"+daysArray.length+" w-full"}>
                      {daysArray.map((day:string, index:number) => (
                         <div key={index} className="weekday">{day}</div>
                      ))}

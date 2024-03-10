@@ -40,10 +40,10 @@ const Schedule = () => {
           // Check window width and update viewType state accordingly
           
           if (window.innerWidth < 768) {
-            console.log('day');
+            
             setViewType('day');
           } else {
-            console.log('week');
+            
             setViewType('week');
           }
         };

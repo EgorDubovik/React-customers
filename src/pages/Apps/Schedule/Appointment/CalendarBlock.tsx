@@ -11,7 +11,8 @@ const CalendarBlock = () => {
       {
          'start': appointment?.start,
          'end': appointment?.end,
-         'bg': appointment?.techs?.length > 0 ?  appointment?.techs[0].color : "#1565C0",
+         'addClass' : appointment?.status === 0 ? 'text-white' : 'text-gray-600',
+         'bg':appointment?.status === 0 ? appointment?.techs?.length > 0 ?  appointment?.techs[0].color : "#1565C0" : "#ccc",
          'title': appointment?.customer.name,
       }
    ];

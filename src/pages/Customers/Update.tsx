@@ -170,7 +170,10 @@ const Update = () => {
       setLoading(true);
       axiosClient.put('/customers/'+customerId, customer)
          .then(res => {
-            navigate('/customers');
+            const queryParams = new URLSearchParams(window.location.search);
+            const redirectTo = queryParams.get('redirectTo');
+            if(redirectTo) navigate(redirectTo);
+            else navigate('/customers');
          })
          .catch(err => {
             setError(true);

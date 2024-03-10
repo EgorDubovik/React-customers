@@ -105,7 +105,7 @@ const Grids = (props:any) => {
                            return (
                               <div key={appointment.title+"-"+aindex+appointment.top} onMouseDown={(e)=>{handleMouseDown(e,aindex)}}  className={"appointment text-[.8em]  absolute p-[2px] cursor-pointer"} style={{ height: appointment.height+'%', width: appointment.width+'%', left: appointment.left+'%', top: appointment.top+'%' }}>
                                  <div className={"appointment-conteiner rounded absolute"} style={{ background:appointment.bg,inset:'1px',opacity:appointment.opacity ?? 0.8 }}></div>
-                                 <div className='text-white sticky'>
+                                 <div className={(appointment.addClass ?? "")+' sticky font-bold'}>
                                     <div className="appointment-title px-2 pt-1 hover:underline " onClick={()=>{onAppointmentClick(appointment)}}>{appointment.title}</div>
                                     <div className="appointment-time px-2">{appointment.start.format('hh:mm A')} - {appointment.end.format('hh:mm A')}</div>
                                  </div>

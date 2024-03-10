@@ -7,60 +7,11 @@ import CustomerInfoBlock from './CustomerInfoBlock';
 import {useAppointmentContext} from '../../../../context/AppointmentContext';
 import CalendarBlock from './CalendarBlock';
 import Header from './Header';
-interface SelectedAppointment{
-   start: string;
-   end: string;
-   bg: string;
-   title: string;
-}
+
 
 const Index = () => {
 
    const {appointment, setAppointment,updateStatus, updatePayments} = useAppointmentContext();
-   const [updateAppointmentLoading, setUpdateAppointmentLoading] = useState<boolean>(false);
-
-   const patmentsType = ['Credit', 'Transfer', 'Check','Cash'];
-   const [selectedPaymentType, setSelectedPaymentType] = useState<number>(0);
-   const [typeOfAmount, setTypeOfAmount] = useState<string>('full');
-   const [amountPay, setAmountPay] = useState<number>(0);
-   const handaleFinishOrActivateAppointment = () => {
-      setUpdateAppointmentLoading(true);
-      axiosClient.put(`appointment/${appointment?.id}/status`)
-         .then((res) => {
-            updateStatus(appointment?.status === 0 ? 1 : 0);
-         })
-         .catch((err) => {
-            console.log(err);
-         })
-         .finally(() => {
-            setUpdateAppointmentLoading(false);
-         });
-   }
-
-   const setAmount = (type:string) => {
-
-      if(type === 'full'){
-         setTypeOfAmount('full');
-      } else if(type === 'deposit'){
-         setAmountPay(100);
-         setTypeOfAmount('deposit');
-      }
-   }
-
-   const addPayment = () => {
-      const newPayment = {
-         id: 1,
-         appointment_id: 1,
-         amount: amountPay,
-         payment_type: patmentsType[selectedPaymentType],
-         created_at: '2021-08-30T11:00:00',
-         updated_at: '2021-08-30T11:00:00',
-         company_id: 1,
-      }
-      const payments = appointment?.payments;
-      payments?.push(newPayment);
-      updatePayments(payments || []);
-   }
 
    return (
       <div>
