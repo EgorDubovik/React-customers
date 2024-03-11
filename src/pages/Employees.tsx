@@ -11,6 +11,10 @@ import axiosClient from '../store/axiosClient';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../store';
+import Dropdown from '../components/Dropdown';
+import IconHorizontalDots from '../components/Icon/IconHorizontalDots';
+import IconPencilPaper from '../components/Icon/IconPencilPaper';
+import IconTrashLines from '../components/Icon/IconTrashLines';
 const getTechAbr = (name:string) => {
    return name.split(' ').map((n:string) => n[0]).join('');
 }
@@ -63,8 +67,12 @@ const Employees = () => {
       });
    }, [search, employees]);    
 
-   const editUser = (customer: any = null) => {
+   const editEmployee = (employee: any = null) => {
       
+   }
+
+   const deleteEmployee = (employee: any = null) => {
+         
    }
 
    const showMessage = (msg = '', type = 'success') => {
@@ -154,10 +162,10 @@ const Employees = () => {
                                           
                                           {user.roles.includes(1) && (
                                              <div className="flex gap-4 items-center justify-center">
-                                                <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => editUser(employee)}>
+                                                <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => editEmployee(employee)}>
                                                    Edit
                                                 </button>
-                                                <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteUser(employee)}>
+                                                <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteEmployee(employee)}>
                                                    Delete
                                                 </button>
                                              </div>
@@ -172,25 +180,60 @@ const Employees = () => {
                 </div>
             )}
 
-            {/*{viewType === 'grid' && (
+            {viewType === 'grid' && (
                 <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 mt-5 w-full">
-                    {filteredItems.map((customer: any) => {
+                    {filteredItems.map((employee: any) => {
                         return (
-                            <div className="bg-white dark:bg-[#1a294166] rounded-md overflow-hidden shadow" key={customer.id}>
-                                 <div className="p-2">
-                                    <div className='user-info flex'>
-                                       
-                                       <div className='user-name w-3/4 font-bold dark:text-white'>{customer.name}</div>
-                                    </div>
-                                    <div className='user-address mt-3 ml-1'>
-                                       {customer.address[0].full}
+                            <div className="bg-white dark:bg-[#1a294166] rounded-md shadow" key={employee.id}>
+                                 <div className="p-4">
+                                    <div className='flex items-center relative'>
+                                       <div className='absolute top-0 right-0 z-10'>
+                                          <div className="dropdown">
+                                             <Dropdown
+                                                offset={[0, 5]}
+                                                btnClassName="align-middle"
+                                                button={<IconHorizontalDots className="rotate-90 opacity-70" />}
+                                             >
+                                                <ul className="whitespace-nowrap">
+                                                   <li>
+                                                      <button type="button" onClick={() => editEmployee(employee)}>
+                                                            <IconPencilPaper className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                            Edit
+                                                      </button>
+                                                   </li>
+                                                   <li>
+                                                      <button type="button" onClick={() => deleteEmployee(employee)}>
+                                                            <IconTrashLines className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                            Delete
+                                                      </button>
+                                                   </li>
+                                                </ul>
+                                             </Dropdown>
+                                          </div>
+                                       </div>
+                                       <div className='avatar'><span className="flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-'bg-danger text-white" style={{ backgroundColor:employee.color }} >{getTechAbr(employee.name)}</span></div>
+                                       <div className='ml-2 w-full overflow-hidden'>
+                                          <div className='user-info'>
+                                             <div className='user-name w-full font-bold dark:text-white'>
+                                                {employee.name}
+                                                {
+                                                   employee.rolesArray.map((role:number, index:number) => (
+                                                      <span key={index} className={`badge badge-outline-${rolesColor[role]} ml-2 text-[10px]`}>{rolesTitle[role]}</span>
+                                                   ))
+                                                }
+                                             </div>
+                                          </div>
+                                          <div className='user-address mt-2 ml-1'>
+                                             {employee.phone}
+                                          </div>
+                                       </div>
                                     </div>
                                  </div>
                             </div>
                         );
                     })}
                 </div>
-            )} */}
+            )}
 
             {/* <Transition appear show={addContactModal} as={Fragment}>
                 <Dialog as="div" open={addContactModal} onClose={() => setAddContactModal(false)} className="relative z-[51]">
