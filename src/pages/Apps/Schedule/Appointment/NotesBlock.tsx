@@ -18,7 +18,6 @@ const NotesBlock = () => {
    const [loadingSaveNote, setLoadingSaveNote] = useState<boolean>(false);
    const [loadingRemoveNote, setLoadingRemoveNote] = useState<number>(0);
    const userInformation = useSelector((state: IRootState) => state.themeConfig.user);
-   console.log(notes);
    const handleChange = (event:any) => {
       setNewNote(event.target.value);
       const rowCount = (event.target.value.match(/\n/g) || []).length + 1;

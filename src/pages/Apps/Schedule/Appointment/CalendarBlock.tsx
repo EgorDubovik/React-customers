@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import { Link } from 'react-router-dom';
 import AppointmentsScheduler from '../../../../components/plugin/sheduler/AppointmentsScheduler';
 import IconPencilPaper from '../../../../components/Icon/IconPencilPaper';
 import { useAppointmentContext } from '../../../../context/AppointmentContext';
+import { use } from 'i18next';
 
 
 const CalendarBlock = () => {
    const {appointment} = useAppointmentContext();
+   
    const selectedAppointment = [
       {
          'start': appointment?.start,

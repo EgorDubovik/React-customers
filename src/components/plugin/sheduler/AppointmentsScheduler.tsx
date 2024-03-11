@@ -124,9 +124,9 @@ const AppointmentsScheduler = (props:any) => {
       setAppointmentForCurentDate(currentAppointments);
       setDaysArray(helper.getDaysArray());
 
-   }, [currentDate]);
+   }, [currentDate, appointments, viewType]);
 
-   console.log('currentDate',appointmentForCurentDate);
+   
    let groupedAppointment = groupAppointmentsByTime(appointmentForCurentDate);
    let appointmentList = fetchAppointments(groupedAppointment);
 

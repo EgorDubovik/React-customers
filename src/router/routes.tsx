@@ -16,6 +16,7 @@ import CreateCustomer from '../pages/Customers/CreateCustomer';
 import Create from '../pages/Invoice/Create';
 import Update from '../pages/Customers/Update';
 import Invoices from '../pages/Invoice/Invoices';
+import Employees from '../pages/Employees';
 
 
 const routes = [
@@ -59,6 +60,10 @@ const routes = [
             {
                 path: '/services',
                 element : <DefaultLayout> <Services /></DefaultLayout>,
+            },
+            {
+                path: '/employees',
+                element: <DefaultLayout> <Employees /></DefaultLayout>,
             },
             
             
