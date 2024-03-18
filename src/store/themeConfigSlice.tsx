@@ -36,6 +36,7 @@ const initialState = {
         email: '',
         phone: '',
         roles: [0],
+        color: '#ccc',
     },
     
     

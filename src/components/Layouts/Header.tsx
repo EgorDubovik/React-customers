@@ -45,6 +45,7 @@ const Header = () => {
                     email: res.data.user.email,
                     phone: res.data.user.phone,
                     roles: res.data.user.rolesArray,
+                    color: res.data.user.color,
                 }
                 dispatch(setUserInformation(user));
                 // setUser(res.data);
@@ -217,7 +218,7 @@ const Header = () => {
                                 offset={[0, 8]}
                                 placement="bottom-end"
                                 btnClassName="relative group block"
-                                button={<span className="flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-danger text-base">{userInformation.name.split(' ').map((n:string) => n[0]).join('')}</span>}
+                                button={<span className={`flex justify-center items-center w-10 h-10 text-center rounded-full object-cover text-base`} style={{ backgroundColor:userInformation.color }}>{userInformation.name.split(' ').map((n:string) => n[0]).join('')}</span>}
                             >
                                 <ul className="text-dark dark:text-white-dark !py-0 w-[230px] font-semibold dark:text-white-light/90">
                                     <li>

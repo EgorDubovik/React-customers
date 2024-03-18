@@ -17,6 +17,7 @@ import Create from '../pages/Invoice/Create';
 import Update from '../pages/Customers/Update';
 import Invoices from '../pages/Invoice/Invoices';
 import Employees from '../pages/Employees';
+import CreateAppointment from '../pages/Apps/Schedule/CreateAppointment';
 
 
 const routes = [
@@ -36,6 +37,10 @@ const routes = [
             {
                 path: '/appointment/:id',
                 element : <DefaultLayout> <Appointment /></DefaultLayout>,
+            },
+            {
+                path: 'appointment/create/:customerId',
+                element : <DefaultLayout> <CreateAppointment /></DefaultLayout>,
             },
             {
                 path: 'invoice/send/:appointmentId',
@@ -65,8 +70,6 @@ const routes = [
                 path: '/employees',
                 element: <DefaultLayout> <Employees /></DefaultLayout>,
             },
-            
-            
         ]
     },
     //Authentication

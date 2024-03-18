@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import AppointmentsScheduler from '../../../../components/plugin/sheduler/AppointmentsScheduler';
 import IconPencilPaper from '../../../../components/Icon/IconPencilPaper';
 import { useAppointmentContext } from '../../../../context/AppointmentContext';
-import { use } from 'i18next';
+import moment from 'moment';
 
 
 const CalendarBlock = () => {
@@ -27,6 +27,16 @@ const CalendarBlock = () => {
                <IconPencilPaper className='w-4 h-4'/>
             </Link>
          </div>
+         <div className=''>
+            <div className='dark:bg-white-dark/5 bg-gray-200 rounded'>
+               <div className='p-4'>
+                  <div className='flex justify-between items-center'>
+                     <h4 className='font-semibold dark:text-white-light'>{moment(appointment?.start).format('ddd, MMM DD')}</h4>
+                     <p className='font-semibold dark:text-white-light'>{moment(appointment?.start).format('hh:mm A')} - {moment(appointment?.end).format('hh:mm A')}</p>
+                  </div>
+               </div>
+            </div>
+         </div>
          <div className='hidden md:block'>
             
             <AppointmentsScheduler 
@@ -39,16 +49,7 @@ const CalendarBlock = () => {
                scheduleBgClass={'bg-none'}
             />
          </div>
-         <div className='md:hidden'>
-            <div className='dark:bg-gray-950 rounded'>
-               <div className='p-4'>
-                  <div className='flex justify-between items-center'>
-                     <h4 className='font-semibold dark:text-white-light'>{appointment?.start.format('ddd, MMM DD')}</h4>
-                     <p className='font-semibold dark:text-white-light'>{appointment?.start.format('hh:mm A')} - {appointment?.end.format('hh:mm A')}</p>
-                  </div>
-               </div>
-            </div>
-         </div>
+         
       </>
    );
 }
