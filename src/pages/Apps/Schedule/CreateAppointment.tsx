@@ -1,9 +1,13 @@
 import {useState, useEffect} from 'react';
 import { Link, useParams } from 'react-router-dom';
 import MyTimePicker from '../../../components/plugin/mytimepicker/src';
+import moment from 'moment';
 const CreateAppointment = () => {
+      const [timeFrom, setTimeFrom] = useState(new Date());
+      const [timeTo, setTimeTo] = useState(new Date().getTime() + 60*120*1000);
       const [formData, setFormData] = useState({
-         date: '',
+         dateFrom: timeFrom,
+         dateTo: timeTo,
          customerId: '',
          addressId: '',
          service: '',
@@ -40,11 +44,13 @@ const CreateAppointment = () => {
 
       const {customerId} = useParams();
       const onDateChange = (date:any) => {
-         console.log(date);
+         setTimeFrom(date);
+         setTimeTo(date.getTime() + 60*120*1000);
       }
       useEffect(() => {
          setFormData({...formData, ["customerId"]: customer?.id.toString()});
          setFormData({...formData, ["addressId"]: customer?.addresses[0].id.toString()});
+         
       }, []);
 
       return (
@@ -68,6 +74,22 @@ const CreateAppointment = () => {
                      </div>
                   </div>
                   <div className='mt-5'>
+                     <div className='mb-5 flex justify-center dark:bg-white-dark/10 rounded p-2'>
+                        <div className='w-1/2 timeFrom flex justify-center items-center cursor-pointer py-3 rounded dark:bg-black/25 dark:text-white'>
+                           <div>From:</div>
+                           <div className='ml-10 text-center'>
+                              <div>{moment(timeFrom).format('MMM DD')}</div>
+                              <div>{moment(timeFrom).format('hh:mm A')}</div>
+                           </div>
+                        </div>
+                        <div className='w-1/2 timeFrom flex justify-center items-center cursor-pointer py-3 rounded '>
+                           <div>To:</div>
+                           <div className='ml-4'>
+                              <div>{moment(timeTo).format('MMM DD')}</div>
+                              <div>{moment(timeTo).format('hh:mm A')}</div>   
+                           </div>
+                        </div>
+                     </div>
                      <MyTimePicker 
                         onDateChange={onDateChange}
                      />
