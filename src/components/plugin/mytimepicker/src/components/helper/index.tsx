@@ -1,4 +1,4 @@
-export const getHoursArray = (curentHour, is12AmPm) => {
+export const getHoursArray = (curentHour:any, is12AmPm:boolean) => {
       
    let hours12 = curentHour % 12;
    if (hours12 === 0) hours12 = 12;
@@ -30,7 +30,7 @@ export const getHoursArray = (curentHour, is12AmPm) => {
    return [...hours1, ...hours2,...hours1];
 }
 
-export const getMinutesArray = (currentMinute,step) => {
+export const getMinutesArray = (currentMinute:any,step:number) => {
    const arraySize = 60;
    const minutes = [];
    const halfSize = Math.floor(arraySize / 2);
@@ -53,7 +53,7 @@ export const getMinutesArray = (currentMinute,step) => {
 
 
 
-export const getDaysNameArray = (currentDay, daysBefore = 20, daysAfter = 19) => {
+export const getDaysNameArray = (currentDay:any, daysBefore = 20, daysAfter = 19) => {
    
    // const weekDaysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
    // const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -103,7 +103,7 @@ export const getDaysNameArray = (currentDay, daysBefore = 20, daysAfter = 19) =>
    return datesArray;
 }
 
-export const getFormatDate = (date) => {
+export const getFormatDate = (date:any) => {
    const weekDaysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
    const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -114,7 +114,7 @@ export const getFormatDate = (date) => {
    return `${dayOfWeekShort} ${monthShort} ${dayOfMonth}`;
 }
 
-export const getDateFromShortFormat = (date) => {
+export const getDateFromShortFormat = (date:any) => {
    const weekDaysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
    const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 

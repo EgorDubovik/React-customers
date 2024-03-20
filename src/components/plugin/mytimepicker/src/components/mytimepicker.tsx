@@ -7,9 +7,9 @@ import MinuteWheel from "./MinuteWheel";
 
 import {getDateFromShortFormat} from "./helper";
 
-const MyTimePicker = (props) => {
+const MyTimePicker = (props:any) => {
    
-   const onHourChange = (value) => {
+   const onHourChange = (value:any) => {
       if(params.is12AmPm){
          if(amPmLast === "PM")
             params.currentDate.setHours(value === 12 ? 12 : (value+12));
@@ -21,7 +21,7 @@ const MyTimePicker = (props) => {
       
       onDateChange();
    }
-   const onMinuteChange = (value) => {
+   const onMinuteChange = (value:any) => {
       
       params.currentDate.setMinutes(value);
       onDateChange();
@@ -29,14 +29,14 @@ const MyTimePicker = (props) => {
 
    
 
-   const onDaysNameChange = (value) => {
+   const onDaysNameChange = (value:any) => {
       const { baseDate } = getDateFromShortFormat(value);
       params.currentDate.setDate(baseDate.getDate());
       params.currentDate.setMonth(baseDate.getMonth());
       onDateChange();
    }
 
-   const onAmPmChange = (value) => {
+   const onAmPmChange = (value:any) => {
       
       if(value === "PM"){
          console.log(params.currentDate.getHours());
@@ -77,8 +77,8 @@ const MyTimePicker = (props) => {
    const wrapperHeight = params.itemHeight * ((params.viewItems % 2 === 0) ? params.viewItems+1 : params.viewItems);
    
    return (
-      <div className="picker-conteiner">
-         <div className="picker-wrapper" style={{ border:"1px solid #ccc",height: wrapperHeight+"px" }}>
+      <div className="picker-conteiner dark:text-white text-[15px]">
+         <div className="picker-wrapper" style={{ height: wrapperHeight+"px" }}>
             <DaysNameWheel {...params}/>
             <Hour {...params}/>
             {params.dots && <div className="picker-dots">:</div>}

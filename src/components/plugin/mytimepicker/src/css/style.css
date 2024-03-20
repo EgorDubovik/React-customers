@@ -45,7 +45,7 @@
    left: 0;
    right: 0;
    height: 2px;
-   background-color: #ff58d9;
+   background-color: #810c66;
    opacity: 1;
 }
 .picker-wheel-middel-line::after{
@@ -55,7 +55,7 @@
    left: 0;
    right: 0;
    height: 2px;
-   background-color: #ff58d9;
+   background-color: #810c66;
    opacity: 1;
 }
 .picker-dots{
