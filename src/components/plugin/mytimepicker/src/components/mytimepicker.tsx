@@ -71,9 +71,6 @@ const MyTimePicker = (props:any) => {
       onAmPmChange: onAmPmChange,
    }
    const [amPmLast, setAmPmLast] = useState((params.currentDate.getHours() >= 12) ? "PM" : "AM");
-
-   
-
    const wrapperHeight = params.itemHeight * ((params.viewItems % 2 === 0) ? params.viewItems+1 : params.viewItems);
    
    return (
