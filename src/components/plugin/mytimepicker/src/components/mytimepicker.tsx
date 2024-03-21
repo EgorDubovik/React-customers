@@ -9,6 +9,8 @@ import {getDateFromShortFormat} from "./helper";
 
 const MyTimePicker = (props:any) => {
    
+   const [currentTime, setCurrentTime] = useState(props.currentDate || new Date());
+
    const onHourChange = (value:any) => {
       if(params.is12AmPm){
          if(amPmLast === "PM")
@@ -27,7 +29,6 @@ const MyTimePicker = (props:any) => {
       onDateChange();
    }
 
-   
 
    const onDaysNameChange = (value:any) => {
       const { baseDate } = getDateFromShortFormat(value);
@@ -59,7 +60,7 @@ const MyTimePicker = (props:any) => {
 
    const params = {
       itemHeight: 40,
-      currentDate: props.currentDate || new Date(),
+      currentDate: currentTime,
       viewItems: 3,
       is12AmPm: true,
       minutesStep: 15,

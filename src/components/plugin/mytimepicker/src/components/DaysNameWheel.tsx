@@ -4,7 +4,8 @@ import { getFormatDate } from "./helper";
 const DaysNameWheel =(props:any) =>{
    
    const itemHeight = props.itemHeight || 40;
-   const currentDate = props.currentDate || new Date();
+   const [currentDate,setCurrentDate] = useState(props.currentDate);
+   
    const viewItems = props.viewItems || 3;
    const onDaysNameChange = props.onDaysNameChange || null;
 
