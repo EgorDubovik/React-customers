@@ -8,35 +8,7 @@ import moment from 'moment'
 import { Dialog, Transition } from '@headlessui/react'
 import axiosClient from '../../../../store/axiosClient'
 import { useAppointmentContext } from '../../../../context/AppointmentContext'
-
-const calculateTaxTotal = (services:any) => {
-   let tax = 0;
-   let total = 0;
-   services.forEach((service:any) => {
-      const price = parseFloat(service.price);
-      total += price;
-      if(service.taxable) tax += (price * 0.0825);
-   });
-   total += tax;
-   return {tax, total};
-}
-
-const calculateRemaining = (payments:any, total:number) => {
-   const totalPaid = payments.reduce((acc:any, payment:any) => {
-      const amount = parseFloat(payment.amount);
-      return acc + amount;
-   }, 0);
-   const remaining = total - totalPaid;
-   return Math.round(remaining*100)/100;
-}
-
-const viewCurrency = (amount:number) => {
-   return amount.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-   });
-}
+import { calculateRemaining, calculateTaxTotal, viewCurrency } from '../../../../helpers/helper'
 
 const ServicesBlock = (props:any) => {
    const {appointment, updateServices} = useAppointmentContext();

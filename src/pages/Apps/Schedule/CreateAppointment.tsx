@@ -1,19 +1,13 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, Fragment} from 'react';
 import { Link, useParams } from 'react-router-dom';
 import MyTimePicker from '../../../components/plugin/mytimepicker/src';
 import moment from 'moment';
 import IconEdit from '../../../components/Icon/IconEdit';
 import IconPlus from '../../../components/Icon/IconPlus';
 import IconTrashLines from '../../../components/Icon/IconTrashLines';
+import { Dialog, Transition } from '@headlessui/react';
+import { calculateTaxTotal, viewCurrency } from '../../../helpers/helper';
 
-
-const viewCurrency = (amount:number) => {
-   return amount.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-   });
-}
 
 
 const CreateAppointment = () => {
@@ -30,18 +24,47 @@ const CreateAppointment = () => {
    const [timeTo, setTimeTo] = useState(new Date(new Date().getTime() + 60*120*1000));
    const [selectedTime, setSelectedTime] = useState('timeFrom');
    const [timeToIsSelected, setTimeToIsSelected] = useState(false);
-   const [services, setServices] = useState([]);
+   const [services, setServices] = useState<any[]>([]);
    const [tax, setTax] = useState(0);
    const [total, setTotal] = useState(0);
-   const [formData, setFormData] = useState({
-      dateFrom: timeFrom,
-      dateTo: timeTo,
-      customerId: '',
-      addressId: '',
-      service: '',
-      tech: '',
+
+
+   // Services...
+   const [modal, setModal] = useState(false);
+   const [serviceForm, setServiceForm] = useState({
+      id : 0,
+      title: '',
+      description: '',
+      price: '',
+      taxable: true,
    });
-   const customer = {
+   const serviceFormChangeHandler = (e:any) => {
+      if(e.target.name === 'price' && isNaN(e.target.value)) return;
+      if(e.target.name === 'taxable')
+         setServiceForm({...serviceForm, [e.target.name]: e.target.checked});
+      else 
+         setServiceForm({...serviceForm, [e.target.name]: e.target.value});
+   }
+   const handleSaveService = () => {
+      setServiceForm({...serviceForm, id: services.length+1});
+      setServices([...services, serviceForm]);
+      setModal(false);
+   }
+
+   const handleRemoveService = (id:number) => {
+      setServices(services.filter((service:any) => service.id !== id));
+   }
+
+   useEffect(() => {
+      const {tax, total} = calculateTaxTotal(services);
+      setTax(tax);
+      setTotal(total);
+   }, [services]);
+
+
+   // Load customer Info
+   const {customerId} = useParams();
+   const [customer, setCustomer] = useState<any>({
       id: 1,
       name: 'John Doe',
       phone: '+1 (754) 226-4666',
@@ -68,9 +91,12 @@ const CreateAppointment = () => {
             zip: '08901'
          }
       ]
-   }
+   });
 
-   const {customerId} = useParams();
+   useEffect(() => {
+            
+   }, []);
+
    const onTimeFromChanged = (date:any) => {
       setTimeFrom(new Date(date));
       if(!timeToIsSelected) 
@@ -82,20 +108,7 @@ const CreateAppointment = () => {
       setTimeTo(new Date(date));
    }
 
-   useEffect(() => {
-      
-      setFormData({...formData, ["customerId"]: customer?.id.toString()});
-      setFormData({...formData, ["addressId"]: customer?.addresses[0].id.toString()});
-      
-   }, []);
-
-   const handeCreateNewService = () => {
-
-   }
-
-   const handleRemoveService = (service:any) => {
-      setServices(services.filter((service:any) => service !== service));
-   }
+   
 
    return (
       <div>
@@ -193,7 +206,7 @@ const CreateAppointment = () => {
                         </table>
                      </div>
                      <div className='flex justify-center mt-4'>
-                        <span className='flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2' onClick={handeCreateNewService}>
+                        <span className='flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2' onClick={()=>setModal(true)}>
                            <IconPlus className='mr-2'/>
                            Add new Service
                         </span>
@@ -204,6 +217,72 @@ const CreateAppointment = () => {
                </div>
             </div>
          </div>
+         <Transition appear show={modal} as={Fragment}>
+            <Dialog 
+                  as="div" 
+                  open={modal} 
+                  onClose={() => setModal(false)}
+               
+               >
+               <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+               >
+                  <div className="fixed inset-0" />
+               </Transition.Child>
+               <div id="login_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                  <div className="flex items-start justify-center min-h-screen px-4">
+                     <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0 scale-95"
+                        enterTo="opacity-100 scale-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100 scale-100"
+                        leaveTo="opacity-0 scale-95"
+                     >
+                        <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-sm my-8 text-black dark:text-white-dark">
+                           <div className="flex items-center justify-between p-3 dark:text-white">
+                              <h5>Update Service</h5>
+                           </div>
+                           <div className="p-3">
+                                 <form>
+                                    <div className="relative mb-4">
+                                       <input type="text" placeholder="Title" className="form-input" name='title' onChange={serviceFormChangeHandler} value={serviceForm.title} />
+                                    </div>
+                                    <div className="relative mb-4">
+                                       <input type="text" placeholder='Price' className="form-input" pattern="\d*\.?\d*" name='price' onChange={serviceFormChangeHandler} value={serviceForm.price} />
+                                    </div>
+                                    <div className="relative mb-4">
+                                       <textarea placeholder="Description" className="form-textarea" name='description' onChange={serviceFormChangeHandler} value={serviceForm.description}></textarea>
+                                    </div>
+                                    <div className="relative mb-4">
+                                       <label className="inline-flex items-center text-sm">
+                                          <input type="checkbox" className="form-checkbox outline-primary" name='taxable' onChange={serviceFormChangeHandler} checked={serviceForm.taxable}  />
+                                          <span className=" text-white-dark">Taxable</span>
+                                       </label>
+                                    </div>
+                                    <div className="flex justify-end items-center mt-8">
+                                       <button type="button" onClick={() => setModal(false)} className="btn btn-outline-danger">
+                                          Discard
+                                       </button>
+                                       <button type="button" onClick={handleSaveService} className="btn btn-primary ltr:ml-4 rtl:mr-4">
+                                          Save
+                                       </button>
+                                    </div>
+                                 </form>
+                           </div>
+                        </Dialog.Panel>
+                     </Transition.Child>
+                  </div>
+               </div>
+            </Dialog>
+         </Transition>
       </div>
    );
 }
