@@ -3,6 +3,18 @@ import { Link, useParams } from 'react-router-dom';
 import MyTimePicker from '../../../components/plugin/mytimepicker/src';
 import moment from 'moment';
 import IconEdit from '../../../components/Icon/IconEdit';
+import IconPlus from '../../../components/Icon/IconPlus';
+import IconTrashLines from '../../../components/Icon/IconTrashLines';
+
+
+const viewCurrency = (amount:number) => {
+   return amount.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+   });
+}
+
 
 const CreateAppointment = () => {
    const getCurrentDate = () => {
@@ -18,7 +30,9 @@ const CreateAppointment = () => {
    const [timeTo, setTimeTo] = useState(new Date(new Date().getTime() + 60*120*1000));
    const [selectedTime, setSelectedTime] = useState('timeFrom');
    const [timeToIsSelected, setTimeToIsSelected] = useState(false);
-   // const [timePicker, setTimePicker] = useState(timeFrom);
+   const [services, setServices] = useState([]);
+   const [tax, setTax] = useState(0);
+   const [total, setTotal] = useState(0);
    const [formData, setFormData] = useState({
       dateFrom: timeFrom,
       dateTo: timeTo,
@@ -75,6 +89,14 @@ const CreateAppointment = () => {
       
    }, []);
 
+   const handeCreateNewService = () => {
+
+   }
+
+   const handleRemoveService = (service:any) => {
+      setServices(services.filter((service:any) => service !== service));
+   }
+
    return (
       <div>
          <div className="flex items-center justify-between flex-wrap gap-4">
@@ -125,6 +147,60 @@ const CreateAppointment = () => {
                      />
                   }
                   
+               </div>
+               <div className='mt-5'>
+                  <h2>Add services</h2>
+
+                  <div className="mt-5">
+                     <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
+                        <table className="whitespace-nowrap">
+                           <tbody className="dark:text-white">
+                              {
+                                 services.map((service:any, index:number) => (
+                                    <tr key={index}>
+                                       <td>{service.title}</td>
+                                       <td> {service.description} </td>
+                                       <td className="">{viewCurrency(parseFloat(service.price))}</td>
+                                       <td className="p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-right">
+                                          <div className='text-right'>
+                                             <button onClick={()=>handleRemoveService(service.id)} type="button">
+                                                <IconTrashLines />
+                                             </button>
+                                          </div>
+                                       </td>
+                                    </tr>
+                                 ))
+                              }
+                           </tbody>
+                        </table>
+                     </div>
+                     <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
+                        <table className="whitespace-nowrap text-right">
+                           <tbody className="dark:text-white-dark">
+                              <tr>
+                                 <td  style={{textAlign:'right'}}>Tax</td>
+                                 <td width={'20%'} className='text-danger'  style={{textAlign:'right'}}>
+                                    {viewCurrency(tax)} 
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td  style={{textAlign:'right'}}>TOTAL</td>
+                                 <td className='text-success'  style={{textAlign:'right'}}>
+                                    {viewCurrency(total)} 
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                     <div className='flex justify-center mt-4'>
+                        <span className='flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2' onClick={handeCreateNewService}>
+                           <IconPlus className='mr-2'/>
+                           Add new Service
+                        </span>
+                     </div>
+                     
+                  </div>
+
                </div>
             </div>
          </div>
