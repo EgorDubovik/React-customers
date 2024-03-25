@@ -1,0 +1,161 @@
+
+import IconTrashLines from '../../../../components/Icon/IconTrashLines';
+import IconPlus from '../../../../components/Icon/IconPlus';
+import { viewCurrency, calculateTaxTotal } from '../../../../helpers/helper';
+import { useState } from 'react';
+import { Fragment } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+
+const ServicesList = (props:any) => {
+
+   const isEditble = props.isEditble;
+   const { services, onRemoveService, onSaveService, onUpdateService } = props;
+   const { tax, total } = calculateTaxTotal(services);
+   const [modal, setModal] = useState(false);
+   const [serviceForm, setServiceForm] = useState(
+      {
+         id: '',
+         title:'', 
+         description:'', 
+         price:'', 
+         taxable:false
+      });
+   const serviceFormChangeHandler = (e:any) => {
+      if(e.target.name === 'price' && isNaN(e.target.value)) return;
+      if(e.target.name === 'taxable')
+         setServiceForm({...serviceForm, [e.target.name]: e.target.checked});
+      else 
+         setServiceForm({...serviceForm, [e.target.name]: e.target.value});
+   }
+
+   const handleSaveService = () => {
+      if(serviceForm.title === '' || serviceForm.price === '') return;
+      if(serviceForm.id === ''){
+         onSaveService(serviceForm);
+      }else{
+         onUpdateService(serviceForm);
+      }
+   }
+
+   const handleRemoveService = (id:number) => {
+      onRemoveService(id);
+   }
+   return (
+      <>
+         <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
+            <table className="whitespace-nowrap">
+               <tbody className="dark:text-white">
+                  {
+                     services.map((service:any, index:number) => (
+                        <tr key={index}>
+                           <td>{service.title}</td>
+                           <td> {service.description} </td>
+                           <td className="">{viewCurrency(parseFloat(service.price))}</td>
+                           <td className="p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-right">
+                              <div className='text-right'>
+                                 <button onClick={()=>handleRemoveService(service.id)} type="button">
+                                    <IconTrashLines />
+                                 </button>
+                              </div>
+                           </td>
+                        </tr>
+                     ))
+                  }
+               </tbody>
+            </table>
+         </div>
+         <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
+            <table className="whitespace-nowrap text-right">
+               <tbody className="dark:text-white-dark">
+                  <tr>
+                     <td  style={{textAlign:'right'}}>Tax</td>
+                     <td width={'20%'} className='text-danger'  style={{textAlign:'right'}}>
+                        {viewCurrency(tax)} 
+                     </td>
+                  </tr>
+                  <tr>
+                     <td  style={{textAlign:'right'}}>TOTAL</td>
+                     <td className='text-success'  style={{textAlign:'right'}}>
+                        {viewCurrency(total)} 
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div className='flex justify-center mt-4'>
+            <span className='flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2' onClick={()=>setModal(true)}>
+               <IconPlus className='mr-2'/>
+               Add new Service
+            </span>
+         </div>
+         <Transition appear show={modal} as={Fragment}>
+            <Dialog 
+                  as="div" 
+                  open={modal} 
+                  onClose={() => setModal(false)}
+               
+               >
+               <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+               >
+                  <div className="fixed inset-0" />
+               </Transition.Child>
+               <div id="login_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                  <div className="flex items-start justify-center min-h-screen px-4">
+                     <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0 scale-95"
+                        enterTo="opacity-100 scale-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100 scale-100"
+                        leaveTo="opacity-0 scale-95"
+                     >
+                        <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-sm my-8 text-black dark:text-white-dark">
+                           <div className="flex items-center justify-between p-3 dark:text-white">
+                              <h5>Update Service</h5>
+                           </div>
+                           <div className="p-3">
+                                 <form>
+                                    <div className="relative mb-4">
+                                       <input type="text" placeholder="Title" className="form-input" name='title' onChange={serviceFormChangeHandler} value={serviceForm.title} />
+                                    </div>
+                                    <div className="relative mb-4">
+                                       <input type="text" placeholder='Price' className="form-input" pattern="\d*\.?\d*" name='price' onChange={serviceFormChangeHandler} value={serviceForm.price} />
+                                    </div>
+                                    <div className="relative mb-4">
+                                       <textarea placeholder="Description" className="form-textarea" name='description' onChange={serviceFormChangeHandler} value={serviceForm.description}></textarea>
+                                    </div>
+                                    <div className="relative mb-4">
+                                       <label className="inline-flex items-center text-sm">
+                                          <input type="checkbox" className="form-checkbox outline-primary" name='taxable' onChange={serviceFormChangeHandler} checked={serviceForm.taxable}  />
+                                          <span className=" text-white-dark">Taxable</span>
+                                       </label>
+                                    </div>
+                                    <div className="flex justify-end items-center mt-8">
+                                       <button type="button" onClick={() => setModal(false)} className="btn btn-outline-danger">
+                                          Discard
+                                       </button>
+                                       <button type="button" onClick={handleSaveService} className="btn btn-primary ltr:ml-4 rtl:mr-4">
+                                          Save
+                                       </button>
+                                    </div>
+                                 </form>
+                           </div>
+                        </Dialog.Panel>
+                     </Transition.Child>
+                  </div>
+               </div>
+            </Dialog>
+         </Transition>
+      </>
+   );
+}
+
+export default ServicesList;

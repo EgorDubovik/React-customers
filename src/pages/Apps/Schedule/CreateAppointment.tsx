@@ -6,8 +6,10 @@ import IconEdit from '../../../components/Icon/IconEdit';
 import IconPlus from '../../../components/Icon/IconPlus';
 import IconTrashLines from '../../../components/Icon/IconTrashLines';
 import { Dialog, Transition } from '@headlessui/react';
-import { calculateTaxTotal, viewCurrency } from '../../../helpers/helper';
-
+import { calculateTaxTotal, viewCurrency, getTechAbr } from '../../../helpers/helper';
+import { useSelector } from 'react-redux';
+import { IRootState } from '../../../store';
+import ServicesList from './includes/ServicesList';
 
 
 const CreateAppointment = () => {
@@ -38,21 +40,27 @@ const CreateAppointment = () => {
       price: '',
       taxable: true,
    });
-   const serviceFormChangeHandler = (e:any) => {
-      if(e.target.name === 'price' && isNaN(e.target.value)) return;
-      if(e.target.name === 'taxable')
-         setServiceForm({...serviceForm, [e.target.name]: e.target.checked});
-      else 
-         setServiceForm({...serviceForm, [e.target.name]: e.target.value});
-   }
-   const handleSaveService = () => {
-      setServiceForm({...serviceForm, id: services.length+1});
-      setServices([...services, serviceForm]);
-      setModal(false);
-   }
+   // const serviceFormChangeHandler = (e:any) => {
+   //    if(e.target.name === 'price' && isNaN(e.target.value)) return;
+   //    if(e.target.name === 'taxable')
+   //       setServiceForm({...serviceForm, [e.target.name]: e.target.checked});
+   //    else 
+   //       setServiceForm({...serviceForm, [e.target.name]: e.target.value});
+   // }
+   // const handleSaveService = () => {
+   //    setServiceForm({...serviceForm, id: services.length+1});
+   //    setServices([...services, serviceForm]);
+   //    setModal(false);
+   // }
 
-   const handleRemoveService = (id:number) => {
+   const onRemoveService = (id:number) => {
       setServices(services.filter((service:any) => service.id !== id));
+   }
+   const onSaveService = (service:any) => {
+      console.log(service);
+      service.id = services.length+1;
+      setServices([...services, service]);
+      // setModal(false);  
    }
 
    useEffect(() => {
@@ -108,8 +116,14 @@ const CreateAppointment = () => {
       setTimeTo(new Date(date));
    }
 
+   // Techs
+   const [techs, setTechs] = useState<any[]>([]);
+   const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
+   const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
    
-
+   const removeTech = (techId:number) => {
+      setTechs(techs.filter((tech:any) => tech.id !== techId));
+   }
    return (
       <div>
          <div className="flex items-center justify-between flex-wrap gap-4">
@@ -165,7 +179,12 @@ const CreateAppointment = () => {
                   <h2>Add services</h2>
 
                   <div className="mt-5">
-                     <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
+                     <ServicesList
+                        services={services} 
+                        onRemoveService={onRemoveService}
+                        onSaveService={onSaveService}
+                     />
+                     {/* <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
                         <table className="whitespace-nowrap">
                            <tbody className="dark:text-white">
                               {
@@ -210,14 +229,52 @@ const CreateAppointment = () => {
                            <IconPlus className='mr-2'/>
                            Add new Service
                         </span>
-                     </div>
+                     </div> */}
                      
                   </div>
 
                </div>
+               <div className='mt-5'>
+                  <h2>Add Technical</h2>
+                  <div className="mt-5">
+                     <ul className='mt-2'>
+                        {
+                           techs.map((tech:any, index:number) => (
+                              <li key={index} className='p-2 mb-2 flex items-center dark:bg-gray-900 bg-gray-100 rounded'>
+                                 <div className='mr-2'>
+                                    <span className={"flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-'bg-danger text-white"} style={{ backgroundColor : tech.color }}>{getTechAbr(tech.name)}</span>
+                                 </div>
+                                 <div className="flex-grow ml-4">
+                                    <p className="font-semibold">{tech.name}</p>
+                                    <p className="font-semibold">{tech.phone}</p>
+                                 </div>
+                                 <div className='mr-4'>
+                                    {
+                                       tech.roles.map((role:any, roleIndex:number) => (
+                                          <span key={roleIndex} className={`badge badge-outline-${rolesColor[role.role]} ml-2`}>{rolesTitle[role.role]}</span>
+                                       ))
+                                    }
+                                 </div>
+                                 <div className=''>
+                                    <button type="button" onClick={()=>removeTech(tech.id)}>
+                                       <IconTrashLines />
+                                    </button>
+                                 </div>
+                              </li>
+                           ))
+                        }
+                     </ul>
+                     <div className='flex justify-center mt-4'>
+                        <span className={'flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2'} onClick={()=>setModal(true)}>
+                           <IconPlus className='mr-2'/>
+                           Add Tech
+                        </span>
+                     </div>
+                  </div>
+               </div>
             </div>
          </div>
-         <Transition appear show={modal} as={Fragment}>
+         {/* <Transition appear show={modal} as={Fragment}>
             <Dialog 
                   as="div" 
                   open={modal} 
@@ -282,7 +339,7 @@ const CreateAppointment = () => {
                   </div>
                </div>
             </Dialog>
-         </Transition>
+         </Transition> */}
       </div>
    );
 }

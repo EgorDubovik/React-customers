@@ -26,3 +26,6 @@ export const calculateRemaining = (payments:any, total:number) => {
    const remaining = total - totalPaid;
    return Math.round(remaining*100)/100;
 }
+export const getTechAbr = (name:string) => {
+   return name.split(' ').map((n:string) => n[0]).join('');
+}
