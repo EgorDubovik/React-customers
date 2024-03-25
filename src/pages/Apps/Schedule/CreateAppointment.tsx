@@ -40,18 +40,7 @@ const CreateAppointment = () => {
       price: '',
       taxable: true,
    });
-   // const serviceFormChangeHandler = (e:any) => {
-   //    if(e.target.name === 'price' && isNaN(e.target.value)) return;
-   //    if(e.target.name === 'taxable')
-   //       setServiceForm({...serviceForm, [e.target.name]: e.target.checked});
-   //    else 
-   //       setServiceForm({...serviceForm, [e.target.name]: e.target.value});
-   // }
-   // const handleSaveService = () => {
-   //    setServiceForm({...serviceForm, id: services.length+1});
-   //    setServices([...services, serviceForm]);
-   //    setModal(false);
-   // }
+   
 
    const onRemoveService = (id:number) => {
       setServices(services.filter((service:any) => service.id !== id));
@@ -60,7 +49,6 @@ const CreateAppointment = () => {
       console.log(service);
       service.id = services.length+1;
       setServices([...services, service]);
-      // setModal(false);  
    }
 
    useEffect(() => {

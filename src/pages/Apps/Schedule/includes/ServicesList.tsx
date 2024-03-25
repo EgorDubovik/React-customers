@@ -5,10 +5,12 @@ import { viewCurrency, calculateTaxTotal } from '../../../../helpers/helper';
 import { useState } from 'react';
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import {SmallDangerLoader} from '../../../../components/loading/SmallCirculeLoader';
 
 const ServicesList = (props:any) => {
 
    const isEditble = props.isEditble;
+   const [loadingRemove, setLoadingRemove] = useState(0);
    const { services, onRemoveService, onSaveService, onUpdateService } = props;
    const { tax, total } = calculateTaxTotal(services);
    const [modal, setModal] = useState(false);
@@ -38,6 +40,7 @@ const ServicesList = (props:any) => {
    }
 
    const handleRemoveService = (id:number) => {
+      setLoadingRemove(id);
       onRemoveService(id);
    }
    return (
@@ -53,9 +56,14 @@ const ServicesList = (props:any) => {
                            <td className="">{viewCurrency(parseFloat(service.price))}</td>
                            <td className="p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-right">
                               <div className='text-right'>
-                                 <button onClick={()=>handleRemoveService(service.id)} type="button">
-                                    <IconTrashLines />
-                                 </button>
+                                 {
+                                 loadingRemove === service.id 
+                                    ? <SmallDangerLoader/> 
+                                    : 
+                                       <button onClick={()=>handleRemoveService(service.id)} type="button">
+                                          <IconTrashLines />
+                                       </button>
+                                 }
                               </div>
                            </td>
                         </tr>
