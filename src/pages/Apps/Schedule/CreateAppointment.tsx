@@ -29,6 +29,7 @@ const CreateAppointment = () => {
    const [services, setServices] = useState<any[]>([]);
    const [tax, setTax] = useState(0);
    const [total, setTotal] = useState(0);
+   const [modalService, setModalService] = useState(false);
 
 
    // Services...
@@ -46,9 +47,10 @@ const CreateAppointment = () => {
       setServices(services.filter((service:any) => service.id !== id));
    }
    const onSaveService = (service:any) => {
-      console.log(service);
+      
       service.id = services.length+1;
       setServices([...services, service]);
+      setModalService(false);
    }
 
    useEffect(() => {
@@ -171,6 +173,8 @@ const CreateAppointment = () => {
                         services={services} 
                         onRemoveService={onRemoveService}
                         onSaveService={onSaveService}
+                        modal={modalService}
+                        setModal={setModalService}
                      />
                      {/* <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
                         <table className="whitespace-nowrap">

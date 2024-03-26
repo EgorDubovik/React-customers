@@ -1,6 +1,7 @@
 
 import IconTrashLines from '../../../../components/Icon/IconTrashLines';
 import IconPlus from '../../../../components/Icon/IconPlus';
+import IconPencil from '../../../../components/Icon/IconPencil';
 import { viewCurrency, calculateTaxTotal } from '../../../../helpers/helper';
 import { useState } from 'react';
 import { Fragment } from 'react';
@@ -11,17 +12,27 @@ const ServicesList = (props:any) => {
 
    const isEditble = props.isEditble;
    const [loadingRemove, setLoadingRemove] = useState(0);
-   const { services, onRemoveService, onSaveService, onUpdateService } = props;
+   const { services, onRemoveService, onSaveService, onUpdateService, modal, setModal } = props;
    const { tax, total } = calculateTaxTotal(services);
-   const [modal, setModal] = useState(false);
+   
    const [serviceForm, setServiceForm] = useState(
       {
          id: '',
          title:'', 
          description:'', 
          price:'', 
-         taxable:false
+         taxable:true
       });
+   const addNewService = () => {
+      setServiceForm({
+         id: '',
+         title:'', 
+         description:'', 
+         price:'', 
+         taxable:true
+      });
+      setModal(true);
+   }
    const serviceFormChangeHandler = (e:any) => {
       if(e.target.name === 'price' && isNaN(e.target.value)) return;
       if(e.target.name === 'taxable')
@@ -37,12 +48,19 @@ const ServicesList = (props:any) => {
       }else{
          onUpdateService(serviceForm);
       }
+      // setModal(false);
    }
 
    const handleRemoveService = (id:number) => {
       setLoadingRemove(id);
       onRemoveService(id);
    }
+
+   const editServiceHandle = (service:any) => {
+      setServiceForm(service);
+      setModal(true);
+   }
+
    return (
       <>
          <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
@@ -56,6 +74,11 @@ const ServicesList = (props:any) => {
                            <td className="">{viewCurrency(parseFloat(service.price))}</td>
                            <td className="p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-right">
                               <div className='text-right'>
+                                 { isEditble &&
+                                    <button onClick={()=>editServiceHandle(service)} type="button" className='mr-4' >
+                                       <IconPencil />
+                                    </button>
+                                 }
                                  {
                                  loadingRemove === service.id 
                                     ? <SmallDangerLoader/> 
@@ -91,7 +114,7 @@ const ServicesList = (props:any) => {
             </table>
          </div>
          <div className='flex justify-center mt-4'>
-            <span className='flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2' onClick={()=>setModal(true)}>
+            <span className='flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2' onClick={()=>addNewService()}>
                <IconPlus className='mr-2'/>
                Add new Service
             </span>
