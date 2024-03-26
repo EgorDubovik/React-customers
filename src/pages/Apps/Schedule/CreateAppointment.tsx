@@ -10,6 +10,8 @@ import { calculateTaxTotal, viewCurrency, getTechAbr } from '../../../helpers/he
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../../store';
 import ServicesList from './includes/ServicesList';
+import TechList from './includes/TechList';
+import { use } from 'i18next';
 
 
 const CreateAppointment = () => {
@@ -30,19 +32,9 @@ const CreateAppointment = () => {
    const [tax, setTax] = useState(0);
    const [total, setTotal] = useState(0);
    const [modalService, setModalService] = useState(false);
-
-
+   const [myId, setMyId] = useState(0);
+   const userId = useSelector((state:IRootState) => state.themeConfig.user.id);
    // Services...
-   const [modal, setModal] = useState(false);
-   const [serviceForm, setServiceForm] = useState({
-      id : 0,
-      title: '',
-      description: '',
-      price: '',
-      taxable: true,
-   });
-   
-
    const onRemoveService = (id:number) => {
       setServices(services.filter((service:any) => service.id !== id));
    }
@@ -91,10 +83,6 @@ const CreateAppointment = () => {
       ]
    });
 
-   useEffect(() => {
-            
-   }, []);
-
    const onTimeFromChanged = (date:any) => {
       setTimeFrom(new Date(date));
       if(!timeToIsSelected) 
@@ -107,13 +95,39 @@ const CreateAppointment = () => {
    }
 
    // Techs
+   const [modalTech, setModalTech] = useState(false);
+   const [techsIds, setTechsIds] = useState<Number[]>([]);
    const [techs, setTechs] = useState<any[]>([]);
-   const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
-   const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
-   
-   const removeTech = (techId:number) => {
+   const isTechAdded = (techId:number) => {
+      return techsIds.includes(techId);
+   }
+   const onRemoveTech = (techId:number) => {
       setTechs(techs.filter((tech:any) => tech.id !== techId));
    }
+   
+   const onCompanyTechsLoaded = () => {
+      console.log('Company techs loaded');
+      console.log('my id', myId);
+      setTechsIds([myId]);
+   }
+
+   const onAddRemovetechFromList = (techId:number) => {
+      if(isTechAdded(techId)){
+         setTechsIds(techsIds.filter((id) => id !== techId));
+      }else{
+         setTechsIds([...techsIds, techId]);
+      }
+   
+   }
+
+   const onSaveTeachs = () => {
+      setModalTech(false);
+   }
+   useEffect(() => {
+      console.log('setMyId', userId)
+      setMyId(userId);
+   }, [userId]);
+
    return (
       <div>
          <div className="flex items-center justify-between flex-wrap gap-4">
@@ -176,52 +190,6 @@ const CreateAppointment = () => {
                         modal={modalService}
                         setModal={setModalService}
                      />
-                     {/* <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
-                        <table className="whitespace-nowrap">
-                           <tbody className="dark:text-white">
-                              {
-                                 services.map((service:any, index:number) => (
-                                    <tr key={index}>
-                                       <td>{service.title}</td>
-                                       <td> {service.description} </td>
-                                       <td className="">{viewCurrency(parseFloat(service.price))}</td>
-                                       <td className="p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-right">
-                                          <div className='text-right'>
-                                             <button onClick={()=>handleRemoveService(service.id)} type="button">
-                                                <IconTrashLines />
-                                             </button>
-                                          </div>
-                                       </td>
-                                    </tr>
-                                 ))
-                              }
-                           </tbody>
-                        </table>
-                     </div>
-                     <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
-                        <table className="whitespace-nowrap text-right">
-                           <tbody className="dark:text-white-dark">
-                              <tr>
-                                 <td  style={{textAlign:'right'}}>Tax</td>
-                                 <td width={'20%'} className='text-danger'  style={{textAlign:'right'}}>
-                                    {viewCurrency(tax)} 
-                                 </td>
-                              </tr>
-                              <tr>
-                                 <td  style={{textAlign:'right'}}>TOTAL</td>
-                                 <td className='text-success'  style={{textAlign:'right'}}>
-                                    {viewCurrency(total)} 
-                                 </td>
-                              </tr>
-                           </tbody>
-                        </table>
-                     </div>
-                     <div className='flex justify-center mt-4'>
-                        <span className='flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2' onClick={()=>setModal(true)}>
-                           <IconPlus className='mr-2'/>
-                           Add new Service
-                        </span>
-                     </div> */}
                      
                   </div>
 
@@ -229,109 +197,20 @@ const CreateAppointment = () => {
                <div className='mt-5'>
                   <h2>Add Technical</h2>
                   <div className="mt-5">
-                     <ul className='mt-2'>
-                        {
-                           techs.map((tech:any, index:number) => (
-                              <li key={index} className='p-2 mb-2 flex items-center dark:bg-gray-900 bg-gray-100 rounded'>
-                                 <div className='mr-2'>
-                                    <span className={"flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-'bg-danger text-white"} style={{ backgroundColor : tech.color }}>{getTechAbr(tech.name)}</span>
-                                 </div>
-                                 <div className="flex-grow ml-4">
-                                    <p className="font-semibold">{tech.name}</p>
-                                    <p className="font-semibold">{tech.phone}</p>
-                                 </div>
-                                 <div className='mr-4'>
-                                    {
-                                       tech.roles.map((role:any, roleIndex:number) => (
-                                          <span key={roleIndex} className={`badge badge-outline-${rolesColor[role.role]} ml-2`}>{rolesTitle[role.role]}</span>
-                                       ))
-                                    }
-                                 </div>
-                                 <div className=''>
-                                    <button type="button" onClick={()=>removeTech(tech.id)}>
-                                       <IconTrashLines />
-                                    </button>
-                                 </div>
-                              </li>
-                           ))
-                        }
-                     </ul>
-                     <div className='flex justify-center mt-4'>
-                        <span className={'flex cursor-pointer border-b dark:border-gray-800 border-gray-200 py-2'} onClick={()=>setModal(true)}>
-                           <IconPlus className='mr-2'/>
-                           Add Tech
-                        </span>
-                     </div>
+                     <TechList
+                        techs={techs}
+                        techsIds={techsIds}
+                        removeTech={onRemoveTech}
+                        modal={modalTech}
+                        setModal={setModalTech}
+                        onAddRemovetechFromList={onAddRemovetechFromList}
+                        onSaveTeachs={onSaveTeachs}
+                        onCompanyTechsLoaded={onCompanyTechsLoaded}
+                     />
                   </div>
                </div>
             </div>
          </div>
-         {/* <Transition appear show={modal} as={Fragment}>
-            <Dialog 
-                  as="div" 
-                  open={modal} 
-                  onClose={() => setModal(false)}
-               
-               >
-               <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0"
-                  enterTo="opacity-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-               >
-                  <div className="fixed inset-0" />
-               </Transition.Child>
-               <div id="login_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
-                  <div className="flex items-start justify-center min-h-screen px-4">
-                     <Transition.Child
-                        as={Fragment}
-                        enter="ease-out duration-300"
-                        enterFrom="opacity-0 scale-95"
-                        enterTo="opacity-100 scale-100"
-                        leave="ease-in duration-200"
-                        leaveFrom="opacity-100 scale-100"
-                        leaveTo="opacity-0 scale-95"
-                     >
-                        <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-sm my-8 text-black dark:text-white-dark">
-                           <div className="flex items-center justify-between p-3 dark:text-white">
-                              <h5>Update Service</h5>
-                           </div>
-                           <div className="p-3">
-                                 <form>
-                                    <div className="relative mb-4">
-                                       <input type="text" placeholder="Title" className="form-input" name='title' onChange={serviceFormChangeHandler} value={serviceForm.title} />
-                                    </div>
-                                    <div className="relative mb-4">
-                                       <input type="text" placeholder='Price' className="form-input" pattern="\d*\.?\d*" name='price' onChange={serviceFormChangeHandler} value={serviceForm.price} />
-                                    </div>
-                                    <div className="relative mb-4">
-                                       <textarea placeholder="Description" className="form-textarea" name='description' onChange={serviceFormChangeHandler} value={serviceForm.description}></textarea>
-                                    </div>
-                                    <div className="relative mb-4">
-                                       <label className="inline-flex items-center text-sm">
-                                          <input type="checkbox" className="form-checkbox outline-primary" name='taxable' onChange={serviceFormChangeHandler} checked={serviceForm.taxable}  />
-                                          <span className=" text-white-dark">Taxable</span>
-                                       </label>
-                                    </div>
-                                    <div className="flex justify-end items-center mt-8">
-                                       <button type="button" onClick={() => setModal(false)} className="btn btn-outline-danger">
-                                          Discard
-                                       </button>
-                                       <button type="button" onClick={handleSaveService} className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                          Save
-                                       </button>
-                                    </div>
-                                 </form>
-                           </div>
-                        </Dialog.Panel>
-                     </Transition.Child>
-                  </div>
-               </div>
-            </Dialog>
-         </Transition> */}
       </div>
    );
 }

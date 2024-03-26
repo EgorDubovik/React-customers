@@ -5,7 +5,6 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useSelector } from 'react-redux'
 import { IRootState } from '../../../../store'
 import axiosClient from '../../../../store/axiosClient'
-import { use } from 'i18next'
 
 const TechBlock = (preps:any) => {
    
