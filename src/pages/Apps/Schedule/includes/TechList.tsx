@@ -6,11 +6,12 @@ import axiosClient from '../../../../store/axiosClient'
 import IconTrashLines from '../../../../components/Icon/IconTrashLines'
 import IconPlus from '../../../../components/Icon/IconPlus'
 import{ getTechAbr } from '../../../../helpers/helper'
-import { use } from 'i18next'
+import { SmallDangerLoader } from '../../../../components/loading/SmallCirculeLoader'
+
 const TechList = (props:any) => {
    const [removeTechStatus, setRemovingTechStatus] = useState(0); 
    const [companyTechs, setCompanyTechs] = useState([]);
-   const {modal, setModal, techsIds, onAddRemovetechFromList,onSaveTeachs, onCompanyTechsLoaded} = props;
+   const {modal, setModal, techsIds, onAddRemovetechFromList,onSaveTeachs, onRemoveTech} = props;
    const [techs, setTechs]  = useState([]);
    const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
    const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
@@ -27,7 +28,7 @@ const TechList = (props:any) => {
             console.log(err);
          })
          .finally(() => {
-            onCompanyTechsLoaded();
+            
          });
    }
 
@@ -38,10 +39,12 @@ const TechList = (props:any) => {
    useEffect(() => {
       console.log(techsIds)
       setTechs(companyTechs.filter((tech:any) => techsIds.includes(tech.id)));
+      setRemovingTechStatus(0);
    }, [techsIds]);
    
    const removeTechHandle = (techId:number) => {
-
+      setRemovingTechStatus(techId);
+      onRemoveTech(techId);
    }
 
    const saveNewTechs = () => {
@@ -74,7 +77,7 @@ const TechList = (props:any) => {
                      </div>
                      <div className=''>
                         {
-                           removeTechStatus === tech.id ? <span className='text-danger'>Removing...</span> 
+                           removeTechStatus === tech.id ? <SmallDangerLoader/> 
                            : 
                            <button type="button" onClick={()=>removeTechHandle(tech.id)}>
                               <IconTrashLines />

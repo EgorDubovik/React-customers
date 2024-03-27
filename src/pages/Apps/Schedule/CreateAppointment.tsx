@@ -11,8 +11,6 @@ import { useSelector } from 'react-redux';
 import { IRootState } from '../../../store';
 import ServicesList from './includes/ServicesList';
 import TechList from './includes/TechList';
-import { use } from 'i18next';
-
 
 const CreateAppointment = () => {
    const getCurrentDate = () => {
@@ -97,18 +95,13 @@ const CreateAppointment = () => {
    // Techs
    const [modalTech, setModalTech] = useState(false);
    const [techsIds, setTechsIds] = useState<Number[]>([]);
-   const [techs, setTechs] = useState<any[]>([]);
    const isTechAdded = (techId:number) => {
       return techsIds.includes(techId);
    }
    const onRemoveTech = (techId:number) => {
-      setTechs(techs.filter((tech:any) => tech.id !== techId));
-   }
-   
-   const onCompanyTechsLoaded = () => {
-      console.log('Company techs loaded');
-      console.log('my id', myId);
-      setTechsIds([myId]);
+      console.log('Removing',techId);
+      
+      setTechsIds(techsIds.filter((id:any) => id !== techId));
    }
 
    const onAddRemovetechFromList = (techId:number) => {
@@ -124,8 +117,7 @@ const CreateAppointment = () => {
       setModalTech(false);
    }
    useEffect(() => {
-      console.log('setMyId', userId)
-      setMyId(userId);
+      setTechsIds([userId]);
    }, [userId]);
 
    return (
@@ -198,14 +190,13 @@ const CreateAppointment = () => {
                   <h2>Add Technical</h2>
                   <div className="mt-5">
                      <TechList
-                        techs={techs}
+                        // techs={techs}
                         techsIds={techsIds}
-                        removeTech={onRemoveTech}
+                        onRemoveTech={onRemoveTech}
                         modal={modalTech}
                         setModal={setModalTech}
                         onAddRemovetechFromList={onAddRemovetechFromList}
                         onSaveTeachs={onSaveTeachs}
-                        onCompanyTechsLoaded={onCompanyTechsLoaded}
                      />
                   </div>
                </div>
