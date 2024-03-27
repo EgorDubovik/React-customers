@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { IRootState } from '../../../store';
 import ServicesList from './includes/ServicesList';
 import TechList from './includes/TechList';
+import axiosClient from '../../../store/axiosClient';
 
 const CreateAppointment = () => {
    const getCurrentDate = () => {
@@ -27,59 +28,49 @@ const CreateAppointment = () => {
    const [selectedTime, setSelectedTime] = useState('timeFrom');
    const [timeToIsSelected, setTimeToIsSelected] = useState(false);
    const [services, setServices] = useState<any[]>([]);
-   const [tax, setTax] = useState(0);
-   const [total, setTotal] = useState(0);
    const [modalService, setModalService] = useState(false);
-   const [myId, setMyId] = useState(0);
+   const [modalAddresses, setModalAddresses] = useState(false);
+   const [openAddresses, setOpenAddresses] = useState(false);
    const userId = useSelector((state:IRootState) => state.themeConfig.user.id);
+   
    // Services...
    const onRemoveService = (id:number) => {
       setServices(services.filter((service:any) => service.id !== id));
    }
    const onSaveService = (service:any) => {
-      
       service.id = services.length+1;
       setServices([...services, service]);
       setModalService(false);
    }
-
-   useEffect(() => {
-      const {tax, total} = calculateTaxTotal(services);
-      setTax(tax);
-      setTotal(total);
-   }, [services]);
-
-
-   // Load customer Info
+   
    const {customerId} = useParams();
    const [customer, setCustomer] = useState<any>({
-      id: 1,
-      name: 'John Doe',
-      phone: '+1 (754) 226-4666',
-      addresses : [
-         {
-            id: 1,
-            address: '2249 Caynor Circle, New Brunswick, New Jersey',
-            city: 'New Brunswick',
-            state: 'New Jersey',
-            zip: '08901'
-         },
-         {
-            id: 2,
-            address: '2249 Caynor Circle, New Brunswick, New Jersey',
-            city: 'New Brunswick',
-            state: 'New Jersey',
-            zip: '08901'
-         },
-         {
-            id: 3,
-            address: '2249 Caynor Circle, New Brunswick, New Jersey',
-            city: 'New Brunswick',
-            state: 'New Jersey',
-            zip: '08901'
-         }
-      ]
+      id: 0,
+      name: 'Unknown',
+      phone: '+1 123 456 7890',
+      idAddress : 0,
+      addresses : []
    });
+   // Load customer Info
+   useEffect(() => {
+      axiosClient.get(`customers/${customerId}`)
+         .then((res) => {
+            console.log(res.data);
+            setCustomer({
+               id: res.data.id,
+               name: res.data.name,
+               phone: res.data.phone,
+               addresses: res.data.address,
+               idAddress: 0
+            });
+         })
+         .catch((err) => {
+            console.log(err);
+         })
+         .finally(() => {
+            
+         });
+   }, []);
 
    const onTimeFromChanged = (date:any) => {
       setTimeFrom(new Date(date));
@@ -99,8 +90,6 @@ const CreateAppointment = () => {
       return techsIds.includes(techId);
    }
    const onRemoveTech = (techId:number) => {
-      console.log('Removing',techId);
-      
       setTechsIds(techsIds.filter((id:any) => id !== techId));
    }
 
@@ -110,7 +99,6 @@ const CreateAppointment = () => {
       }else{
          setTechsIds([...techsIds, techId]);
       }
-   
    }
 
    const onSaveTeachs = () => {
@@ -120,6 +108,16 @@ const CreateAppointment = () => {
       setTechsIds([userId]);
    }, [userId]);
 
+   const createNewAppointment = () => {
+      // axiosClient.post('appointments', {
+      //    timeFrom: timeFrom,
+      //    timeTo: timeTo,
+      //    services: services,
+      //    techs: techsIds,
+      //    customerId: customerId
+      // });
+   }
+
    return (
       <div>
          <div className="flex items-center justify-between flex-wrap gap-4">
@@ -127,17 +125,25 @@ const CreateAppointment = () => {
          </div>
          <div className='conteiner w-full md:w-1/3 m-auto'>
             <div className='panel'>
-               <div className="mb-5">
-                  <div className="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
+               <div className="mb-5 relative">
+                  <div className="border-b border-[#ebedf2] dark:border-[#1b2e4b] bg-gray-800 px-2 rounded-t">
                      <div className="flex items-center justify-between py-3">
                         <h6 className="text-[#515365] font-bold dark:text-white-dark text-[15px]">
                            {customer.name}
-                           <span className="block text-white-dark dark:text-white-light font-normal text-xs mt-1">{customer.addresses[0].address}</span>
+                           <span className="block text-white-dark dark:text-white-light font-normal text-xs mt-1">{customer.addresses[customer.idAddress]?.full}</span>
                         </h6>
-                        <div className="h-full p-2 cursor-pointer rounded hover:dark:bg-white-dark/10 hover:bg-gray-100">
+                        <div className="h-full p-2 cursor-pointer rounded hover:dark:bg-white-dark/10 hover:bg-gray-100" onClick={()=>setOpenAddresses(!openAddresses)}>
                            <IconEdit />
                         </div>
                      </div>
+                  </div>
+                  <div className={'absolute '+(!openAddresses ? "hidden" : "" )+' left-0 right-0 top-17 bg-gray-800 py-4 rounded-b z-50'}>
+                     { customer.addresses.map((address:any, index:number) => (
+                        <div className='address-list p-4 hover:bg-gray-900 cursor-pointer'>
+                           {address.full}
+                        </div>
+                     )) }
+                     
                   </div>
                </div>
                <div className='mt-5'>
@@ -200,8 +206,56 @@ const CreateAppointment = () => {
                      />
                   </div>
                </div>
+               <div className='mt-8'>
+                  <button onClick={createNewAppointment} className='btn btn-primary w-full'>Create appointment</button>
+               </div>
             </div>
          </div>
+         <Transition appear show={modalAddresses} as={Fragment}>
+            <Dialog as="div" open={modalAddresses} onClose={() => setModalAddresses(false)}>
+               <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+               >
+                  <div className="fixed inset-0" />
+               </Transition.Child>
+               <div id="login_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                  <div className="flex items-start justify-center min-h-screen px-4">
+                        <Transition.Child
+                           as={Fragment}
+                           enter="ease-out duration-300"
+                           enterFrom="opacity-0 scale-95"
+                           enterTo="opacity-100 scale-100"
+                           leave="ease-in duration-200"
+                           leaveFrom="opacity-100 scale-100"
+                           leaveTo="opacity-0 scale-95"
+                        >
+                           <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark">
+                              <div className="p-4">
+                                 <ul className='list-group'>
+                                    {
+                                       customer.addresses.map((address:any, index:number) => (
+                                       <li key={index} className={'px-2 py-4  mb-2 flex items-center  '+(customer.idAddress === index ? 'dark:bg-[#050b14] text-primary' : "hover:dark:bg-white-dark/10")+' '+(customer.idAddress === index ? 'bg-gray-100 text-primary' : 'hover:bg-gray-200')+' rounded cursor-pointer'} onClick={()=>{setCustomer({...customer,['idAddress']:index}); setModalAddresses(false)}}>
+                                          
+                                          <div className="flex-grow ml-4 text-sm">
+                                             <p className="font-semibold">{address.full}</p>                                             
+                                          </div>
+                                       </li>
+                                       ))
+                                    }
+                                 </ul>
+                              </div>   
+                           </Dialog.Panel>
+                        </Transition.Child>
+                  </div>
+               </div>
+            </Dialog>
+         </Transition>
       </div>
    );
 }

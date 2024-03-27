@@ -114,6 +114,7 @@ const Contacts = () => {
                         <table className="table-striped table-hover">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Phone</th>
                                     <th>Email</th>
@@ -125,6 +126,7 @@ const Contacts = () => {
                                 {filteredItems.map((customer: any) => {
                                     return (
                                         <tr key={customer.id}>
+                                            <td>{customer.id}</td>
                                             <td>
                                                 <div className="flex items-center w-max">
                                                     { /* <div className="grid place-content-center h-8 w-8 ltr:mr-2 rtl:ml-2 rounded-full bg-primary text-white text-sm font-semibold"></div> */}
