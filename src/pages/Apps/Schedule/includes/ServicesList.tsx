@@ -3,18 +3,20 @@ import IconTrashLines from '../../../../components/Icon/IconTrashLines';
 import IconPlus from '../../../../components/Icon/IconPlus';
 import IconPencil from '../../../../components/Icon/IconPencil';
 import { viewCurrency, calculateTaxTotal } from '../../../../helpers/helper';
-import { useState } from 'react';
-import { Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {SmallDangerLoader} from '../../../../components/loading/SmallCirculeLoader';
+import { ButtonLoader } from '../../../../components/loading/ButtonLoader';
 import AutoComplete from '../../../../components/plugin/autocomplite/AutoComplete';
-
+import axiosClient from '../../../../store/axiosClient';
 const ServicesList = (props:any) => {
 
    const isEditble = props.isEditble;
    const [loadingRemove, setLoadingRemove] = useState(0);
-   const { services, onRemoveService, onSaveService, onUpdateService, modal, setModal } = props;
+   const loadingStatus = props.loadingStatus || false;
+   const { services, onRemoveService, onSaveService, onUpdateService, modal, setModal} = props;
    const { tax, total } = calculateTaxTotal(services);
+   const [companyServices, setCompanyServices] = useState([]); 
    
    const [serviceForm, setServiceForm] = useState(
       {
@@ -49,7 +51,6 @@ const ServicesList = (props:any) => {
       }else{
          onUpdateService(serviceForm);
       }
-      // setModal(false);
    }
 
    const handleRemoveService = (id:number) => {
@@ -61,6 +62,18 @@ const ServicesList = (props:any) => {
       setServiceForm(service);
       setModal(true);
    }
+
+   // Load company services
+   useEffect(() => {
+      axiosClient.get(`company/settings/services`)
+         .then((res) => {
+            console.log(res.data);
+            setCompanyServices(res.data.services);
+         })
+         .catch((err) => {
+            console.log(err);
+         });
+   }, []);
 
    return (
       <>
@@ -158,15 +171,7 @@ const ServicesList = (props:any) => {
                                     <div className="relative mb-4">
                                        <AutoComplete
                                           inputValue={serviceForm.title}
-                                          list={
-                                             [
-                                                {id: 1, title: 'Washer', price: 100, description: 'Washer service'},
-                                                {id: 2, title: 'Dryer', price: 200, description: 'Dryer service'},
-                                                {id: 3, title: 'Refrigerator', price: 300, description: 'Refrigerator service'},
-                                                {id: 4, title: 'Oven', price: 400, description: 'Oven service'},
-                                                {id: 5, title: 'Dishwasher', price: 500, description: 'Dishwasher service'},
-                                             ]
-                                          }
+                                          list={companyServices}
                                           onInputChange={(value) => setServiceForm({...serviceForm, title: value})}
                                           onSaggestionClick={(item) => setServiceForm({...serviceForm, title: item.title, price: item.price, description: item.description})}
                                        >
@@ -191,7 +196,13 @@ const ServicesList = (props:any) => {
                                           Discard
                                        </button>
                                        <button type="button" onClick={handleSaveService} className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                          Save
+                                          
+                                          {
+                                             loadingStatus === true 
+                                                ? <ButtonLoader />
+                                                : 'Save'
+                                          }
+                                          
                                        </button>
                                     </div>
                                  </form>
