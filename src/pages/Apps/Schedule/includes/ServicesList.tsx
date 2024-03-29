@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {SmallDangerLoader} from '../../../../components/loading/SmallCirculeLoader';
+import AutoComplete from '../../../../components/plugin/autocomplite/AutoComplete';
 
 const ServicesList = (props:any) => {
 
@@ -148,14 +149,30 @@ const ServicesList = (props:any) => {
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                      >
-                        <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-sm my-8 text-black dark:text-white-dark">
+                        <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg w-full max-w-sm my-8 text-black dark:text-white-dark">
                            <div className="flex items-center justify-between p-3 dark:text-white">
                               <h5>Update Service</h5>
                            </div>
                            <div className="p-3">
                                  <form>
                                     <div className="relative mb-4">
-                                       <input type="text" placeholder="Title" className="form-input" name='title' onChange={serviceFormChangeHandler} value={serviceForm.title} />
+                                       <AutoComplete
+                                          inputValue={serviceForm.title}
+                                          list={
+                                             [
+                                                {id: 1, title: 'Washer', price: 100, description: 'Washer service'},
+                                                {id: 2, title: 'Dryer', price: 200, description: 'Dryer service'},
+                                                {id: 3, title: 'Refrigerator', price: 300, description: 'Refrigerator service'},
+                                                {id: 4, title: 'Oven', price: 400, description: 'Oven service'},
+                                                {id: 5, title: 'Dishwasher', price: 500, description: 'Dishwasher service'},
+                                             ]
+                                          }
+                                          onInputChange={(value) => setServiceForm({...serviceForm, title: value})}
+                                          onSaggestionClick={(item) => setServiceForm({...serviceForm, title: item.title, price: item.price, description: item.description})}
+                                       >
+                                          <input type="text" placeholder="Title" className="form-input" name='title'/>
+                                       </AutoComplete>
+                                       {/* <input type="text" placeholder="Title" className="form-input" name='title' onChange={serviceFormChangeHandler} value={serviceForm.title} /> */}
                                     </div>
                                     <div className="relative mb-4">
                                        <input type="text" placeholder='Price' className="form-input" pattern="\d*\.?\d*" name='price' onChange={serviceFormChangeHandler} value={serviceForm.price} />

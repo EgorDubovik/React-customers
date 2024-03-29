@@ -108,6 +108,12 @@ const CreateAppointment = () => {
       setTechsIds([userId]);
    }, [userId]);
 
+
+   const setNewAddress = (addressIndex:number) => {
+      setCustomer({...customer,['idAddress']:addressIndex});
+      setOpenAddresses(false);
+   }
+
    const createNewAppointment = () => {
       // axiosClient.post('appointments', {
       //    timeFrom: timeFrom,
@@ -137,9 +143,9 @@ const CreateAppointment = () => {
                         </div>
                      </div>
                   </div>
-                  <div className={'absolute '+(!openAddresses ? "hidden" : "" )+' left-0 right-0 top-17 bg-gray-800 py-4 rounded-b z-50'}>
+                  <div className={'absolute '+(!openAddresses ? "hidden" : "" )+' left-0 right-0 top-17 bg-gray-800 py-4 rounded-b z-50'} >
                      { customer.addresses.map((address:any, index:number) => (
-                        <div className='address-list p-4 hover:bg-gray-900 cursor-pointer'>
+                        <div className='address-list p-4 hover:bg-gray-900 cursor-pointer' onClick={()=>setNewAddress(index)}>
                            {address.full}
                         </div>
                      )) }
