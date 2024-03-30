@@ -12,14 +12,11 @@ const Appointment = () => {
    const [appointment, setAppointment] = useState<any>({});
    const dispatch = useDispatch();
    const [loadingStatus, setLoadingStatus] = useState<string>('loading');
-   
 
    useEffect(() => {
       dispatch(setPageTitle('Appointment'));
    });
 
-   
-   
    useEffect(() => {
       setLoadingStatus('loading');
       axiosClient.get(`/appointment/${id}`)
