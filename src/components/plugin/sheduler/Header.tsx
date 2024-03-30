@@ -17,6 +17,6 @@ const Header = (props:any) => {
    console.log(currentDate);
 
    return (
-      
+      <></>
    );
 }
