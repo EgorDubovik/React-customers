@@ -20,13 +20,15 @@ axiosClient.interceptors.request.use((config)=>{
 
 axiosClient.interceptors.response.use((response) =>{
    return response;
+   
 },
 (error)=>{
    // Handle response errors
    if (error.response) {
       // The request was made and the server responded with a status code that falls out of the range of 2xx
       console.error('Response Error:', error.response.data);
-      console.error('Status Code:', error.response.status);
+      console.error('Response Code:', error.response.status);
+
       if(error.response.status === 401){
          cookies.remove('_auth');
          window.location.href = '/auth/signin';

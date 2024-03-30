@@ -5,8 +5,6 @@ const AuthPrivetRoute = () => {
    
    const isAuthenticated = useIsAuthenticated()
 
-   // const isAuth = isAuthenticated() ? true : true;
-
    return isAuthenticated() ? <Outlet/> : <Navigate to='/auth/signin' />
 }
 

@@ -2,12 +2,8 @@ import { Link, NavLink } from 'react-router-dom';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useState, useEffect } from 'react';
 import sortBy from 'lodash/sortBy';
-import { useDispatch, useSelector } from 'react-redux';
-import { IRootState } from '../../store';
+import { useDispatch} from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import IconTrashLines from '../../components/Icon/IconTrashLines';
-import IconPlus from '../../components/Icon/IconPlus';
-import IconEdit from '../../components/Icon/IconEdit';
 import IconEye from '../../components/Icon/IconEye';
 import moment from 'moment';
 import axiosClient from '../../store/axiosClient';
@@ -36,32 +32,33 @@ const Invoice = () => {
       /* eslint-disable react-hooks/exhaustive-deps */
    }, [pageSize]);
 
-   useEffect(() => {
-      const from = (page - 1) * pageSize;
-      const to = from + pageSize;
-      setRecords([...initialRecords.slice(from, to)]);
-   }, [page, pageSize, initialRecords]);
+   // useEffect(() => {
+   //    const from = (page - 1) * pageSize;
+   //    const to = from + pageSize;
+   //    console.log('Set Records');
+   //    setRecords([...initialRecords.slice(from, to)]);
+   // }, [page, pageSize, initialRecords]);
 
    useEffect(() => {
       const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
       setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
-      setPage(1);
-   }, [sortStatus]);
+      // setPage(1);
+   }, [sortStatus, initialRecords]);
 
    // load Ivocies
    useEffect(() => {
       setLoadingStatus('loading');
       axiosClient.get('invoice?page='+page+"&limit="+pageSize)
-      .then((res) => {
-         console.log(res.data.invoices);
-         setInitialRecords(res.data.invoices.data);
-         setTotalRecords(res.data.invoices.total);
-         setLoadingStatus('succsess');
-      })
-      .catch((err) => {
-         setLoadingStatus('error');
-         console.log(err);
-      })
+         .then((res:any) => {
+            console.log('data:',res.data.invoices.data);
+            setInitialRecords(res.data.invoices.data);
+            setTotalRecords(res.data.invoices.total);
+            setLoadingStatus('succsess');
+         })
+         .catch((err) => {
+            setLoadingStatus('error');
+            console.log(err);
+         })
 
    }, [page, pageSize]);
 
@@ -119,8 +116,8 @@ const Invoice = () => {
                         {
                            accessor: 'date',
                            sortable: true,
-                           render: ({ date }) => (
-                              <div className="font-semibold">{moment(date).format('MMMM Do YYYY, h:mm:ss a')}</div>
+                           render: ({ created_at }) => (
+                              <div className="font-semibold">{moment(created_at).format('MMMM Do YYYY, h:mm:ss a')}</div>
                            ),
                         },
                         {

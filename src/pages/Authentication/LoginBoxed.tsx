@@ -2,10 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import axios from 'axios';
 import { useSignIn, useSignOut } from 'react-auth-kit';
 import Cookies from 'universal-cookie';
-import env from '../../store/env';
 import IconMail from '../../components/Icon/IconMail';
 import IconLockDots from '../../components/Icon/IconLockDots';
 import axiosClient from '../../store/axiosClient';
@@ -18,10 +16,10 @@ const LoginBoxed = () => {
     const singOut = useSignOut();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+    const [errorMesage, setErrorMessage] = useState('Somthing went wrong. Please try again.');
     const [error, setError] = useState(false);
     useEffect(() => {
         dispatch(setPageTitle('Login Boxed'));
-        // singOut();
     });
     
     
@@ -35,18 +33,20 @@ const LoginBoxed = () => {
                 console.log(res);
                 if(res.status === 200){
                     if(signIn({
-                            token: res.data.success.token,
-                            expiresIn:3600,
-                            tokenType: "Bearer",
-                            authState : {'name' : 'egor'},
-                        })){
-                            navigate('/customers');
-                        }
+                        token: res.data.success.token,
+                        expiresIn:3600,
+                        tokenType: "Bearer",
+                        authState : {'name' : 'egor'},
+                    })){
+                        navigate('/customers');
+                    }
                 } else {
                     console.log('Error')
                 }
             })
-            .catch((err)=>{
+            .catch((err:any)=>{
+                if(err.response.status === 403)
+                    setErrorMessage(err.response.data.error);
                 setError(true);
             })
             .finally(()=>{
@@ -78,7 +78,7 @@ const LoginBoxed = () => {
                             {error && (
                             <div className="flex mb-2 items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light">
                                 <span className="ltr:pr-2 rtl:pl-2">
-                                    <strong className="ltr:mr-1 rtl:ml-1">Whoops!</strong>Somthing went wrong. Please try again.
+                                    {errorMesage}
                                 </span>
                             </div>)}
                             <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
