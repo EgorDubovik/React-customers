@@ -29,20 +29,11 @@ const Invoice = () => {
 
    useEffect(() => {
       setPage(1);
-      /* eslint-disable react-hooks/exhaustive-deps */
    }, [pageSize]);
-
-   // useEffect(() => {
-   //    const from = (page - 1) * pageSize;
-   //    const to = from + pageSize;
-   //    console.log('Set Records');
-   //    setRecords([...initialRecords.slice(from, to)]);
-   // }, [page, pageSize, initialRecords]);
 
    useEffect(() => {
       const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
       setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
-      // setPage(1);
    }, [sortStatus, initialRecords]);
 
    // load Ivocies
