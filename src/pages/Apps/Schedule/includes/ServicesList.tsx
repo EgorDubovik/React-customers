@@ -3,7 +3,7 @@ import IconTrashLines from '../../../../components/Icon/IconTrashLines';
 import IconPlus from '../../../../components/Icon/IconPlus';
 import IconPencil from '../../../../components/Icon/IconPencil';
 import { viewCurrency, calculateTaxTotal } from '../../../../helpers/helper';
-import { useState, Fragment, useEffect } from 'react';
+import { useState, Fragment, useEffect, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {SmallDangerLoader} from '../../../../components/loading/SmallCirculeLoader';
 import { ButtonLoader } from '../../../../components/loading/ButtonLoader';
@@ -17,7 +17,8 @@ const ServicesList = (props:any) => {
    const { services, onRemoveService, onSaveService, onUpdateService, modal, setModal} = props;
    const { tax, total } = calculateTaxTotal(services);
    const [companyServices, setCompanyServices] = useState([]); 
-   
+   const [isEditMode, setIsEditMode] = useState(false);
+   const priceRef = useRef(null);
    const [serviceForm, setServiceForm] = useState(
       {
          id: '',
@@ -34,6 +35,7 @@ const ServicesList = (props:any) => {
          price:'', 
          taxable:true
       });
+      setIsEditMode(false);
       setModal(true);
    }
    const serviceFormChangeHandler = (e:any) => {
@@ -60,6 +62,7 @@ const ServicesList = (props:any) => {
 
    const editServiceHandle = (service:any) => {
       setServiceForm(service);
+      setIsEditMode(true);
       setModal(true);
    }
 
@@ -138,7 +141,7 @@ const ServicesList = (props:any) => {
                   as="div" 
                   open={modal} 
                   onClose={() => setModal(false)}
-               
+                  initialFocus = {isEditMode ? priceRef : undefined }
                >
                <Transition.Child
                   as={Fragment}
@@ -177,10 +180,10 @@ const ServicesList = (props:any) => {
                                        >
                                           <input type="text" placeholder="Title" className="form-input" name='title'/>
                                        </AutoComplete>
-                                       {/* <input type="text" placeholder="Title" className="form-input" name='title' onChange={serviceFormChangeHandler} value={serviceForm.title} /> */}
+                                       
                                     </div>
                                     <div className="relative mb-4">
-                                       <input type="text" placeholder='Price' className="form-input" pattern="\d*\.?\d*" name='price' onChange={serviceFormChangeHandler} value={serviceForm.price} />
+                                       <input ref={priceRef} type="text" placeholder='Price' className="form-input" pattern="\d*\.?\d*" name='price' onChange={serviceFormChangeHandler} value={serviceForm.price} onFocus={(e)=> e.target.select()} />
                                     </div>
                                     <div className="relative mb-4">
                                        <textarea placeholder="Description" className="form-textarea" name='description' onChange={serviceFormChangeHandler} value={serviceForm.description}></textarea>

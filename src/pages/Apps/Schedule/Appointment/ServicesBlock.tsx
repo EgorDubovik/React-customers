@@ -23,16 +23,6 @@ const ServicesBlock = (props:any) => {
    const {total} = calculateTaxTotal(services);
    const remaining = calculateRemaining(payments, total);
 
-   const handeCreateNewService = () => {
-      setServiceFormData({
-         title:'',
-         description:'',
-         price:'',
-         taxable:true
-      });
-      setModal(true);
-   }
-
    const handleSaveService = (service:any) => {
       console.log('service:',service);
       setServiceFormLoading(true);
@@ -96,9 +86,9 @@ const ServicesBlock = (props:any) => {
       <div className='panel'>
          <div className="flex items-center justify-between">
             <h3 className="font-semibold text-lg dark:text-white-light">Services</h3>
-            <button className="btn btn-primary p-2 rounded-full" onClick={handeCreateNewService}>
+            {/* <button className="btn btn-primary p-2 rounded-full" onClick={handeCreateNewService}>
                <IconPlus className='w-4 h-4'/>
-            </button>
+            </button> */}
          </div>
          <div className="mt-5">
             <ServicesList
