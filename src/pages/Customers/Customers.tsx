@@ -8,7 +8,7 @@ import IconListCheck from '../../components/Icon/IconListCheck';
 import IconLayoutGrid from '../../components/Icon/IconLayoutGrid';
 import IconSearch from '../../components/Icon/IconSearch';
 import axiosClient from '../../store/axiosClient';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Contacts = () => {
     const dispatch = useDispatch();
@@ -126,7 +126,11 @@ const Contacts = () => {
                                             <td>
                                                 <div className="flex items-center w-max">
                                                     { /* <div className="grid place-content-center h-8 w-8 ltr:mr-2 rtl:ml-2 rounded-full bg-primary text-white text-sm font-semibold"></div> */}
-                                                    <div className='font-bold'>{customer.name}</div>
+                                                    <div className='font-bold'>
+                                                        <Link to={`/appointment/create/${customer.id}`}>
+                                                            {customer.name}
+                                                        </Link>
+                                                    </div>
                                                 </div>
                                             </td>
                                             <td>{customer.phone}</td>

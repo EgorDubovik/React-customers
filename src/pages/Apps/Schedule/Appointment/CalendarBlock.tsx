@@ -42,9 +42,11 @@ const CalendarBlock = () => {
             <AppointmentsScheduler 
                appointments={selectedAppointment}
                currentDate={appointment?.start}
+               isHeader={false}
+               isDaysNames={false}
                viewType={'day'}
-               startTime={'06:00'}
-               endTime={'19:00'}
+               startTime={'07:00'}
+               endTime={'21:00'}
                blockHeight={40}
                scheduleBgClass={'bg-none'}
             />

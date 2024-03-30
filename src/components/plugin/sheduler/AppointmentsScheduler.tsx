@@ -5,6 +5,9 @@ import Grids from './Grids';
 const AppointmentsScheduler = (props:any) => {
    const startTime = moment(props.startTime || '00:00', 'HH:mm');
    const endTime = moment(props.endTime || '23:00', 'HH:mm');
+   
+   const isHeader = props.isHeader !== undefined ? props.isHeader : true;
+   const isDaysNames = props.isDaysNames !== undefined ? props.isDaysNames : true;
    const defaultBackgroundColor = props.eventDefoultBgColor || '#1565c0';
    const endTimeCopy = endTime.clone().add(1, 'hour');
    const totalDuration = moment.duration(endTimeCopy.diff(startTime));
@@ -151,25 +154,29 @@ const AppointmentsScheduler = (props:any) => {
       <div className='select-none'>
          
          <div className={"scheduler-container rounded "+scheduleBgClass+" p-4"}>
-            <div className="scheduler-header flex justify-between">
-               <div className="scheduler-date text-base">{currentDate.format('MMMM YYYY')}</div>
-               <div className="scheduler-nav flex gap-4">
-                  <button className="btn btn-sm btn-outline btn-outline-primary" onClick={prevWeekHandle}>{'<'}</button>
-                  <button className="btn btn-sm btn-outline btn-outline-primary" onClick={todayHandle}>Today</button>
-                  <button className="btn btn-sm btn-outline btn-outline-primary" onClick={nextWeekHandle}>{'>'}</button>
-               </div>
-            </div>
-            
-            <div className="scheduler-body">
-               <div className="scheduler-weekdays flex pt-4 pb-4 border-b dark:border-gray-600 border-gray-300">
-                  <div className="first-item w-10"></div>
-                  <div key={daysArray.length} className={"weekdays text-center grid grid-cols-"+daysArray.length+" w-full"}>
-                     {daysArray.map((day:string, index:number) => (
-                        <div key={index} className="weekday">{day}</div>
-                     ))}
-                     
+            { isHeader &&
+               <div className="scheduler-header flex justify-between">
+                  <div className="scheduler-date text-base">{currentDate.format('MMMM YYYY')}</div>
+                  <div className="scheduler-nav flex gap-4">
+                     <button className="btn btn-sm btn-outline btn-outline-primary" onClick={prevWeekHandle}>{'<'}</button>
+                     <button className="btn btn-sm btn-outline btn-outline-primary" onClick={todayHandle}>Today</button>
+                     <button className="btn btn-sm btn-outline btn-outline-primary" onClick={nextWeekHandle}>{'>'}</button>
                   </div>
                </div>
+            }
+            
+            <div className="scheduler-body">
+               {isDaysNames &&
+                  <div className="scheduler-weekdays flex pt-4 pb-4 border-b dark:border-gray-600 border-gray-300">
+                     <div className="first-item w-10"></div>
+                     <div key={daysArray.length} className={"weekdays text-center grid w-full"} style={{ gridTemplateColumns: `repeat(${daysArray.length}, minmax(0, 1fr))` }}>
+                        {daysArray.map((day:string, index:number) => (
+                           <div key={index} className="weekday">{day}</div>
+                        ))}
+                        
+                     </div>
+                  </div>
+               }
                <div className="scheduler-dates flex relative">
                   <div className={"times text-[0.8em] w-10 pt-2"}>
                      {timesArray.map((time, index) => (

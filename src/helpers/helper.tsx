@@ -29,3 +29,7 @@ export const calculateRemaining = (payments:any, total:number) => {
 export const getTechAbr = (name:string) => {
    return name.split(' ').map((n:string) => n[0]).join('');
 }
+
+export const manualIsoString = (date:Date) => {
+   return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}Z`;
+}

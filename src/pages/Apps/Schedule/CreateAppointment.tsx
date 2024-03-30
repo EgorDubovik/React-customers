@@ -1,12 +1,12 @@
 import {useState, useEffect, Fragment} from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import MyTimePicker from '../../../components/plugin/mytimepicker/src';
 import moment from 'moment';
 import IconEdit from '../../../components/Icon/IconEdit';
 import IconPlus from '../../../components/Icon/IconPlus';
 import IconTrashLines from '../../../components/Icon/IconTrashLines';
 import { Dialog, Transition } from '@headlessui/react';
-import { calculateTaxTotal, viewCurrency, getTechAbr } from '../../../helpers/helper';
+import { manualIsoString } from '../../../helpers/helper';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../../store';
 import ServicesList from './includes/ServicesList';
@@ -14,6 +14,9 @@ import TechList from './includes/TechList';
 import axiosClient from '../../../store/axiosClient';
 
 const CreateAppointment = () => {
+
+   const navigate = useNavigate();
+
    const getCurrentDate = () => {
       const date = new Date();
       if(date.getMinutes() > 45 && date.getMinutes() <= 59){
@@ -86,6 +89,7 @@ const CreateAppointment = () => {
    // Techs
    const [modalTech, setModalTech] = useState(false);
    const [techsIds, setTechsIds] = useState<Number[]>([]);
+
    const isTechAdded = (techId:number) => {
       return techsIds.includes(techId);
    }
@@ -105,6 +109,7 @@ const CreateAppointment = () => {
       setModalTech(false);
    }
    useEffect(() => {
+      console.log('settechs',userId);
       setTechsIds([userId]);
    }, [userId]);
 
@@ -115,13 +120,24 @@ const CreateAppointment = () => {
    }
 
    const createNewAppointment = () => {
-      // axiosClient.post('appointments', {
-      //    timeFrom: timeFrom,
-      //    timeTo: timeTo,
-      //    services: services,
-      //    techs: techsIds,
-      //    customerId: customerId
-      // });
+      axiosClient.post('appointment', {
+         timeFrom: manualIsoString(timeFrom),
+         timeTo: manualIsoString(timeTo),
+         services: services,
+         techs: techsIds,
+         customerId: customerId,
+         addressId: customer.addresses[customer.idAddress].id || 0
+      }).then((res) => {
+            if(res.status === 200){
+               navigate('/appointment/'+res.data.appointment.id);
+            }
+         })
+         .catch((err) => {
+            console.log(err);
+         })
+         .finally(() => {
+
+         });
    }
 
    return (
@@ -145,7 +161,7 @@ const CreateAppointment = () => {
                   </div>
                   <div className={'absolute '+(!openAddresses ? "hidden" : "" )+' left-0 right-0 top-17 bg-gray-800 py-4 rounded-b z-50'} >
                      { customer.addresses.map((address:any, index:number) => (
-                        <div className='address-list p-4 hover:bg-gray-900 cursor-pointer' onClick={()=>setNewAddress(index)}>
+                        <div key={index} className='address-list p-4 hover:bg-gray-900 cursor-pointer' onClick={()=>setNewAddress(index)}>
                            {address.full}
                         </div>
                      )) }
@@ -202,7 +218,6 @@ const CreateAppointment = () => {
                   <h2>Add Technical</h2>
                   <div className="mt-5">
                      <TechList
-                        // techs={techs}
                         techsIds={techsIds}
                         onRemoveTech={onRemoveTech}
                         modal={modalTech}

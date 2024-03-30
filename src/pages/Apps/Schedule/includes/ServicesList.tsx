@@ -66,6 +66,10 @@ const ServicesList = (props:any) => {
       setModal(true);
    }
 
+   useEffect(() => {
+      setLoadingRemove(0);
+   }, [services]);
+
    // Load company services
    useEffect(() => {
       axiosClient.get(`company/settings/services`)

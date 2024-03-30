@@ -77,8 +77,8 @@ const Schedule = () => {
                         appointments={appointments}
                         onClickHandler={viewAppointments}
                         viewType={viewType}
-                        startTime={'08:00'}
-                        endTime={'18:00'}
+                        startTime={'07:00'}
+                        endTime={'20:00'}
                     />
                 }
             </div>

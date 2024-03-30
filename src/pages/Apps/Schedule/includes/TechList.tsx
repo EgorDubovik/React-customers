@@ -37,10 +37,10 @@ const TechList = (props:any) => {
    }, []);
 
    useEffect(() => {
-      console.log(techsIds)
+      
       setTechs(companyTechs.filter((tech:any) => techsIds.includes(tech.id)));
       setRemovingTechStatus(0);
-   }, [techsIds]);
+   }, [techsIds, companyTechs]);
    
    const removeTechHandle = (techId:number) => {
       setRemovingTechStatus(techId);
