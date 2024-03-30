@@ -1,23 +1,22 @@
 import { lazy } from 'react';
-const Index = lazy(() => import('../pages/Index'));
+const Dashboard = lazy(() => import('../pages/Dashboard/Dashboard'));
 const LoginBoxed = lazy(() => import('../pages/Authentication/LoginBoxed'));
 const RegisterBoxed = lazy(() => import('../pages/Authentication/RegisterBoxed'));
 const RecoverIdBoxed = lazy(() => import('../pages/Authentication/RecoverIdBox'));
-const Error = lazy(() => import('../components/Error'));
 import DefaultLayout from '../components/Layouts/DefaultLayout';
 import BlankLayout from '../components/Layouts/BlankLayout';
 import AuthPrivetRoute from '../middleware/AuthPrivetRoute';
 import Customers from '../pages/Customers/Customers';
 import Services from '../pages/Services/Services';
-import Schedule from '../pages/Apps/Schedule/Schedule';
-import Appointment from '../pages/Apps/Schedule/Appointment';
+import Schedule from '../pages/Schedule/Schedule';
+import Appointment from '../pages/Schedule/Appointment';
 import Error404 from '../pages/Pages/Error404';
 import CreateCustomer from '../pages/Customers/CreateCustomer';
 import Create from '../pages/Invoice/Create';
 import Update from '../pages/Customers/Update';
 import Invoices from '../pages/Invoice/Invoices';
 import Employees from '../pages/Employees';
-import CreateAppointment from '../pages/Apps/Schedule/CreateAppointment';
+import CreateAppointment from '../pages/Schedule/CreateAppointment';
 
 
 const routes = [
@@ -28,7 +27,7 @@ const routes = [
         children : [
             {
                 index : true,
-                element : <DefaultLayout> <Index /></DefaultLayout>,
+                element : <DefaultLayout> <Dashboard /></DefaultLayout>,
             },
             {
                 path: '/schedule',
