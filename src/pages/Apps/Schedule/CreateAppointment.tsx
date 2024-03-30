@@ -12,6 +12,7 @@ import { IRootState } from '../../../store';
 import ServicesList from './includes/ServicesList';
 import TechList from './includes/TechList';
 import axiosClient from '../../../store/axiosClient';
+import {ButtonLoader} from '../../../components/loading/ButtonLoader';
 
 const CreateAppointment = () => {
 
@@ -34,6 +35,7 @@ const CreateAppointment = () => {
    const [modalService, setModalService] = useState(false);
    const [modalAddresses, setModalAddresses] = useState(false);
    const [openAddresses, setOpenAddresses] = useState(false);
+   const [loadingCreate, setLoadingCreate] = useState(false);
    const userId = useSelector((state:IRootState) => state.themeConfig.user.id);
    
    // Services...
@@ -120,6 +122,7 @@ const CreateAppointment = () => {
    }
 
    const createNewAppointment = () => {
+      if(loadingCreate) return;
       axiosClient.post('appointment', {
          timeFrom: manualIsoString(timeFrom),
          timeTo: manualIsoString(timeTo),
@@ -134,6 +137,7 @@ const CreateAppointment = () => {
          })
          .catch((err) => {
             console.log(err);
+            alert('Error, please try again')
          })
          .finally(() => {
 
@@ -228,7 +232,12 @@ const CreateAppointment = () => {
                   </div>
                </div>
                <div className='mt-8'>
-                  <button onClick={createNewAppointment} className='btn btn-primary w-full'>Create appointment</button>
+                  <button onClick={createNewAppointment} className='btn btn-primary w-full'>
+                     {loadingCreate 
+                        ? <div>Loading...<ButtonLoader/></div>
+                        : 'Create appointment'
+                     }
+                  </button>
                </div>
             </div>
          </div>
