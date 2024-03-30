@@ -17,7 +17,7 @@ const Hour =(props:any) =>{
    }
 
    const itemsView = (viewItems % 2 === 0) ? viewItems/2 : (viewItems-1)/2;
-   const wrapperRef = useRef(null);
+   const wrapperRef = useRef<HTMLDivElement>(null);
    const isDraging = useRef(false);
    const startY = useRef(0);
    const [items, setItems] = useState(getHoursArray(currentDate.getHours(), is12AmPm));
@@ -45,7 +45,8 @@ const Hour =(props:any) =>{
       
       isDraging.current = true;
       startY.current = e.clientY;
-      wrapperRef.current.style.transition = 'transform 0s ease-out';
+      if(wrapperRef.current)
+         wrapperRef.current.style.transition = 'transform 0s ease-out';
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
 
@@ -60,7 +61,8 @@ const Hour =(props:any) =>{
    const handleMouseUp = (e:any) => {
       isDraging.current = false;
       setCurentTranslateY(prev => Math.round(prev/itemHeight) * itemHeight);
-      wrapperRef.current.style.transition = 'transform 0.5s ease-out';
+      if(wrapperRef.current)
+         wrapperRef.current.style.transition = 'transform 0.5s ease-out';
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
    }

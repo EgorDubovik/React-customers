@@ -1,13 +1,21 @@
 import { useEffect, useState, useRef } from "react";
 import { getMinutesArray } from "./helper";
 
+interface HourProps {
+   itemHeight: number;
+   currentDate: Date;
+   viewItems: number;
+   onMinuteChange: (newMinute: number) => void;
+   minutesStep: number;
+}
+
 const Hour =({
       itemHeight,
       currentDate,
       viewItems,
       onMinuteChange,
       minutesStep,
-   }) =>{
+   }:HourProps) =>{
    
    const getItemIndexTranslate = () => {
       return Math.round(curentTranslateY / itemHeight) * -1 + itemsView;
@@ -17,9 +25,9 @@ const Hour =({
       return items[indexTranslate-indexMarginTop].value;
    }
    const itemsView = (viewItems % 2 === 0) ? viewItems/2 : (viewItems-1)/2;
-   const wrapperRef = useRef(null);
+   const wrapperRef = useRef<HTMLDivElement>(null);
    const isDraging = useRef(false);
-   const startY = useRef(null);
+   const startY = useRef(0);
    const [items, setItems] = useState(getMinutesArray(currentDate.getMinutes(),minutesStep));
    const [curentTranslateY, setCurentTranslateY] = useState((items.length/2-itemsView) * -itemHeight);
    const [marginTop, setMarginTop] = useState(0);
@@ -42,31 +50,33 @@ const Hour =({
       setIndexTranslate(getItemIndexTranslate());
    }, [curentTranslateY]);
 
-   const handleMouseDown = (e) => {
+   const handleMouseDown = (e:any) => {
       
       isDraging.current = true;
       startY.current = e.clientY;
-      wrapperRef.current.style.transition = 'transform 0s ease-out';
+      if(wrapperRef.current)
+         wrapperRef.current.style.transition = 'transform 0s ease-out';
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
 
    }
-   const handleMouseMove = (e) => {
+   const handleMouseMove = (e:any) => {
       
       if (!isDraging.current) return;
       const diff = e.clientY - startY.current;
       setCurentTranslateY(prev => prev + diff);
       startY.current = e.clientY;
    }
-   const handleMouseUp = (e) => {
+   const handleMouseUp = (e:any) => {
       isDraging.current = false;
       setCurentTranslateY(prev => Math.round(prev/itemHeight) * itemHeight);
-      wrapperRef.current.style.transition = 'transform 0.5s ease-out';
+      if(wrapperRef.current)
+         wrapperRef.current.style.transition = 'transform 0.5s ease-out';
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
    }
 
-   const handleOnWheel = (e) => {
+   const handleOnWheel = (e:any) => {
       if (e.deltaY < 0) {
          setCurentTranslateY(prev => prev + itemHeight);
       } else {
@@ -74,7 +84,7 @@ const Hour =({
       }
    }
 
-   const handleClick = (ind) => {
+   const handleClick = (ind:number) => {
       const indaxDiff = index - ind;
       setCurentTranslateY(prev => prev + (indaxDiff * itemHeight));  
    }

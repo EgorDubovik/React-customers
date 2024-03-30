@@ -31,7 +31,7 @@ const Grids = (props:any) => {
    const startPosition = useRef(0);
    const appointmentOffsetTop = useRef(0);
    const appointmentOffsetInner = useRef(0);
-   const appointmentRef = useRef(null);
+   const appointmentRef = useRef<HTMLDivElement | null>(null);
    const appointmentProcentHeightRef = useRef(0);
    const appointmentPxHeightRef = useRef(0);
    const appointmentIndex = useRef(0);
@@ -39,28 +39,29 @@ const Grids = (props:any) => {
    const deltaProcent = (15 * 100) / totalDuration.asMinutes();
    const deltaPx = useRef(0);
    const isMoving = useRef(false);
-   const handleMouseDown = (e:any,index:number) => {
 
+
+   const handleMouseDown = (e:any,index:number) => {
       if(e.target.className.indexOf('appointment-title') != -1) return;
       appointmentIndex.current = index;
       appointmentRef.current = e.currentTarget;
+
 
       const dayInnerElement = e.currentTarget.closest('.day-inner');
 
       dayInnerHeight.current = dayInnerElement.getBoundingClientRect().height;
       dayInnerOffsettop.current = dayInnerElement.getBoundingClientRect().top;
-      appointmentOffsetTop.current = appointmentRef.current.getBoundingClientRect().top;
-      
+      if(appointmentRef.current){
+         appointmentOffsetTop.current = appointmentRef.current.getBoundingClientRect().top;
+         appointmentPxHeightRef.current = appointmentRef.current.getBoundingClientRect().height;
+         appointmentRef.current.style.zIndex = '100';
+         appointmentRef.current.style.width = '100%';
+         appointmentRef.current.style.left = '0%';
+      }
       appointmentOffsetInner.current = appointmentOffsetTop.current - dayInnerOffsettop.current;
       appointmentProcentHeightRef.current = calculateTimePercentage(appointmentList[index].end) - calculateTimePercentage(appointmentList[index].start);
-      appointmentPxHeightRef.current = appointmentRef.current.getBoundingClientRect().height;
       startPosition.current = e.clientY;
-
       deltaPx.current = (deltaProcent * dayInnerHeight.current) / 100;
-      appointmentRef.current.style.zIndex = '100';
-      appointmentRef.current.style.width = '100%';
-      appointmentRef.current.style.left = '0%';
-
       isDragging.current = true;
    }
    
@@ -74,7 +75,8 @@ const Grids = (props:any) => {
          let t = Math.round(newTopPosition / deltaPx.current);
          newTopPosition = t * deltaPx.current;
          newProcentTop.current = (newTopPosition / dayInnerHeight.current) * 100;
-         appointmentRef.current.style.top = newProcentTop.current + '%';
+         if(appointmentRef.current)
+            appointmentRef.current.style.top = newProcentTop.current + '%';
       }
    }
 
@@ -84,8 +86,8 @@ const Grids = (props:any) => {
       appointmentList[appointmentIndex.current].start = moment(appointmentList[appointmentIndex.current].start.format('YYYY-MM-DD')+' '+startTime.format('HH:mm')).add(procentToMinutes(newProcentTop.current), 'minutes');
       appointmentList[appointmentIndex.current].end = moment(appointmentList[appointmentIndex.current].end.format('YYYY-MM-DD')+' '+startTime.format('HH:mm')).add(procentToMinutes(newProcentTop.current+appointmentProcentHeightRef.current), 'minutes');
       isDragging.current = false;
-
-      appointmentRef.current.style.zIndex = '1';
+      if(appointmentRef.current)
+         appointmentRef.current.style.zIndex = '1';
       isMoving.current = false;
       setAppointmentForCurentDate(appointmentList);
    }

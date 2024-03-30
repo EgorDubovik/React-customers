@@ -10,6 +10,12 @@ const rotateX = plugin(function ({ addUtilities }) {
 });
 module.exports = {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+    purge: {
+        content: ['./src/**/*.{js,jsx,ts,tsx,html}'],
+        options: {
+          safelist: ['badge-outline-info', 'badge-outline-success', 'badge-outline-danger', 'badge-outline-warning', 'badge-outline-primary', 'badge-outline-secondary', 'badge-outline-dark', 'badge-outline-light'],
+        },
+    },
     darkMode: 'class',
     theme: {
         container: {
