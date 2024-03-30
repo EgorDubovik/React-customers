@@ -1,4 +1,3 @@
-import React, { useEffect,useState } from 'react';
 import { Link } from 'react-router-dom';
 import AppointmentsScheduler from '../../../components/plugin/sheduler/AppointmentsScheduler';
 import IconPencilPaper from '../../../components/Icon/IconPencilPaper';

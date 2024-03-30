@@ -1,11 +1,11 @@
 import { useState, Fragment, useEffect } from 'react';
-import axiosClient from '../../../../store/axiosClient';
-import IconChecks from '../../../../components/Icon/IconChecks';
-import IconCreditCard from '../../../../components/Icon/IconCreditCard';
-import IconArrowBackward from '../../../../components/Icon/IconArrowBackward';
-import IconClock from '../../../../components/Icon/IconClock';
-import { ButtonLoader } from '../../../../components/loading/ButtonLoader';
-import {useAppointmentContext} from '../../../../context/AppointmentContext';
+import axiosClient from '../../../store/axiosClient';
+import IconChecks from '../../../components/Icon/IconChecks';
+import IconCreditCard from '../../../components/Icon/IconCreditCard';
+import IconArrowBackward from '../../../components/Icon/IconArrowBackward';
+import IconClock from '../../../components/Icon/IconClock';
+import { ButtonLoader } from '../../../components/loading/ButtonLoader';
+import {useAppointmentContext} from '../../../context/AppointmentContext';
 import { Dialog, Transition } from '@headlessui/react';
 
 const calculateTaxTotal = (services:any) => {
