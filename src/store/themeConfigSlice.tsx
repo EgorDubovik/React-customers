@@ -5,7 +5,7 @@ import themeConfig from '../theme.config';
 const defaultState = {
     isDarkMode: false,
     mainLayout: 'app',
-    theme: 'light',
+    theme: 'dark',
     menu: 'vertical',
     layout: 'full',
     rtlClass: 'ltr',

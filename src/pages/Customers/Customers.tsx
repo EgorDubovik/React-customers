@@ -13,6 +13,16 @@ import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
 import moment from 'moment';
 
+interface Record{
+   id: number;
+   name: string;
+   phone: string;
+   email: string;
+   address: any;
+   created_at: string;
+
+}
+
 const Contacts = () => {
    const dispatch = useDispatch();
    const navigator = useNavigate();
@@ -41,7 +51,7 @@ const Contacts = () => {
    const PAGE_SIZES = [10, 20, 30, 50, 100];
    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
    const [initialRecords, setInitialRecords] = useState([]);
-   const [records, setRecords] = useState(initialRecords);
+   const [records, setRecords] = useState<Record[]>(initialRecords);
    const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
       columnAccessor: 'firstName',
       direction: 'asc',
