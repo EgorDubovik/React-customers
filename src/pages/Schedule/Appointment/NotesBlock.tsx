@@ -75,7 +75,9 @@ const NotesBlock = () => {
             <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
                <table className="whitespace-nowrap">
                   <tbody className="dark:text-white">
-                     {notes?.length === 0 && <div className='text-center dark:text-gray-700 text-gray-400 mt-4'>Create first note...</div> }
+                     {notes?.length === 0 
+                        && 
+                        <tr><td><div className='text-center dark:text-gray-700 text-gray-400 mt-4'>Create first note...</div></td></tr> }
                      {
                         
                         notes?.map((note:any, index:number) => (
