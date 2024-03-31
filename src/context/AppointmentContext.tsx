@@ -38,6 +38,7 @@ interface AppointmentContextType {
   updateNotes: (notes: any[]) => void;
   updatePayments: (payments: Payments[]) => void;
   updateServices: (services: any[]) => void;
+  updateTime: (start: string, end: string) => void;
 }
 
 const AppointmentContext = createContext<AppointmentContextType | null>(null);
@@ -76,6 +77,12 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
     }
   }
 
+  const updateTime = (start: string, end: string) => {
+    if (appointment) {
+      setAppointment({ ...appointment, start:start, end:end });
+    }
+  }
+
   const value: AppointmentContextType = {
     appointment,
     setAppointment,
@@ -83,6 +90,7 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
     updateNotes,
     updatePayments,
     updateServices,
+    updateTime,
   };
 
   return (

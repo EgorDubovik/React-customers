@@ -12,19 +12,19 @@ const MyTimePicker = (props:any) => {
    const [currentTime, setCurrentTime] = useState(props.currentDate || new Date());
 
    const onHourChange = (value:any) => {
+      let newHour = value;
       if(params.is12AmPm){
          if(amPmLast === "PM")
-            params.currentDate.setHours(value === 12 ? 12 : (value+12));
+            newHour = value === 12 ? 12 : (value+12);
+         
          if(amPmLast === "AM")
-            params.currentDate.setHours(value === 12 ? 0 : value);
-      } else {
-         params.currentDate.setHours(value);
+            newHour = value === 12 ? 0 : value;
+            
       }
-      
+      params.currentDate.setHours(newHour);
       onDateChange();
    }
    const onMinuteChange = (value:any) => {
-      
       params.currentDate.setMinutes(value);
       onDateChange();
    }
@@ -40,7 +40,6 @@ const MyTimePicker = (props:any) => {
    const onAmPmChange = (value:any) => {
       
       if(value === "PM"){
-         console.log(params.currentDate.getHours());
          if(params.currentDate.getHours() < 12){
             params.currentDate.setHours(params.currentDate.getHours() + 12);
          }

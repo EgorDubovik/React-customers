@@ -1,6 +1,5 @@
 import { useEffect, useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { Link } from 'react-router-dom';
 import AppointmentsScheduler from '../../../components/plugin/sheduler/AppointmentsScheduler';
 import IconPencilPaper from '../../../components/Icon/IconPencilPaper';
 import { useAppointmentContext } from '../../../context/AppointmentContext';
@@ -8,9 +7,12 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../../store';
 import MyTimePicker from '../../../components/plugin/mytimepicker/src';
+import axiosClient from '../../../store/axiosClient';
+import {manualIsoString} from '../../../helpers/helper';
+import {ButtonLoader} from '../../../components/loading/ButtonLoader';
 
 const CalendarBlock = () => {
-   const {appointment} = useAppointmentContext();
+   const {appointment, updateTime} = useAppointmentContext();
    const theme = useSelector((state: IRootState) => state.themeConfig.theme);
    const [appointments, setAppointments] = useState<any[]>([]);
    const [modal, setModal] = useState(false);
@@ -18,8 +20,9 @@ const CalendarBlock = () => {
    const [timeFrom, setTimeFrom] = useState(new Date(appointment?.start || new Date()));
    const [timeTo, setTimeTo] = useState(new Date(appointment?.end || new Date(timeFrom.getTime() + 60*120*1000)));
    const [timeToIsSelected, setTimeToIsSelected] = useState(false);
-
+   const [updateStatus, setUpdateStatus] = useState(false);
    const onTimeFromChanged = (date:any) => {
+      console.log('time from from plugin', date);
       setTimeFrom(new Date(date));
       if(!timeToIsSelected) 
          setTimeTo(new Date(date.getTime() + 60*120*1000));
@@ -28,6 +31,27 @@ const CalendarBlock = () => {
    const onTimeToChanged = (date:any) => {
       setTimeToIsSelected(true);
       setTimeTo(new Date(date));
+   }
+
+   const updateAppointmentTimeHandle = () => {
+      setUpdateStatus(true);
+      
+      axiosClient.put(`/appointment/${appointment?.id}`, {
+         timeFrom: manualIsoString(timeFrom),
+         timeTo: manualIsoString(timeTo),
+      })
+      .then((res) => {
+         console.log(res);
+         updateTime(timeFrom.toString(), timeTo.toString());
+         setModal(false);
+      })
+      .catch((err) => {
+         alert('Something went wrong');
+         console.log(err);
+      })
+      .finally(() => {
+         setUpdateStatus(false);
+      });
    }
 
    const refactorAppointments = (appointments:any) => {
@@ -158,6 +182,12 @@ const CalendarBlock = () => {
                                        />
                                     }
                                     
+                                 </div>
+                                 <div className='flex justify-center mt-4'>
+                                    <button onClick={updateAppointmentTimeHandle} className='btn btn-primary w-full'>
+                                       Update
+                                       {updateStatus && <ButtonLoader/>}
+                                    </button>
                                  </div>
                               </div>   
                            </Dialog.Panel>
