@@ -13,19 +13,12 @@ const Schedule = () => {
    const [appointments, setAppointments] = useState<any[]>([]);
    const [viewType, setViewType] = useState('week');
    const theme = useSelector((state: IRootState) => state.themeConfig.theme);
+   
    useEffect(() => {
       dispatch(setPageTitle('Schedule'));
    });
    
    const [loading, setLoading] = useState(false);
-
-   const getTextColor = (appointment:any) => {
-      console.log("getColors", theme);
-      let bgColor = (theme === 'dark') ? '#ffffff29' : '#ccc';
-      bgColor = appointment.status == 0 ? appointment.bg : bgColor;
-      let textColor = appointment.status === 0 ? 'text-white' : ((theme === 'dark') ? 'text-gray-300' : 'text-gray-500');
-      return {bgColor, textColor};
-   }
 
    const refactorAppointments = (appointments:any) => {
       const getTextColor = (appointment:any) => {
@@ -59,25 +52,23 @@ const Schedule = () => {
       setLoading(true);
       axiosClient.get('/appointment')
          .then((res) => {
-               console.log(res.data.appointments);
-               refactorAppointments(res.data.appointments);
-               setLoading(false);
+            refactorAppointments(res.data.appointments);
          })
          .catch((err) => {
-            
-               console.log(err); 
+            alert('Something went wrong');
+            console.log(err); 
          })
          .finally(() => {
-               setLoading(false);
+            setLoading(false);
          });
    }, []);
    
    useEffect(() => {
       const handleResize = () => {
          if (window.innerWidth < 768) {
-               setViewType('day');
+            setViewType('day');
          } else {  
-               setViewType('week');
+            setViewType('week');
          }
       };
       window.addEventListener('resize', handleResize);
