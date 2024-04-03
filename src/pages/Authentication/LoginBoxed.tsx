@@ -2,18 +2,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import { useSignIn, useSignOut } from 'react-auth-kit';
-import Cookies from 'universal-cookie';
+import { useSignIn} from 'react-auth-kit';
 import IconMail from '../../components/Icon/IconMail';
 import IconLockDots from '../../components/Icon/IconLockDots';
 import axiosClient from '../../store/axiosClient';
 
 const LoginBoxed = () => {
-    
-    const cookies = new Cookies();
+
     const navigate = useNavigate();
     const signIn = useSignIn();
-    const singOut = useSignOut();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [errorMesage, setErrorMessage] = useState('Somthing went wrong. Please try again.');
@@ -21,7 +18,6 @@ const LoginBoxed = () => {
     useEffect(() => {
         dispatch(setPageTitle('Login Boxed'));
     });
-    
     
     const [formData, setFormData] = useState({email: '', password: ''})
     
