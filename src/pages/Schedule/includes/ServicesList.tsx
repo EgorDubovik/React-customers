@@ -74,7 +74,6 @@ const ServicesList = (props:any) => {
    useEffect(() => {
       axiosClient.get(`company/settings/services`)
          .then((res) => {
-            console.log(res.data);
             setCompanyServices(res.data.services);
          })
          .catch((err) => {

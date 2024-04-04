@@ -17,7 +17,7 @@ const LoginBoxed = () => {
     const [error, setError] = useState(false);
     useEffect(() => {
         dispatch(setPageTitle('Login Boxed'));
-    });
+    },[]);
     
     const [formData, setFormData] = useState({email: '', password: ''})
     
@@ -68,7 +68,7 @@ const LoginBoxed = () => {
                         <div className="mx-auto w-full max-w-[440px] relative">
                             
                             <div className="mb-8">
-                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">Sign in</h1>
+                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">SIGN IN</h1>
                                 <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to login</p>
                             </div>
                             {error && (

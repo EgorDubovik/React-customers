@@ -58,7 +58,7 @@ const CreateAppointment = () => {
    useEffect(() => {
       axiosClient.get(`customers/${customerId}`)
          .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             setCustomer({
                id: res.data.id,
                name: res.data.name,
@@ -76,6 +76,7 @@ const CreateAppointment = () => {
    }, []);
 
    const onTimeFromChanged = (date:any) => {
+      console.log('time from:',date);
       setTimeFrom(new Date(date));
       if(!timeToIsSelected) 
          setTimeTo(new Date(date.getTime() + 60*120*1000));
@@ -109,7 +110,6 @@ const CreateAppointment = () => {
       setModalTech(false);
    }
    useEffect(() => {
-      console.log('settechs',userId);
       setTechsIds([userId]);
    }, [userId]);
 

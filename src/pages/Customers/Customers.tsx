@@ -47,7 +47,7 @@ const Contacts = () => {
 	const [filteredItems, setFilteredItems] = useState<any>(customers);
 	const [page, setPage] = useState(1);
 	const [totalRecords, setTotalRecords] = useState(0);
-	const PAGE_SIZES = [1,10, 20, 30, 50, 100];
+	const PAGE_SIZES = [10, 20, 30, 50, 100];
 	const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
 	const [initialRecords, setInitialRecords] = useState([]);
 	const [records, setRecords] = useState<Record[]>(initialRecords);

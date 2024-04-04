@@ -38,10 +38,12 @@ const AmPmWheel = ({
    const wrapperRef = useRef<HTMLDivElement>(null);
    const isDraging = useRef(false);
    const startY = useRef(0);
+   const haveBeenDrag = useRef(false);
+   const movment = useRef(0);
+
 
    useEffect(() => {
       setItems(getAmPmArray(currentIndex));
-      
       if(onAmPmChange) onAmPmChange(items[currentIndex].value);
    }, [currentIndex]);
 
@@ -54,6 +56,8 @@ const AmPmWheel = ({
 
    const handleMouseDown = (e:any) => {
       isDraging.current = true;
+      movment.current = 0; 
+      haveBeenDrag.current = false;
       if(wrapperRef.current)
          wrapperRef.current.style.transition = 'transform 0s ease-out';
       document.addEventListener('mousemove', handleMouseMove);
@@ -63,6 +67,8 @@ const AmPmWheel = ({
    const handleMouseMove = (e:any) => {
       if (!isDraging.current) return;
       const diff = e.clientY - startY.current;
+      movment.current += diff;
+      if(movment.current > 10 || movment.current < 10) haveBeenDrag.current = true;
       setCurentTranslateY(prev => {
 
          if(prev + diff < itemHeight * (itemsView-1)) return (itemsView-1) * itemHeight;
@@ -82,7 +88,8 @@ const AmPmWheel = ({
    
    
    const handleClick = (index:number) => {
-      if(onAmPmChange) onAmPmChange(items[index].value);
+      if(haveBeenDrag.current) return;
+      setCurentTranslateY(itemHeight * (index *-1+1));
    }
    const handleOnWheel = (e:any) => {
       if(e.deltaY > 0){
