@@ -114,8 +114,8 @@ const Contacts = () => {
 						</div>
 					</div>
 					<div className="relative">
-						<input type="text" placeholder="Search Contacts" className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => searchHandler(e)} />
-						<button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
+						<input type="text" placeholder="Search Contacts" className="form-input py-2 pr-11 peer" value={search} onChange={(e) => searchHandler(e)} />
+						<button type="button" className="absolute right-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
 							<IconSearch className="mx-auto" />
 						</button>
 					</div>
