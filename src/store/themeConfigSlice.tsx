@@ -38,9 +38,6 @@ const initialState = {
         roles: [0],
         color: '#ccc',
     },
-    
-    
-    
 };
 
 const themeConfigSlice = createSlice({

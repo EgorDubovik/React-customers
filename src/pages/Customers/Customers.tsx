@@ -13,6 +13,8 @@ import moment from 'moment';
 import IconMapPin from '../../components/Icon/IconMapPin';
 import Pagination from './Includes/Pagination';
 import {SmallPrimaryLoader} from '../../components/loading/SmallCirculeLoader';
+import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
+import {PageLoadError} from '../../components/loading/Errors';
 
 interface Record {
 	id: number;
@@ -42,13 +44,12 @@ const Contacts = () => {
 	};
 
 	const [search, setSearch] = useState<any>('');
-	const [customers, setCustomers] = useState<any>([]);
-	const [filteredItems, setFilteredItems] = useState<any>(customers);
 	const [page, setPage] = useState(1);
 	const [totalRecords, setTotalRecords] = useState(0);
 	const PAGE_SIZES = [10, 20, 30, 50, 100];
 	const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
 	const [initialRecords, setInitialRecords] = useState([]);
+	const [loadingStatus, setLoadingStatus] = useState('loading');
 	const [records, setRecords] = useState<Record[]>(initialRecords);
 	const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
 		columnAccessor: 'firstName',
@@ -66,17 +67,17 @@ const Contacts = () => {
 
 	// load Ivocies
 	useEffect(() => {
-		// setLoadingStatus('loading');
+		setLoadingStatus('loading');
 		axiosClient
 			.get('/customers?page=' + page + '&limit=' + pageSize)
 			.then((res: any) => {
 				console.log('data:', res.data);
 				setInitialRecords(res.data.data);
 				setTotalRecords(res.data.total);
-				// setLoadingStatus('succsess');
+				setLoadingStatus('success');
 			})
 			.catch((err) => {
-				// setLoadingStatus('error');
+				setLoadingStatus('error');
 				console.log(err);
 			});
 	}, [page, pageSize]);
@@ -146,6 +147,9 @@ const Contacts = () => {
 					</div>
 				</div>
 			</div>
+			{loadingStatus === 'loading' && <PageCirclePrimaryLoader />}
+			{loadingStatus === 'error' && <div className='mt-4'><PageLoadError /></div>}
+			{loadingStatus === 'success' && <>
 			{viewType === 'list' && (
 				<div className="mt-5 panel p-0 border-0 overflow-hidden">
 					<div className="datatables pagination-padding">
@@ -249,6 +253,8 @@ const Contacts = () => {
 					<Pagination />
 				</>
 			)}
+			</>
+			}
 		</div>
 	);
 };
