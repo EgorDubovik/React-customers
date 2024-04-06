@@ -91,12 +91,12 @@ const Contacts = () => {
 	const searchData = async (s: string) => {
 		console.log('sending:',s);
 		setSearchLoading(true);
-		const respons = await axiosClient.get('/customers/search',{
+		const respons = await axiosClient.get('/customers',{
 			params: { search: s }
 		});
 		setSearchLoading(false);
-		setInitialRecords(respons.data);
-		setTotalRecords(respons.data.length);
+		setInitialRecords(respons.data.data);
+		setTotalRecords(respons.data.total);
 	}
 
 	const searchHandler = (e: any) => {
