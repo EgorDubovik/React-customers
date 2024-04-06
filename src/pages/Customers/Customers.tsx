@@ -1,6 +1,4 @@
-import { useState, Fragment, useEffect } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import Swal from 'sweetalert2';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import IconUserPlus from '../../components/Icon/IconUserPlus';
@@ -12,10 +10,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
 import moment from 'moment';
-import IconArrowLeft from '../../components/Icon/IconArrowLeft';
-import IconArrowForward from '../../components/Icon/IconArrowForward';
 import IconMapPin from '../../components/Icon/IconMapPin';
 import Pagination from './Includes/Pagination';
+import {SmallPrimaryLoader} from '../../components/loading/SmallCirculeLoader';
 
 interface Record {
 	id: number;
@@ -88,8 +85,31 @@ const Contacts = () => {
 		navigator('/customer/' + customer.id);
 	};
 
+	const debounceRef = useRef<NodeJS.Timeout | null>(null);
+	const [searchLoading, setSearchLoading] = useState(false);
+
+	const searchData = async (s: string) => {
+		console.log('sending:',s);
+		setSearchLoading(true);
+		const respons = await axiosClient.get('/customers/search',{
+			params: { search: s }
+		});
+		setSearchLoading(false);
+		setInitialRecords(respons.data);
+		setTotalRecords(respons.data.length);
+	}
+
 	const searchHandler = (e: any) => {
 		setSearch(e.target.value);
+		const s = e.target.value.trim();
+		if(s.length < 3) 
+			if(s.length === 0) searchData('');
+			else return;
+		
+		if(debounceRef.current) clearTimeout(debounceRef.current);
+		debounceRef.current = setTimeout(() => {
+			searchData(s);
+		}, 300);
 	};
 
 	return (
@@ -118,7 +138,10 @@ const Contacts = () => {
 					<div className="relative">
 						<input type="text" placeholder="Search Contacts" className="form-input py-2 pr-11 peer" value={search} onChange={(e) => searchHandler(e)} />
 						<button type="button" className="absolute right-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
-							<IconSearch className="mx-auto" />
+							{searchLoading 
+								? <SmallPrimaryLoader />
+								: <IconSearch className="mx-auto" />
+							}
 						</button>
 					</div>
 				</div>
