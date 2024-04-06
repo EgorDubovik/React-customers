@@ -14,6 +14,8 @@ import sortBy from 'lodash/sortBy';
 import moment from 'moment';
 import IconArrowLeft from '../../components/Icon/IconArrowLeft';
 import IconArrowForward from '../../components/Icon/IconArrowForward';
+import IconMapPin from '../../components/Icon/IconMapPin';
+import Pagination from './Includes/Pagination';
 
 interface Record {
 	id: number;
@@ -203,27 +205,25 @@ const Contacts = () => {
 						{records.map((customer: any) => {
 							return (
 								<div className="bg-white dark:bg-[#1a294166] rounded-md overflow-hidden shadow" key={customer.id}>
-									<div className="p-2">
-										<div className="user-info flex">
-											<div className="user-name w-3/4 font-bold dark:text-white">{customer.name}</div>
+									<div className="p-3">
+										<div className='flex items-center justify-between'>
+											
+											<div className="user-info w-full">
+												<div className="user-name w-3/4 font-bold dark:text-white">{customer.name}</div>
+												<div className=''>{customer.phone}</div>
+											</div>
+											<div className='text-center px-4 text-[12px]'>paid $126.56</div>
 										</div>
-										<div className="user-address mt-3 ml-1">{customer.address[0].full}</div>
+										<div className="user-address mt-3 ml-1 flex overflow-hidden">
+											<IconMapPin />
+											<div className='ml-2'>{customer.address[0].full}</div>
+										</div>
 									</div>
 								</div>
 							);
 						})}
 					</div>
-					<div className="mt-4 flex justify-between items-center dark:bg-[#1a294166] px-5 py-2 rounded">
-						<div className="pageSize">page size</div>
-						<div className="papagination">
-							<div className='pagination-list flex gap-2'>
-								<button className='page bg-gray-900 w-8 h-8 rounded-2xl text-center text-white'></button>
-								<button className='page bg-primary w-8 h-8 rounded-2xl text-center text-white'>1</button>
-								<button className='page bg-gray-900 w-8 h-8 rounded-2xl text-center text-white'>2</button>
-								<button className='page bg-gray-900 w-8 h-8 rounded-2xl text-center text-white'></button>
-							</div>
-						</div>
-					</div>
+					<Pagination />
 				</>
 			)}
 		</div>

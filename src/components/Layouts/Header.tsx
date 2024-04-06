@@ -23,10 +23,6 @@ const Header = () => {
 
     const dispatch = useDispatch();
     
-    const [user, setUser] = useState<any>({
-        name: '',
-        email: '',
-    });
     const singOut = useSignOut();
     const navigate = useNavigate();
 
@@ -48,7 +44,6 @@ const Header = () => {
                     color: res.data.user.color,
                 }
                 dispatch(setUserInformation(user));
-                // setUser(res.data);
             }
         });
     }
@@ -61,8 +56,8 @@ const Header = () => {
 
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const userInformation = useSelector((state: IRootState) => state.themeConfig.user);
-
-    
+    const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
+    const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
 
     const [notifications, setNotifications] = useState([
         {
@@ -97,7 +92,7 @@ const Header = () => {
                     <div className="horizontal-logo flex lg:hidden justify-between items-center ltr:mr-2 rtl:ml-2">
                         <Link to="/" className="main-logo flex items-center shrink-0">
                             <img className="w-8 ltr:-ml-1 rtl:-mr-1 inline" src="/assets/images/logo.svg" alt="logo" />
-                            <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5  font-semibold  align-middle hidden md:inline dark:text-white-light transition-all duration-300">VRISTO</span>
+                            <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5  font-semibold  align-middle hidden md:inline dark:text-white-light transition-all duration-300">Customers</span>
                         </Link>
                         <button
                             type="button"
@@ -223,10 +218,10 @@ const Header = () => {
                                 <ul className="text-dark dark:text-white-dark !py-0 w-[230px] font-semibold dark:text-white-light/90">
                                     <li>
                                         <div className="flex items-center px-4 py-4">
-                                            <div className="ltr:pl-4 rtl:pr-4 truncate">
+                                            <div className="truncate">
                                                 <h4 className="text-base">
-                                                    {userInformation.name}
-                                                    <span className="text-xs bg-success-light rounded text-success px-1 ltr:ml-2 rtl:ml-2">Admin</span>
+                                                    {userInformation.name} 
+                                                    <span className={"text-xs badge badge-outline-"+rolesColor[userInformation.roles[0]]+" px-1 ml-2"}>{rolesTitle[userInformation.roles[0]]}</span>
                                                 </h4>
                                                 <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
                                                     {userInformation.email}
