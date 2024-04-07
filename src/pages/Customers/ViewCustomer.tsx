@@ -5,6 +5,8 @@ import IconPencilPaper from '../../components/Icon/IconPencilPaper';
 import IconMapPin from '../../components/Icon/IconMapPin';
 import IconPhone from '../../components/Icon/IconPhone';
 import IconMail from '../../components/Icon/IconMail';
+import { viewCurrency } from '../../helpers/helper';
+import moment from 'moment';
 
 const ViewCustomer = () => {
 	const { id } = useParams();
@@ -70,21 +72,26 @@ const ViewCustomer = () => {
 					<div className="panel p-4">
 						<h3 className="font-semibold text-lg dark:text-white-light">Appointments history</h3>
 						<div className="appointments-list py-4">
-							<div className="flex justify-start items-center p-2 dark:bg-slate-950 rounded border-l border-blue-700">
-								<div className="text-center px-4">
-									<p>23</p>
-									<p>JUL</p>
-								</div>
-								<div className="border-l border-gray-500 h-full px-4 flex justify-between w-full items-center">
-									<div>
-										<p className="font-bold dark:text-gray-300">Washer</p>
-										<p>Replace heating eleelemt</p>
+							{customer?.appointments?.map((appointment: any, index: number) => (
+								<Link to={`/appointment/${appointment.id}`} key={index} className="flex justify-start items-center p-2 dark:bg-slate-950 rounded border-l mb-3" style={{ borderColor: appointment.techs.length>0 ? appointment.techs[0].color : '#1565c0'}}>
+									<div className="text-center px-4 whitespace-nowrap">
+										<p>{moment(appointment.start).format('DD MMM')}</p>
+										<p>{moment(appointment.start).format('hh:mm A')}</p>
 									</div>
-                           <div className='text-success text-center text-[12px]'>
-                              <p>$126.56</p>
-                           </div>
-								</div>
-							</div>
+									<div className="border-l border-gray-700 h-full px-4 flex justify-between w-full items-center">
+										<div>
+											<p className="font-bold dark:text-gray-300">{appointment?.services[0].title}</p>
+											<p>{appointment?.services[0].description}</p>
+										</div>
+
+										{appointment.remainingBalance > 0 ? (
+											<div className="text-danger text-center text-[12px]">{viewCurrency(appointment.remainingBalance)}</div>
+										) : (
+											<div className="text-success text-center text-[12px]">{viewCurrency(appointment.totalPaid)}</div>
+										)}
+									</div>
+								</Link>
+							))}
 						</div>
 					</div>
 				</div>

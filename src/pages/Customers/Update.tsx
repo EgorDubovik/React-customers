@@ -25,12 +25,12 @@ interface Customer{
 }
 
 const Update = () => {
+   const customerId = useParams().id ?? 0;
    const cancelButtonRef = React.useRef(null);
    const [loadingPage, setLoadingPage] = useState(true);
    const [modal, setModal] = useState(false);
    const [addressFormLoading, setAddressFormLoading] = useState(false);
    const [removeAddressLoading, setRemoveAddressLoading] = useState(0);
-   const customerId = useParams().id ?? 0;
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState(false);
    const [phoneError, setPhoneError] = useState(false);
