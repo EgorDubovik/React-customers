@@ -83,7 +83,7 @@ const Contacts = () => {
 	}, [page, pageSize]);
 
 	const editUser = (customer: any = null) => {
-		navigator('/customer/' + customer.id);
+		navigator('/customer/update/' + customer.id);
 	};
 
 	const debounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -204,7 +204,7 @@ const Contacts = () => {
 											<button type="button" className="btn btn-sm btn-outline-warning" onClick={() => editUser({ id })}>
 												Edit
 											</button>
-											<button type="button" className="btn btn-sm btn-outline-info">
+											<button type="button" className="btn btn-sm btn-outline-info" onClick={()=>navigator('/customer/'+id)}>
 												View
 											</button>
 										</div>

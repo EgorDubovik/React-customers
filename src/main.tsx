@@ -8,9 +8,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 // Tailwind css
 import './tailwind.css';
 
-// i18n (needs to be bundled)
-import './i18n';
-
 // Router
 import { BrowserRouter, Route, RouterProvider, Routes } from 'react-router-dom';
 import router from './router/index';

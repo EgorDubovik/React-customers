@@ -11,10 +11,11 @@ import Appointment from '../pages/Schedule/Appointment';
 const Error404 = lazy(() => import('../components/Error404'));
 import CreateCustomer from '../pages/Customers/CreateCustomer';
 import Create from '../pages/Invoice/Create';
-import Update from '../pages/Customers/Update';
+import {Update as CustomerUpdate} from '../pages/Customers/Update';
 import Invoices from '../pages/Invoice/Invoices';
 import Employees from '../pages/Employees';
 import CreateAppointment from '../pages/Schedule/CreateAppointment';
+import ViewCustomer from '../pages/Customers/ViewCustomer';
 
 
 const routes = [
@@ -53,7 +54,11 @@ const routes = [
             },
             {
                 path: '/customer/:id',
-                element : <DefaultLayout> <Update /></DefaultLayout>,
+                element : <DefaultLayout> <ViewCustomer /></DefaultLayout>,
+            },
+            {
+                path: '/customer/update/:id',
+                element : <DefaultLayout> <CustomerUpdate /></DefaultLayout>,
             },
             {
                 path: '/customers/create',

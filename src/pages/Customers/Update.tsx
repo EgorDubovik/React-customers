@@ -26,7 +26,7 @@ interface Customer{
 
 const Update = () => {
    const cancelButtonRef = React.useRef(null);
-   const [loadingPage, setLoadingPage] = useState(false);
+   const [loadingPage, setLoadingPage] = useState(true);
    const [modal, setModal] = useState(false);
    const [addressFormLoading, setAddressFormLoading] = useState(false);
    const [removeAddressLoading, setRemoveAddressLoading] = useState(0);
@@ -356,4 +356,4 @@ const Update = () => {
    );
 }
 
-export default Update;
+export {Update};
