@@ -29,7 +29,7 @@ const ViewCustomer = () => {
 	return (
 		<>
 			<div className="py-4">
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<div className="panel p-0">
 						<div className="flex items-center justify-between p-4">
 							<h3 className="font-semibold text-lg dark:text-white-light">Customer</h3>
@@ -69,31 +69,44 @@ const ViewCustomer = () => {
 							</div>
 						</div>
 					</div>
-					<div className="panel p-4">
-						<h3 className="font-semibold text-lg dark:text-white-light">Appointments history</h3>
-						<div className="appointments-list py-4">
-							{customer?.appointments?.map((appointment: any, index: number) => (
-								<Link to={`/appointment/${appointment.id}`} key={index} className="flex justify-start items-center p-2 dark:bg-slate-950 rounded border-l mb-3" style={{ borderColor: appointment.techs.length>0 ? appointment.techs[0].color : '#1565c0'}}>
-									<div className="text-center px-4 whitespace-nowrap">
-										<p>{moment(appointment.start).format('DD MMM')}</p>
-										<p>{moment(appointment.start).format('hh:mm A')}</p>
-									</div>
-									<div className="border-l border-gray-700 h-full px-4 flex justify-between w-full items-center">
-										<div>
-											<p className="font-bold dark:text-gray-300">{appointment?.services[0].title}</p>
-											<p>{appointment?.services[0].description}</p>
-										</div>
+               <div className='grid grid-flow-row gap-3'>
+                  <div className="panel p-4">
+                     <h3 className="font-semibold text-lg dark:text-white-light">Appointments history</h3>
+                     <div className="appointments-list py-4">
+                        {customer?.appointments?.map((appointment: any, index: number) => (
+                           <Link to={`/appointment/${appointment.id}`} key={index} className="flex justify-start items-center p-2 dark:bg-slate-950 rounded border-l mb-3" style={{ borderColor: appointment.techs.length>0 ? appointment.techs[0].color : '#1565c0'}}>
+                              <div className="text-center px-4 whitespace-nowrap">
+                                 <p>{moment(appointment.start).format('DD MMM')}</p>
+                                 <p>{moment(appointment.start).format('hh:mm A')}</p>
+                              </div>
+                              <div className="border-l border-gray-700 h-full px-4 flex justify-between w-full items-center">
+                                 <div>
+                                    <p className="font-bold dark:text-gray-300">{appointment?.services[0].title}</p>
+                                    <p>{appointment?.services[0].description}</p>
+                                 </div>
 
-										{appointment.remainingBalance > 0 ? (
-											<div className="text-danger text-center text-[12px]">{viewCurrency(appointment.remainingBalance)}</div>
-										) : (
-											<div className="text-success text-center text-[12px]">{viewCurrency(appointment.totalPaid)}</div>
-										)}
-									</div>
-								</Link>
-							))}
-						</div>
-					</div>
+                                 {appointment.remainingBalance > 0 ? (
+                                    <div className="text-danger text-center text-[12px]">{viewCurrency(appointment.remainingBalance)}</div>
+                                 ) : (
+                                    <div className="text-success text-center text-[12px]">{viewCurrency(appointment.totalPaid)}</div>
+                                 )}
+                              </div>
+                           </Link>
+                        ))}
+                     </div>
+                  </div>
+                  <div className='panel'>
+                     <h3 className="font-semibold text-lg dark:text-white-light">Tags</h3>
+                     <div className='teags-list'>
+                        {customer?.tags?.map((tag: any, index: number) => (
+                           <div key={index} className='tag-item'>
+                              <span className='text-primary'>{tag.name}</span>
+                           </div>
+                        ))}
+                     </div>
+                  </div>
+               </div>
+               <div className='panel'></div>
 				</div>
 			</div>
 		</>
