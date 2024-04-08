@@ -16,6 +16,7 @@ import Invoices from '../pages/Invoice/Invoices';
 import Employees from '../pages/Employees';
 import CreateAppointment from '../pages/Schedule/CreateAppointment';
 import ViewCustomer from '../pages/Customers/ViewCustomer';
+import ProfilePage from '../pages/ProfilePage';
 
 
 const routes = [
@@ -72,6 +73,10 @@ const routes = [
                 path: '/employees',
                 element: <DefaultLayout> <Employees /></DefaultLayout>,
             },
+            {
+                path: '/profile',
+                element: <DefaultLayout><ProfilePage /></DefaultLayout>,
+            }
         ]
     },
     //Authentication
