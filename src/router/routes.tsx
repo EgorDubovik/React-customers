@@ -16,7 +16,7 @@ import Invoices from '../pages/Invoice/Invoices';
 import Employees from '../pages/Employees';
 import CreateAppointment from '../pages/Schedule/CreateAppointment';
 import ViewCustomer from '../pages/Customers/ViewCustomer';
-import ProfilePage from '../pages/ProfilePage';
+import ProfilePage from '../pages/Profile/ProfilePage';
 
 
 const routes = [
