@@ -15,24 +15,6 @@ const ProfilePage = () => {
 	const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
 	const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
 
-   const [passwordForm, setPasswordForm] = useState({
-      oldPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-   });
-
-   const handlePasswordFormChange = (e: any) => {
-      setPasswordForm({
-         ...passwordForm,
-         [e.target.name]: e.target.value,
-      });
-   }
-
-   const updatePassword = (e: any) => {
-      e.preventDefault();
-      
-   }
-
 	useEffect(() => {
 		// Load user information
 		setLoadingStatus('loading');
