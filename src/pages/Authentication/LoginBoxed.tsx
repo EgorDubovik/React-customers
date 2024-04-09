@@ -23,6 +23,7 @@ const LoginBoxed = () => {
     
     const submitForm = (event: any) => {
         setLoading(true);
+        setError(false);
         event.preventDefault();
         axiosClient.post('/signin', formData)
             .then((res)=>{
@@ -36,12 +37,12 @@ const LoginBoxed = () => {
                     })){
                         navigate('/customers');
                     }
-                } else {
-                    console.log('Error')
                 }
             })
             .catch((err:any)=>{
-                if(err.response.status === 403)
+                if(err.code === 'ERR_NETWORK')
+                    setErrorMessage(err.message);
+                if(err.response && err.response.status === 403)
                     setErrorMessage(err.response.data.error);
                 setError(true);
             })
