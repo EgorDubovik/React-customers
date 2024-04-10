@@ -123,40 +123,40 @@ const Header = () => {
    }
 
    return (
-      <div className="flex gap-3 md:justify-end justify-around">
+      <div className="flex gap-2 md:justify-end justify-around mt-4 mb-2 ">
          <div>
             {
                appointment?.status === 0 && 
-               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-primary h-full">
+               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-primary h-full text-[13px]">
                   {
                      updateAppointmentLoading 
                         ? <ButtonLoader/> 
                         : <IconChecks />
                   }
-                  <span className='ml-2'>Finish Appointment</span>
+                  <span className='ml-1'>Finish Appointment</span>
                </button>   
             }
             {
                appointment?.status === 1 && 
-               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-outline-dark h-full">
+               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-outline-dark h-full text-[13px]">
                   {
                      updateAppointmentLoading 
                         ? <ButtonLoader/> 
                         : <IconArrowBackward/>
                   }
-                  <span className='ml-2'>Back to Active</span>
+                  <span className='ml-1'>Back to Active</span>
                </button>   
             }
          </div>
          <div>
-            <button type="button" className="btn btn-primary h-full">
-               <IconClock className='mr-2'/>
+            <button type="button" className="btn btn-primary h-full text-[13px]">
+               <IconClock className='mr-1'/>
                Start job
             </button>
          </div>
          <div>
             <button type="button" className="btn btn-primary h-full" onClick={()=>setModal(true)}>
-               <IconCreditCard className='mr-2'/>
+               <IconCreditCard className='mr-1'/>
                Pay 
             </button>
          </div>
@@ -184,8 +184,8 @@ const Header = () => {
                            leaveFrom="opacity-100 scale-100"
                            leaveTo="opacity-0 scale-95"
                         >
-                           <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark">
-                              <div className="p-4">
+                           <Dialog.Panel className="panel border-0 py-1 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark">
+                              <div className="py-4 px-2">
                                  <div className='title flex justify-between'>
                                     <span className='text-danger'>Remaining: {viewCurrency(remaining)}</span>
                                     <span className='text-success'>Total: {viewCurrency(total)}</span> 
@@ -197,7 +197,7 @@ const Header = () => {
                                     {remaining > 100 && <button type="button" onClick={()=>setAmount('deposit')} className={`btn ${typeOfAmount === 'deposit' ? 'btn-primary' : 'btn-outline-primary' } mr-4`}>Deposit</button>}
                                     <button type="button" onClick={()=>setAmount('full')} className={`btn ${typeOfAmount === 'full' ? 'btn-primary' : 'btn-outline-primary' }`}>Full</button>
                                  </div>
-                                 <div className='payment-methods mt-4'>
+                                 <div className='payment-methods mt-10'>
                                     <div className="relative inline-flex w-full align-middle justify-around">
                                        {
                                           patmentsType.map((type, index) => (
@@ -210,7 +210,7 @@ const Header = () => {
                                     </div>
                                  </div>
                                     
-                                 <div className="flex justify-end items-center mt-8">
+                                 <div className="flex justify-end items-center mt-10">
                                     <button type="button" onClick={() => setModal(false)} className="btn btn-outline-danger">
                                        Discard
                                     </button>

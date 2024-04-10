@@ -9,10 +9,7 @@ import {useAppointmentContext} from '../../../context/AppointmentContext';
 import CalendarBlock from './CalendarBlock';
 import Header from './Header';
 
-
 const Index = () => {
-
-
    const {appointment, setAppointment,updateStatus, updatePayments} = useAppointmentContext();
    const navigate = useNavigate();
    const [loadingStatus, setLoadingStatus] = useState(false);

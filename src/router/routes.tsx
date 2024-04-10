@@ -13,10 +13,11 @@ import CreateCustomer from '../pages/Customers/CreateCustomer';
 import Create from '../pages/Invoice/Create';
 import {Update as CustomerUpdate} from '../pages/Customers/Update';
 import Invoices from '../pages/Invoice/Invoices';
-import Employees from '../pages/Employees';
+const Employees = lazy(() => import('../pages/Employees'));
 import CreateAppointment from '../pages/Schedule/CreateAppointment';
 import ViewCustomer from '../pages/Customers/ViewCustomer';
 import ProfilePage from '../pages/Profile/ProfilePage';
+import PaymentsIndex from '../pages/Payments/PaymentsIndex';
 
 
 const routes = [
@@ -76,6 +77,10 @@ const routes = [
             {
                 path: '/profile',
                 element: <DefaultLayout><ProfilePage /></DefaultLayout>,
+            },
+            {
+                path: '/payments',
+                element: <DefaultLayout><PaymentsIndex /></DefaultLayout>
             }
         ]
     },

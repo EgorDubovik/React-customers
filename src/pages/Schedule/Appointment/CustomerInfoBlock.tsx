@@ -12,7 +12,7 @@ const CustomerInfoBlock = (props:any) => {
    const [customer, setCustomer] = useState(props.customer || {});   
    const [address, setAddress] = useState(props.address || {});
    return (
-      <div className="panel p-0">
+      <div className="panel p-0 pb-4">
          <div className="flex items-center justify-between p-4">
                <h3 className="font-semibold text-lg dark:text-white-light">Customer</h3>
                <Link to={"/customer/"+(customer.id ?? 0)+"?redirectTo="+window.location.pathname} className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
