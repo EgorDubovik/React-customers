@@ -144,7 +144,7 @@ const CreateAppointment = () => {
 
    return (
       <div>
-         <div className="flex items-center justify-between flex-wrap gap-4">
+         <div className="flex items-center justify-center flex-wrap gap-4 my-4 md:my-0 md:justify-start">
             <h2 className="text-xl">Create appointment</h2>
          </div>
          <div className='conteiner w-full md:w-1/3 m-auto'>

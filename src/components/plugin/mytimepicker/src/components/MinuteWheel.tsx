@@ -76,13 +76,41 @@ const Hour =({
       document.removeEventListener('mouseup', handleMouseUp);
    }
 
-   const handleOnWheel = (e:any) => {
-      if (e.deltaY < 0) {
-         setCurentTranslateY(prev => prev + itemHeight);
-      } else {
-         setCurentTranslateY(prev => prev - itemHeight);
-      }
-   }
+   // Touch Events
+	const handleTouchStart = (e: any) => {
+		isDraging.current = true;
+		startY.current = e.touches[0].clientY;
+		if (wrapperRef.current) wrapperRef.current.style.transition = 'transform 0s ease-out';
+		document.addEventListener('touchmove', handleTouchMove, { passive: false });
+		document.addEventListener('touchend', handleTouchEnd);
+	};
+
+	const handleTouchMove = (e: any) => {
+		if (!isDraging.current) return;
+		if (e.cancelable && typeof e.preventDefault === 'function') {
+			e.preventDefault(); // Prevent default scrolling behavior if possible
+		}
+		const diff = e.touches[0].clientY - startY.current;
+		setCurentTranslateY((prev) => prev + diff);
+		startY.current = e.touches[0].clientY;
+	};
+
+	const handleTouchEnd = () => {
+		isDraging.current = false;
+		setCurentTranslateY((prev) => Math.round(prev / itemHeight) * itemHeight);
+		if (wrapperRef.current) wrapperRef.current.style.transition = 'transform 0.5s ease-out';
+		document.removeEventListener('touchmove', handleTouchMove);
+		document.removeEventListener('touchend', handleTouchEnd);
+	};
+
+	const handleOnWheel = (e: any) => {
+		e.preventDefault();
+		if (e.deltaY < 0) {
+			setCurentTranslateY((prev) => prev + itemHeight);
+		} else {
+			setCurentTranslateY((prev) => prev - itemHeight);
+		}
+	};
 
    const handleClick = (ind:number) => {
       const indaxDiff = index - ind;
@@ -90,19 +118,23 @@ const Hour =({
    }
 
    useEffect(() => {
-      return () => {
-         document.removeEventListener('mousemove', handleMouseMove);
-         document.removeEventListener('mouseup', handleMouseUp);
-       };
-   },[]);
+		wrapperRef.current?.addEventListener('wheel', handleOnWheel, { passive: false });
+		return () => {
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
+			document.removeEventListener('touchmove', handleTouchMove);
+			document.removeEventListener('touchend', handleTouchEnd);
+		};
+	}, []);
 
    return (
       <div className="picker-wheel">
          <div className="picker-wheel-middel-line" style={{ height:itemHeight+"px" }}></div>
          <div 
             onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
             ref = {wrapperRef} 
-            onWheel={handleOnWheel}
+            // onWheel={handleOnWheel}
             className="picker-wheel-items" 
             style={{ transform:'translateY('+curentTranslateY+'px)',marginTop:marginTop+'px'}}>
             {items.map((item, index) => (
