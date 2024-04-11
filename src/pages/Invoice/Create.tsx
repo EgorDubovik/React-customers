@@ -1,6 +1,6 @@
 import { useEffect,useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import IconSend from '../../components/Icon/IconSend';
 import IconPrinter from '../../components/Icon/IconPrinter';
@@ -42,6 +42,7 @@ interface Appointment {
 const Create = () => {
    const {appointmentId} = useParams();
    const dispatch = useDispatch();
+   const navigator = useNavigate();
    const [appointment, setAppointment] = useState<Appointment>();
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState(false);
@@ -71,8 +72,7 @@ const Create = () => {
       setSendLoading(true);
       axiosClient.post("appointment/"+appointmentId+"/invoice-send")
       .then((res) => {
-
-         
+         navigator('/invoices');
       })
       .catch((err) => {
          alert('Something went wrong');
