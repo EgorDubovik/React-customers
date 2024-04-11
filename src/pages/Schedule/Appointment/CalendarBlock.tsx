@@ -150,20 +150,20 @@ const CalendarBlock = () => {
                            leaveFrom="opacity-100 scale-100"
                            leaveTo="opacity-0 scale-95"
                         >
-                           <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark">
-                              <div className="p-4">
-                                 <div className='mt-5'>
+                           <Dialog.Panel className="panel border-0 py-6 px-4 rounded-lg overflow-hidden w-full max-w-lg mt-10  text-black dark:text-white-dark">
+                              <div className="p-2 md:p-4">
+                                 <div className='mt-1'>
                                     <div className='mb-5 flex justify-center bg-gray-100 dark:bg-white-dark/10 rounded p-2'>
-                                       <div onClick={()=>setSelectedTime('timeFrom')} className={'w-1/2 timeFrom flex justify-center items-center cursor-pointer py-3 rounded '+((selectedTime === 'timeFrom') ? "dark:bg-black/25 dark:text-white font-bold bg-gray-200" : "")}>
+                                       <div onClick={()=>setSelectedTime('timeFrom')} className={'w-1/2 timeFrom flex justify-between items-center cursor-pointer py-3 px-2 rounded '+((selectedTime === 'timeFrom') ? "dark:bg-black/25 dark:text-white font-bold bg-gray-200" : "")}>
                                           <div>From:</div>
-                                          <div className='ml-10 text-center'>
+                                          <div className='text-center'>
                                              <div>{moment(timeFrom).format('MMM DD')}</div>
                                              <div>{moment(timeFrom).format('hh:mm A')}</div>
                                           </div>
                                        </div>
-                                       <div onClick={()=>setSelectedTime('timeTo')} className={'w-1/2 timeFrom flex justify-center items-center cursor-pointer py-3 rounded '+((selectedTime === 'timeTo') ? "dark:bg-black/25 dark:text-white font-bold bg-gray-200" : "")}>
+                                       <div onClick={()=>setSelectedTime('timeTo')} className={'w-1/2 timeFrom flex justify-between items-center cursor-pointer py-3 px-2 rounded '+((selectedTime === 'timeTo') ? "dark:bg-black/25 dark:text-white font-bold bg-gray-200" : "")}>
                                           <div>To:</div>
-                                          <div className='ml-10 text-center'>
+                                          <div className='text-center'>
                                              <div>{moment(timeTo).format('MMM DD')}</div>
                                              <div>{moment(timeTo).format('hh:mm A')}</div>   
                                           </div>

@@ -127,7 +127,7 @@ const Header = () => {
          <div>
             {
                appointment?.status === 0 && 
-               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-primary h-full text-[13px]">
+               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-primary h-full text-[13px] px-4 md:px-4">
                   {
                      updateAppointmentLoading 
                         ? <ButtonLoader/> 
@@ -138,7 +138,7 @@ const Header = () => {
             }
             {
                appointment?.status === 1 && 
-               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-outline-dark h-full text-[13px]">
+               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-outline-dark h-full text-[13px] px-3 md:px-4">
                   {
                      updateAppointmentLoading 
                         ? <ButtonLoader/> 
@@ -149,13 +149,13 @@ const Header = () => {
             }
          </div>
          <div>
-            <button type="button" className="btn btn-primary h-full text-[13px]">
+            <button type="button" className="btn btn-primary h-full text-[13px] px-3 md:px-4">
                <IconClock className='mr-1'/>
                Start job
             </button>
          </div>
          <div>
-            <button type="button" className="btn btn-primary h-full" onClick={()=>setModal(true)}>
+            <button type="button" className="btn btn-primary h-full text-[13px] px-3 md:px-4"  onClick={()=>setModal(true)}>
                <IconCreditCard className='mr-1'/>
                Pay 
             </button>
