@@ -22,7 +22,6 @@ const CalendarBlock = () => {
    const [timeToIsSelected, setTimeToIsSelected] = useState(false);
    const [updateStatus, setUpdateStatus] = useState(false);
    const onTimeFromChanged = (date:any) => {
-      console.log('time from from plugin', date);
       setTimeFrom(new Date(date));
       if(!timeToIsSelected) 
          setTimeTo(new Date(date.getTime() + 60*120*1000));
@@ -56,7 +55,6 @@ const CalendarBlock = () => {
 
    const refactorAppointments = (appointments:any) => {
       const getTextColor = (appointment:any) => {
-         console.log("getColors", theme);
          let bgColor = (theme === 'dark') ? '#ffffff29' : '#ccc';
          bgColor = appointment.status == 0 ? (appointment?.techs?.length > 0 ?  appointment?.techs[0].color : "#1565C0") : bgColor;
          let textColor = appointment.status === 0 ? 'text-white' : ((theme === 'dark') ? 'text-gray-300' : 'text-gray-500');
@@ -75,7 +73,6 @@ const CalendarBlock = () => {
             addClass: textColor,
          };
       });
-      console.log(appointmentList);
       setAppointments(appointmentList);
    }
 
@@ -83,16 +80,6 @@ const CalendarBlock = () => {
    useEffect(() => {
       refactorAppointments([appointment]);
    }, [theme, appointment]);
-
-   // const selectedAppointment = [
-   //    {
-   //       'start': appointment?.start,
-   //       'end': appointment?.end,
-   //       'addClass' : appointment?.status === 0 ? 'text-white' : 'text-gray-600',
-   //       'bg':appointment?.status === 0 ? appointment?.techs?.length > 0 ?  appointment?.techs[0].color : "#1565C0" : "#ccc",
-   //       'title': appointment?.customer.name,
-   //    }
-   // ];
    
    return (
       <>

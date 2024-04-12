@@ -91,9 +91,9 @@ const ServicesList = (props:any) => {
                         <tr key={index}>
                            <td>
                               <div>{service.title}</div>
-                              <div className='mt-2 dark:text-gray-400 overflow-hidden' style={{ whiteSpace: 'normal' }} >{service.description}</div>
+                              <div className='mt-2 dark:text-gray-400 overflow-hidden' style={{ whiteSpace: 'pre-line' }} >{service.description}</div>
                            </td>
-                           {/* <td className='text-balance'> {service.description} </td> */}
+                           
                            <td className="">{viewCurrency(parseFloat(service.price))}</td>
                            <td className="py-3 px-2 md:p-3 border-b border-[#ebedf2] dark:border-[#191e3a] text-right">
                               <div className='text-right'>

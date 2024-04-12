@@ -109,11 +109,10 @@ const ServicesBlock = (props:any) => {
                      {
                         payments.map((payment:any, index:number) => (
                            <tr key={index}>
-                              <td>#{payment.id}</td>
+                              {/* <td>#{payment.id}</td> */}
                               <td>{moment(payment.created_at).format('MMM DD YYYY h:mm A')}</td>
                               <td>{payment.payment_type}</td>
-                              <td className="">${ payment.amount}</td>
-                              
+                              <td>${ payment.amount}</td>
                            </tr>
                         ))
                      }
