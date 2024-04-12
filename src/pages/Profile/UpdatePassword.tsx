@@ -74,10 +74,12 @@ const UpdatePassword = () => {
 					<label htmlFor="groupsecond">Confirm new password</label>
 					<input id="groupsecond" type="password" placeholder="Confirm password" className="form-input" name="confirmPassword" value={passwordForm.confirmPassword} onChange={handlePasswordFormChange} />
 				</div>
-				<button type="submit" className="btn btn-primary !mt-6">
-					Submit
-					{loading && <ButtonLoader />}
-				</button>
+				<div className='flex justify-end'>
+					<button type="submit" className="btn btn-primary">
+						Submit
+						{loading && <ButtonLoader />}
+					</button>
+				</div>
 			</form>
 		</div>
 	);

@@ -46,12 +46,6 @@ const ProfilePage = () => {
 				<>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
 						<div className="panel">
-							{/* <div className="flex items-center justify-between mb-5">
-								<h5 className="font-semibold text-lg dark:text-white-light">Profile</h5>
-								<Link className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full" to="/profile/update">
-									<IconPencilPaper className="w-4 h-4" />
-								</Link>
-							</div> */}
 							<div className="flex items-center justify-center">
 								<div className="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-2xl text-gray-300" style={{ backgroundColor: user.color ?? '#ccc' }}>
 									{getTechAbr(user.name)}
