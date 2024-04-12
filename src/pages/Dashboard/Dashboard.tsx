@@ -18,9 +18,9 @@ const Dashboard = () => {
 			.then((res) => {
 				console.log('data:', res.data);
             const newStat = {
-               currentMonth: res.data.sumCurentMonth,
-               currentWeek: res.data.sumCurentWeek,
-               today: 0,
+               currentMonth: res.data.sumCurrentMonth,
+               currentWeek: res.data.sumCurrentWeek,
+               today: res.data.sumCurrentDay,
                avarage: 0,
             }
 				setMainState(newStat);

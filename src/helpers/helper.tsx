@@ -1,5 +1,6 @@
 
 export const viewCurrency = (amount:number) => {
+   if(isNaN(amount)) return '$0.00';
    return amount.toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
