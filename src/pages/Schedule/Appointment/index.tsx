@@ -63,7 +63,7 @@ const Index = () => {
                      {/* Tech for mobile */}
                      
                      <div className='panel p-4 block md:hidden'>
-                        <TechBlock techs={appointment?.techs} />
+                        <TechBlock techs={appointment?.techs} appointmentId={appointment?.id} />
                      </div>
 
                      {/* Images for mobile*/}

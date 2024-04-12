@@ -6,12 +6,12 @@ import { useSelector } from 'react-redux'
 import { IRootState } from '../../../store'
 import axiosClient from '../../../store/axiosClient'
 
-const TechBlock = (preps:any) => {
+const TechBlock = (props:any) => {
    
-   const [techs, setTechs]  = useState(preps.techs || []);
+   const [techs, setTechs]  = useState(props.techs || []);
    const [techsIds, setTechsIds] = useState<Number[]>([]);
    const [companyTechs, setCompanyTechs] = useState([]);
-   const appointmentId = preps.appointmentId || 0;
+   const appointmentId = props.appointmentId || 0;
    const [modal, setModal] = React.useState(false);
    const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
    const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
@@ -37,6 +37,7 @@ const TechBlock = (preps:any) => {
    }
 
    const saveNewTechs = () => {
+      console.log(appointmentId);
       axiosClient.post(`appointment/tech/${appointmentId}`, {techs:techsIds})
          .then((res) => {
             console.log(res);
