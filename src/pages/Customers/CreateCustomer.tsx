@@ -52,7 +52,7 @@ const CreateCustomer = () => {
       setLoading(true);
       axiosClient.post('/customers', dataForm)
          .then(res => {
-            navigate('/customers');
+            navigate('/appointment/create/'+res.data.id);
          })
          .catch(err => {
             setError(true);
@@ -85,7 +85,6 @@ const CreateCustomer = () => {
       if(result.zipCode)
          dataForm.zip = result.zipCode;
       setDataForm({...dataForm});
-      
 
    }
 
