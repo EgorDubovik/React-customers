@@ -7,6 +7,7 @@ import IconPhone from '../../components/Icon/IconPhone';
 import IconMail from '../../components/Icon/IconMail';
 import { viewCurrency } from '../../helpers/helper';
 import moment from 'moment';
+import IconPlus from '../../components/Icon/IconPlus';
 
 const ViewCustomer = () => {
 	const { id } = useParams();
@@ -73,7 +74,13 @@ const ViewCustomer = () => {
 					</div>
 					<div className="grid grid-flow-row gap-3">
 						<div className="panel p-4">
-							<h3 className="font-semibold text-lg dark:text-white-light">Appointments history</h3>
+							<div className='flex items-center justify-between'>
+								<h3 className="font-semibold text-lg dark:text-white-light">Appointments history</h3>
+								<Link to={`/appointment/create/${customer.id}`} className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full" >
+									<IconPlus className='w-4 h-4'/>
+								</Link>
+							</div>
+
 							<div className="appointments-list py-4">
 								{customer?.appointments?.map((appointment: any, index: number) => (
 									<Link
