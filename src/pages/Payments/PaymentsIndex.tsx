@@ -17,7 +17,11 @@ const PaymentsIndex = () => {
 	const [filteredItems, setFilteredItems] = useState([]);
 	const [techs, setTechs] = useState([]);
 	const [selectedTechs, setSelectedTechs] = useState<any[]>([]);
-
+	const [totalPerPeriod, setTotalPerPeriod] = useState(0);
+	const [creditTransaction, setCreditTransaction] = useState(0);
+	const [transferTransaction, setTransferTransaction] = useState(0);
+	const [cashTransaction, setCashTransaction] = useState(0);
+	const [checkTransaction, setCheckTransaction] = useState(0);
 	useEffect(() => {
 		setFilteredItems(payments);
 	}, [payments]);
@@ -42,6 +46,12 @@ const PaymentsIndex = () => {
 				console.log(response.data);
 				setPayments(response.data.payments);
 				setTechs(response.data.techs);
+				setTotalPerPeriod(response.data.totalPerPeriod);
+				setCreditTransaction(response.data.creditTransaction);
+				setTransferTransaction(response.data.transferTransaction);
+				setCashTransaction(response.data.cashTransaction);
+				setCheckTransaction(response.data.checkTransaction);
+
 				setLoadingStatus('success');
 			})
 			.catch((error) => {
@@ -63,61 +73,17 @@ const PaymentsIndex = () => {
 			{loadingStatus === 'loading' && <PageCirclePrimaryLoader />}
 			{loadingStatus === 'error' && <PageLoadError />}
 			{loadingStatus === 'success' && (
-				<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-					<div className="md:col-span-3 ">
-						<div className="panel p-4">
-							<h2>Graph</h2>
-						</div>
-						<div className="panel p-0 overflow-hidden mt-4">
-							<div className="table-responsive">
-								<table className="table-striped table-hover">
-									<thead>
-										<tr>
-											<th>ID</th>
-											<th>Customer</th>
-											<th>Appointment</th>
-											<th>Amount</th>
-											<th>Day of payment</th>
-											<th>Payment type</th>
-											<th className="!text-center">Actions</th>
-										</tr>
-									</thead>
-									<tbody>
-										{filteredItems.map((payment: any) => {
-											return (
-												<tr key={payment.id}>
-													<td>{payment.id}</td>
-													<td className="text-primary whitespace-nowrap">
-														<Link to={'/customer/' + payment.customer?.id ?? 0}>{payment.customer ? payment.customer.name : 'Unknow'}</Link>
-													</td>
-													<td className="text-primary whitespace-nowrap">
-														<Link to={'/appointment/' + payment.appointment?.id ?? 0}>
-															Appointment at {payment.appointment ? moment(payment.appointment.created_at).format('d-m-Y') : 'Unknow'}
-														</Link>
-													</td>
-													<td className={'whitespace-nowrap' + (payment.amount > 0) ? 'text-success' : 'text-danger'}>{viewCurrency(payment.amount)}</td>
-													<td>{moment(payment.date).format('DD MMM YYYY')}</td>
-													<td>{payment.payment_type}</td>
-													<td>
-														<div className="flex justify-center">
-															<IconTrashLines className="text-danger" />
-														</div>
-													</td>
-												</tr>
-											);
-										})}
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-					<div className="panel">
-						<h2>Technitial</h2>
-						<ul className="mt-2">
+				<div className="grid grid-flow-row gap-4">
+					<div className="panel p-2">
+						<ul className="">
 							{techs.map((tech: any, index: number) => (
 								<li
 									key={index}
-									className={'p-2 mb-2 flex cursor-pointer items-center ' + (selectedTechs.includes(tech.id) ? 'dark:bg-success-dark-light' : 'dark:bg-gray-900') + '  bg-gray-100 rounded-md'}
+									className={
+										'p-2 float-left px-4 m-1 first:ml-0 flex cursor-pointer items-center ' +
+										(selectedTechs.includes(tech.id) ? 'dark:bg-success-dark-light' : 'dark:bg-gray-900') +
+										'  bg-gray-100 rounded-md'
+									}
 									onClick={() => toogleViewTech(tech.id)}
 								>
 									<div className="mr-2">
@@ -132,6 +98,75 @@ const PaymentsIndex = () => {
 								</li>
 							))}
 						</ul>
+					</div>
+
+					<div className="panel p-4">
+						<h2>Graph</h2>
+					</div>
+					<div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-6 text-center">
+						<div className="panel text-center col-span-2">
+							Total per period
+							<div className="text-[25px] font-bold mt-2">{viewCurrency(totalPerPeriod)}</div>
+						</div>
+						<div className="panel">
+							Credit transaction
+							<div className="text-[25px] font-bold mt-2">{viewCurrency(creditTransaction)}</div>
+						</div>
+						<div className="panel">
+							Transfer transaction
+							<div className="text-[25px] font-bold mt-2">{viewCurrency(transferTransaction)}</div>
+						</div>
+						<div className="panel">
+							Cash transaction
+							<div className="text-[25px] font-bold mt-2">{viewCurrency(cashTransaction)}</div>
+						</div>
+						<div className="panel">
+							Check transaction
+							<div className="text-[25px] font-bold mt-2">{viewCurrency(checkTransaction)}</div>
+						</div>
+					</div>
+
+					<div className="panel p-0 overflow-hidden">
+						<div className="table-responsive">
+							<table className="table-striped table-hover">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Customer</th>
+										<th>Appointment</th>
+										<th>Amount</th>
+										<th>Day of payment</th>
+										<th>Payment type</th>
+										<th className="!text-center">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									{filteredItems.map((payment: any) => {
+										return (
+											<tr key={payment.id}>
+												<td>{payment.id}</td>
+												<td className="text-primary whitespace-nowrap">
+													<Link to={'/customer/' + payment.customer?.id ?? 0}>{payment.customer ? payment.customer.name : 'Unknow'}</Link>
+												</td>
+												<td className="text-primary whitespace-nowrap">
+													<Link to={'/appointment/' + payment.appointment?.id ?? 0}>
+														Appointment at {payment.appointment ? moment(payment.appointment.created_at).format('d-m-Y') : 'Unknow'}
+													</Link>
+												</td>
+												<td className={'whitespace-nowrap' + (payment.amount > 0) ? 'text-success' : 'text-danger'}>{viewCurrency(payment.amount)}</td>
+												<td>{moment(payment.date).format('DD MMM YYYY')}</td>
+												<td>{payment.payment_type}</td>
+												<td>
+													<div className="flex justify-center">
+														<IconTrashLines className="text-danger" />
+													</div>
+												</td>
+											</tr>
+										);
+									})}
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			)}
