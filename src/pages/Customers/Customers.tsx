@@ -167,7 +167,7 @@ const Contacts = () => {
 									sortable: true,
 									render: ({ name, id }) => (
 										<div className="flex items-center font-semibold">
-											<Link to={`/appointment/create/${id}`} className="text-primary underline hover:no-underline">
+											<Link to={`/customer/${id}`} className="text-primary underline hover:no-underline">
 												{name}
 											</Link>
 										</div>
