@@ -122,10 +122,10 @@ const Invoice = () => {
                            title: 'Actions',
                            sortable: false,
                            textAlignment: 'center',
-                           render: ({ id }) => (
+                           render: ({ id, pdf_path }) => (
                               <div className="flex gap-4 items-center w-max mx-auto">
                                     
-                                    <NavLink to="/apps/invoice/preview" className="flex hover:text-primary">
+                                    <NavLink target='_blank' to={"https://edservice.s3.us-east-2.amazonaws.com/invoices/"+pdf_path} className="flex hover:text-primary">
                                        <IconEye />
                                     </NavLink>
                                    
