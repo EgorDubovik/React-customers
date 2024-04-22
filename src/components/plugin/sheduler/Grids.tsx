@@ -1,4 +1,4 @@
-import React, { useState,useRef } from 'react';
+import { useRef } from 'react';
 import moment from 'moment';
 
 const Grids = (props:any) => {
@@ -81,8 +81,11 @@ const Grids = (props:any) => {
    }
 
    const handleMouseUp = () => {
-      if(!isDragging.current || !isMoving) return;
-
+      if(!isDragging.current || !isMoving.current){
+         isDragging.current = false;
+         isMoving.current = false;
+         return;
+      }
       appointmentList[appointmentIndex.current].start = moment(appointmentList[appointmentIndex.current].start.format('YYYY-MM-DD')+' '+startTime.format('HH:mm')).add(procentToMinutes(newProcentTop.current), 'minutes');
       appointmentList[appointmentIndex.current].end = moment(appointmentList[appointmentIndex.current].end.format('YYYY-MM-DD')+' '+startTime.format('HH:mm')).add(procentToMinutes(newProcentTop.current+appointmentProcentHeightRef.current), 'minutes');
       isDragging.current = false;

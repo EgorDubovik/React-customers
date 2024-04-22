@@ -7,6 +7,7 @@ import { viewCurrency } from '../../helpers/helper';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
 import { PageLoadError } from '../../components/loading/Errors';
 import { getTechAbr } from '../../helpers/helper';
+import ReactApexChart from 'react-apexcharts';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 const PaymentsIndex = () => {
@@ -68,6 +69,142 @@ const PaymentsIndex = () => {
 		}
 	};
 
+	const options = {
+		chart: {
+			 height: 325,
+			 type: 'area',
+			 fontFamily: 'Nunito, sans-serif',
+			 zoom: {
+				  enabled: false,
+			 },
+			 toolbar: {
+				  show: false,
+			 },
+		},
+
+		dataLabels: {
+			 enabled: false,
+		},
+		stroke: {
+			 show: true,
+			 curve: 'smooth',
+			 width: 2,
+			 lineCap: 'square',
+		},
+		dropShadow: {
+			 enabled: true,
+			 opacity: 0.2,
+			 blur: 10,
+			 left: -7,
+			 top: 22,
+		},
+		colors: ['#2196F3'],
+		markers: {
+			 discrete: [
+				  {
+						seriesIndex: 0,
+						dataPointIndex: 6,
+						fillColor: '#1B55E2',
+						strokeColor: 'transparent',
+						size: 7,
+				  },
+			 ],
+		},
+		labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+		xaxis: {
+			 axisBorder: {
+				  show: false,
+			 },
+			 axisTicks: {
+				  show: false,
+			 },
+			 crosshairs: {
+				  show: true,
+			 },
+			 labels: {
+				  offsetX: 0,
+				  offsetY: 5,
+				  style: {
+						fontSize: '12px',
+						cssClass: 'apexcharts-xaxis-title',
+				  },
+			 },
+		},
+		yaxis: {
+			 tickAmount: 7,
+			 labels: {
+				  formatter: (value: number) => {
+						return value / 1000 + 'K';
+				  },
+				  offsetX:  -10,
+				  offsetY: 0,
+				  style: {
+						fontSize: '12px',
+						cssClass: 'apexcharts-yaxis-title',
+				  },
+			 },
+			 opposite: false,
+		},
+		grid: {
+			 borderColor: '#191E3A',
+			 strokeDashArray: 5,
+			 xaxis: {
+				  lines: {
+						show: true,
+				  },
+			 },
+			 yaxis: {
+				  lines: {
+						show: false,
+				  },
+			 },
+			 padding: {
+				  top: 0,
+				  right: 0,
+				  bottom: 0,
+				  left: 0,
+			 },
+		},
+		legend: {
+			 position: 'top',
+			 horizontalAlign: 'right',
+			 fontSize: '16px',
+			 markers: {
+				  width: 10,
+				  height: 10,
+				  offsetX: -2,
+			 },
+			 itemMargin: {
+				  horizontal: 10,
+				  vertical: 5,
+			 },
+		},
+		tooltip: {
+			 marker: {
+				  show: true,
+			 },
+			 x: {
+				  show: false,
+			 },
+		},
+		fill: {
+			 type: 'gradient',
+			 gradient: {
+				  shadeIntensity: 1,
+				  inverseColors: !1,
+				  opacityFrom: 0.19,
+				  opacityTo: 0.05,
+				  stops: [100, 100],
+			 },
+		},
+	};
+	const series = [
+		{
+			name: 'Total',
+			data: payments.map((payment: any) => payment.amount),
+		},
+	];
+
 	return (
 		<div>
 			{loadingStatus === 'loading' && <PageCirclePrimaryLoader />}
@@ -102,6 +239,15 @@ const PaymentsIndex = () => {
 
 					<div className="panel p-4">
 						<h2>Graph</h2>
+						<div>
+							<ReactApexChart
+								options={options}
+								series={series}
+								type="area"
+								height={350}
+								width={'100%'}
+								className="shadow-lg"/>
+						</div>
 					</div>
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-6 text-center">
 						<div className="panel text-center col-span-2">
