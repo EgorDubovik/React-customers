@@ -10,7 +10,7 @@ import { getTechAbr } from '../../helpers/helper';
 import ReactApexChart, { Props } from 'react-apexcharts';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
-
+import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
 
 const PaymentsIndex = () => {
 	const [loadingStatus, setLoadingStatus] = useState<string>('loading');
@@ -25,7 +25,7 @@ const PaymentsIndex = () => {
 	const [transferTransaction, setTransferTransaction] = useState(0);
 	const [cashTransaction, setCashTransaction] = useState(0);
 	const [checkTransaction, setCheckTransaction] = useState(0);
-
+	const [paymentRemoveStatus, setPaymentRemoveStatus] = useState(0);
 	const isDark = useSelector((state: IRootState) => state.themeConfig.isDarkMode);
 
 	const [series, setSeries] = useState<any[]>([]);
@@ -136,35 +136,33 @@ const PaymentsIndex = () => {
 		},
 	});
 
-
 	useEffect(() => {
 		ParseDate(payments);
 		getTechsColors();
 	}, [selectedTechs]);
 
 	const getTechsColors = () => {
-		const colors:any = [];
+		const colors: any = [];
 		selectedTechs.forEach((techId) => {
 			const tech = techs.find((tech) => tech.id === techId);
 			if (tech) {
 				colors.push(tech.color);
 			}
 		});
-		console.log('set colors')
-		setOptions((prevOptions:any) => ({ ...prevOptions, colors: colors }));
-	}
+		console.log('set colors');
+		setOptions((prevOptions: any) => ({ ...prevOptions, colors: colors }));
+	};
 	const ParseDate = (date: any) => {
-		const labels:string[] = [];
-		const chartData:any = {};
-		const paymentsForTable:any[] = [];
+		const labels: string[] = [];
+		const chartData: any = {};
+		const paymentsForTable: any[] = [];
 		let totalPerPeriod = 0;
 		let creditTransaction = 0;
 		date.forEach((element: any) => {
-			let dataOneDayByTech:any = {};
+			let dataOneDayByTech: any = {};
 			labels.push(moment(element.date).format('DD MMM'));
-			element.payments.forEach((payment:any) => {
-				
-				if(selectedTechs.includes(payment.tech_id)){
+			element.payments.forEach((payment: any) => {
+				if (selectedTechs.includes(payment.tech_id)) {
 					totalPerPeriod += payment.amount;
 					paymentsForTable.push(payment);
 					if (payment.payment_type === 'credit') {
@@ -178,7 +176,7 @@ const PaymentsIndex = () => {
 				}
 			});
 
-			selectedTechs.forEach((techId:any) => {
+			selectedTechs.forEach((techId: any) => {
 				if (!chartData[techId]) {
 					chartData[techId] = [];
 				}
@@ -189,26 +187,26 @@ const PaymentsIndex = () => {
 				}
 			});
 		});
-		let series:any[] = [];
-		selectedTechs.forEach((techId:any) => {
+		let series: any[] = [];
+		selectedTechs.forEach((techId: any) => {
 			series.push({
 				name: techs.find((tech) => tech.id === techId)?.name ?? 'Unknow',
 				data: chartData[techId],
 			});
 		});
-		console.log('set labels')
-		setOptions((prevOptions:any) => ({ ...prevOptions, labels: labels}));
+		console.log('set labels');
+		setOptions((prevOptions: any) => ({ ...prevOptions, labels: labels }));
 		setSeries(series);
 		setTotalPerPeriod(totalPerPeriod);
 		setCreditTransaction(creditTransaction);
 		setFilteredItems(paymentsForTable.sort((a, b) => b.id - a.id));
 	};
 
-	const getTechsList = (allPayments:any) => {
-		let techs:any[] = [];
-		allPayments.forEach((payment:any) => {
-			if(payment.payments.length === 0) return;
-			payment.payments.forEach((p:any) => {
+	const getTechsList = (allPayments: any) => {
+		let techs: any[] = [];
+		allPayments.forEach((payment: any) => {
+			if (payment.payments.length === 0) return;
+			payment.payments.forEach((p: any) => {
 				if (!techs.includes(p.tech_id)) {
 					techs.push(p.tech_id);
 				}
@@ -216,7 +214,7 @@ const PaymentsIndex = () => {
 		});
 		console.log(techs);
 		setSelectedTechs(techs);
-	}
+	};
 
 	useEffect(() => {
 		getTechsList(payments);
@@ -253,7 +251,6 @@ const PaymentsIndex = () => {
 			setSelectedTechs([...selectedTechs, techId]);
 		}
 	};
-	
 
 	useEffect(() => {
 		console.log('isDark:', isDark);
@@ -274,7 +271,21 @@ const PaymentsIndex = () => {
 		});
 	}, [isDark]);
 
-	
+	const removePaymentHandler = (paymentId: number) => {
+		setPaymentRemoveStatus(paymentId);
+		axiosClient
+			.delete('/payments/' + paymentId)
+			.then((response) => {
+				setFilteredItems(filteredItems.filter((payment) => payment.id !== paymentId));
+			}) 
+			.catch((error) => {
+				console.log(error);
+			})
+			.finally(() => {
+				setPaymentRemoveStatus(0);
+			});
+
+	};
 
 	return (
 		<div>
@@ -369,7 +380,13 @@ const PaymentsIndex = () => {
 												<td>{payment.payment_type}</td>
 												<td>
 													<div className="flex justify-center">
-														<IconTrashLines className="text-danger" />
+														{paymentRemoveStatus === payment.id ? (
+															<SmallDangerLoader />
+														) : (
+															<span className="text-primary cursor-pointer" onClick={() => removePaymentHandler(payment.id)}>
+																<IconTrashLines className="text-danger" />
+															</span>
+														)}
 													</div>
 												</td>
 											</tr>
