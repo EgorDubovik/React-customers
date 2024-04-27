@@ -10,7 +10,6 @@ import { getTechAbr } from '../../helpers/helper';
 import ReactApexChart, { Props } from 'react-apexcharts';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
-import { get } from 'sortablejs';
 
 
 const PaymentsIndex = () => {
@@ -27,132 +26,9 @@ const PaymentsIndex = () => {
 	const [cashTransaction, setCashTransaction] = useState(0);
 	const [checkTransaction, setCheckTransaction] = useState(0);
 
-	
-
-	useEffect(() => {
-		ParseDate(payments);
-	}, [selectedTechs]);
-
-	const ParseDate = (date: any) => {
-		const labels:string[] = [];
-		const chartData:any = {};
-		const paymentsForTable:any[] = [];
-		let totalPerPeriod = 0;
-		let creditTransaction = 0;
-		date.forEach((element: any) => {
-			let dataOneDayByTech:any = {};
-			labels.push(moment(element.date).format('DD MMM'));
-			element.payments.forEach((payment:any) => {
-				totalPerPeriod += payment.amount;
-				if(selectedTechs.includes(payment.tech_id))
-					paymentsForTable.push(payment);	
-				if (payment.payment_type === 'credit') {
-					creditTransaction += payment.amount;
-				}
-				if (dataOneDayByTech[payment.tech_id]) {
-					dataOneDayByTech[payment.tech_id] += payment.amount;
-				} else {
-					dataOneDayByTech[payment.tech_id] = payment.amount;
-				}
-			});
-
-			selectedTechs.forEach((techId:any) => {
-				if (!chartData[techId]) {
-					chartData[techId] = [];
-				}
-				if (dataOneDayByTech[techId]) {
-					chartData[techId].push(dataOneDayByTech[techId]);
-				} else {
-					chartData[techId].push(0);
-				}
-			});
-		});
-		let series:any[] = [];
-		selectedTechs.forEach((techId:any) => {
-			series.push({
-				name: techs.find((tech) => tech.id === techId)?.name ?? 'Unknow',
-				data: chartData[techId],
-			});
-		});
-		setOptions({...options, ["labels"]: labels});
-		setSeries(series);
-		setTotalPerPeriod(totalPerPeriod);
-		setCreditTransaction(creditTransaction);
-		setFilteredItems(paymentsForTable.sort((a, b) => b.id - a.id));
-	};
-
-	const getTechsList = (allPayments:any) => {
-		let techs:any[] = [];
-		allPayments.forEach((payment:any) => {
-			if(payment.payments.length === 0) return;
-			payment.payments.forEach((p:any) => {
-				if (!techs.includes(p.tech_id)) {
-					techs.push(p.tech_id);
-				}
-			});
-		});
-		console.log(techs);
-		setSelectedTechs(techs);
-	}
-
-	useEffect(() => {
-		getTechsList(payments);
-	}, [payments]);
-
-	useEffect(() => {
-		setLoadingStatus('loading');
-		axiosClient
-			.get('/payments')
-			.then((response) => {
-				setPayments(response.data.paymentForGraph);
-				setTechs(response.data.techs);
-				// console.log(response.data);
-				// setPayments(response.data.payments);
-				// setTechs(response.data.techs);
-				// setTotalPerPeriod(response.data.totalPerPeriod);
-				// setCreditTransaction(response.data.creditTransaction);
-				// setTransferTransaction(response.data.transferTransaction);
-				// setCashTransaction(response.data.cashTransaction);
-				// setCheckTransaction(response.data.checkTransaction);
-
-				setLoadingStatus('success');
-			})
-			.catch((error) => {
-				console.log(error);
-				setLoadingStatus('error');
-			});
-	}, []);
-
-	const toogleViewTech = (techId: number) => {
-		if (selectedTechs.includes(techId)) {
-			setSelectedTechs(selectedTechs.filter((id) => id !== techId));
-		} else {
-			setSelectedTechs([...selectedTechs, techId]);
-		}
-	};
 	const isDark = useSelector((state: IRootState) => state.themeConfig.isDarkMode);
 
-	useEffect(() => {
-		console.log('isDark:', isDark);
-		setOptions({
-			...options,
-			colors: [isDark ? '#2196F3' : '#1B55E2', isDark ? '#E7515A' : '#E7515A'],
-			grid: {
-				...options.grid,
-				borderColor: isDark ? '#191E3A' : '#E0E6ED',
-			},
-			fill: {
-				...options.fill,
-				gradient: {
-					...options.fill.gradient,
-					opacityFrom: isDark ? 0.19 : 0.28,
-				},
-			},
-		});
-	}, [isDark]);
-
 	const [series, setSeries] = useState<any[]>([]);
-
 	const [options, setOptions] = useState<any>({
 		chart: {
 			height: 325,
@@ -182,26 +58,8 @@ const PaymentsIndex = () => {
 			left: -7,
 			top: 22,
 		},
-		colors: ['#2196F3', '#E7515A'],
-		markers: {
-			discrete: [
-				{
-					seriesIndex: 0,
-					dataPointIndex: 6,
-					fillColor: '#1B55E2',
-					strokeColor: 'transparent',
-					size: 7,
-				},
-				{
-					seriesIndex: 1,
-					dataPointIndex: 5,
-					fillColor: '#E7515A',
-					strokeColor: 'transparent',
-					size: 7,
-				},
-			],
-		},
-		labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+		colors: [],
+		labels: [],
 		xaxis: {
 			axisBorder: {
 				show: false,
@@ -277,6 +135,146 @@ const PaymentsIndex = () => {
 			},
 		},
 	});
+
+
+	useEffect(() => {
+		ParseDate(payments);
+		getTechsColors();
+	}, [selectedTechs]);
+
+	const getTechsColors = () => {
+		const colors:any = [];
+		selectedTechs.forEach((techId) => {
+			const tech = techs.find((tech) => tech.id === techId);
+			if (tech) {
+				colors.push(tech.color);
+			}
+		});
+		console.log('set colors')
+		setOptions((prevOptions:any) => ({ ...prevOptions, colors: colors }));
+	}
+	const ParseDate = (date: any) => {
+		const labels:string[] = [];
+		const chartData:any = {};
+		const paymentsForTable:any[] = [];
+		let totalPerPeriod = 0;
+		let creditTransaction = 0;
+		date.forEach((element: any) => {
+			let dataOneDayByTech:any = {};
+			labels.push(moment(element.date).format('DD MMM'));
+			element.payments.forEach((payment:any) => {
+				
+				if(selectedTechs.includes(payment.tech_id)){
+					totalPerPeriod += payment.amount;
+					paymentsForTable.push(payment);
+					if (payment.payment_type === 'credit') {
+						creditTransaction += payment.amount;
+					}
+					if (dataOneDayByTech[payment.tech_id]) {
+						dataOneDayByTech[payment.tech_id] += payment.amount;
+					} else {
+						dataOneDayByTech[payment.tech_id] = payment.amount;
+					}
+				}
+			});
+
+			selectedTechs.forEach((techId:any) => {
+				if (!chartData[techId]) {
+					chartData[techId] = [];
+				}
+				if (dataOneDayByTech[techId]) {
+					chartData[techId].push(dataOneDayByTech[techId]);
+				} else {
+					chartData[techId].push(0);
+				}
+			});
+		});
+		let series:any[] = [];
+		selectedTechs.forEach((techId:any) => {
+			series.push({
+				name: techs.find((tech) => tech.id === techId)?.name ?? 'Unknow',
+				data: chartData[techId],
+			});
+		});
+		console.log('set labels')
+		setOptions((prevOptions:any) => ({ ...prevOptions, labels: labels}));
+		setSeries(series);
+		setTotalPerPeriod(totalPerPeriod);
+		setCreditTransaction(creditTransaction);
+		setFilteredItems(paymentsForTable.sort((a, b) => b.id - a.id));
+	};
+
+	const getTechsList = (allPayments:any) => {
+		let techs:any[] = [];
+		allPayments.forEach((payment:any) => {
+			if(payment.payments.length === 0) return;
+			payment.payments.forEach((p:any) => {
+				if (!techs.includes(p.tech_id)) {
+					techs.push(p.tech_id);
+				}
+			});
+		});
+		console.log(techs);
+		setSelectedTechs(techs);
+	}
+
+	useEffect(() => {
+		getTechsList(payments);
+	}, [payments]);
+
+	useEffect(() => {
+		setLoadingStatus('loading');
+		axiosClient
+			.get('/payments')
+			.then((response) => {
+				setPayments(response.data.paymentForGraph);
+				setTechs(response.data.techs);
+				// console.log(response.data);
+				// setPayments(response.data.payments);
+				// setTechs(response.data.techs);
+				// setTotalPerPeriod(response.data.totalPerPeriod);
+				// setCreditTransaction(response.data.creditTransaction);
+				// setTransferTransaction(response.data.transferTransaction);
+				// setCashTransaction(response.data.cashTransaction);
+				// setCheckTransaction(response.data.checkTransaction);
+
+				setLoadingStatus('success');
+			})
+			.catch((error) => {
+				console.log(error);
+				setLoadingStatus('error');
+			});
+	}, []);
+
+	const toogleViewTech = (techId: number) => {
+		if (selectedTechs.includes(techId)) {
+			setSelectedTechs(selectedTechs.filter((id) => id !== techId));
+		} else {
+			setSelectedTechs([...selectedTechs, techId]);
+		}
+	};
+	
+
+	useEffect(() => {
+		console.log('isDark:', isDark);
+		setOptions({
+			...options,
+			colors: [isDark ? '#2196F3' : '#1B55E2', isDark ? '#E7515A' : '#E7515A'],
+			grid: {
+				...options.grid,
+				borderColor: isDark ? '#191E3A' : '#E0E6ED',
+			},
+			fill: {
+				...options.fill,
+				gradient: {
+					...options.fill.gradient,
+					opacityFrom: isDark ? 0.19 : 0.28,
+				},
+			},
+		});
+	}, [isDark]);
+
+	
 
 	return (
 		<div>
