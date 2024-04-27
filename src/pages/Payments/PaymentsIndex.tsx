@@ -10,15 +10,16 @@ import { getTechAbr } from '../../helpers/helper';
 import ReactApexChart, { Props } from 'react-apexcharts';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
-import { ApexOptions } from 'apexcharts';
+import { get } from 'sortablejs';
+
 
 const PaymentsIndex = () => {
 	const [loadingStatus, setLoadingStatus] = useState<string>('loading');
 	const [startTime, setStartTime] = useState();
 	const [endTime, setEndTime] = useState();
-	const [payments, setPayments] = useState([]);
-	const [filteredItems, setFilteredItems] = useState([]);
-	const [techs, setTechs] = useState([]);
+	const [payments, setPayments] = useState<any[]>([]);
+	const [filteredItems, setFilteredItems] = useState<any[]>([]);
+	const [techs, setTechs] = useState<any[]>([]);
 	const [selectedTechs, setSelectedTechs] = useState<any[]>([]);
 	const [totalPerPeriod, setTotalPerPeriod] = useState(0);
 	const [creditTransaction, setCreditTransaction] = useState(0);
@@ -26,42 +27,84 @@ const PaymentsIndex = () => {
 	const [cashTransaction, setCashTransaction] = useState(0);
 	const [checkTransaction, setCheckTransaction] = useState(0);
 
-	useEffect(() => {
-		setFilteredItems(payments);
-	}, [payments]);
+	
 
 	useEffect(() => {
-		const filtered = payments.filter((payment: any) => {
-			return selectedTechs.includes(payment.tech_id);
-		});
-		setFilteredItems(filtered);
+		ParseDate(payments);
 	}, [selectedTechs]);
-
-	useEffect(() => {
-		let techsIds = techs.map((tech: any) => tech.id);
-		setSelectedTechs(techsIds);
-	}, [techs]);
 
 	const ParseDate = (date: any) => {
 		const labels:string[] = [];
-		const chartData:number[] = [];
+		const chartData:any = {};
+		const paymentsForTable:any[] = [];
+		let totalPerPeriod = 0;
+		let creditTransaction = 0;
 		date.forEach((element: any) => {
+			let dataOneDayByTech:any = {};
 			labels.push(moment(element.date).format('DD MMM'));
-			let amount = element.payments.map((payment: any) => payment.amount).reduce((a: number, b: number) => a + b, 0);
-			
-			chartData.push(amount);
-			// console.log(element);
+			element.payments.forEach((payment:any) => {
+				totalPerPeriod += payment.amount;
+				paymentsForTable.push(payment);
+				if (payment.payment_type === 'credit') {
+					creditTransaction += payment.amount;
+				}
+				if (dataOneDayByTech[payment.tech_id]) {
+					dataOneDayByTech[payment.tech_id] += payment.amount;
+				} else {
+					dataOneDayByTech[payment.tech_id] = payment.amount;
+				}
+			});
+
+			selectedTechs.forEach((techId:any) => {
+				if (!chartData[techId]) {
+					chartData[techId] = [];
+				}
+				if (dataOneDayByTech[techId]) {
+					chartData[techId].push(dataOneDayByTech[techId]);
+				} else {
+					chartData[techId].push(0);
+				}
+			});
+		});
+		let series:any[] = [];
+		selectedTechs.forEach((techId:any) => {
+			series.push({
+				name: techId,
+				data: chartData[techId],
+			});
 		});
 		setOptions({...options, ["labels"]: labels});
-		setSeries([{data: chartData}]);
+		setSeries(series);
+		setTotalPerPeriod(totalPerPeriod);
+		setCreditTransaction(creditTransaction);
+		setFilteredItems(paymentsForTable.sort((a, b) => b.id - a.id));
 	};
+
+	const getTechsList = (allPayments:any) => {
+		let techs:any[] = [];
+		allPayments.forEach((payment:any) => {
+			if(payment.payments.length === 0) return;
+			payment.payments.forEach((p:any) => {
+				if (!techs.includes(p.tech_id)) {
+					techs.push(p.tech_id);
+				}
+			});
+		});
+		console.log(techs);
+		setSelectedTechs(techs);
+	}
+
+	useEffect(() => {
+		getTechsList(payments);
+	}, [payments]);
 
 	useEffect(() => {
 		setLoadingStatus('loading');
 		axiosClient
 			.get('/payments')
 			.then((response) => {
-				ParseDate(response.data.paymentForGraph);
+				setPayments(response.data.paymentForGraph);
+				
 				// console.log(response.data);
 				// setPayments(response.data.payments);
 				// setTechs(response.data.techs);
@@ -89,6 +132,7 @@ const PaymentsIndex = () => {
 	const isDark = useSelector((state: IRootState) => state.themeConfig.isDarkMode);
 
 	useEffect(() => {
+		console.log('isDark:', isDark);
 		setOptions({
 			...options,
 			colors: [isDark ? '#2196F3' : '#1B55E2', isDark ? '#E7515A' : '#E7515A'],
@@ -106,16 +150,7 @@ const PaymentsIndex = () => {
 		});
 	}, [isDark]);
 
-	
-
-	const [series, setSeries] = useState([
-		{
-			data: [16800, 16800, 15500, 17800, 15500, 17000, 19000, 16000, 15000, 17000, 14000, 17000],
-		},
-		{
-			data: [16500, 17500, 16200, 17300, 16000, 19500, 16000, 17000, 16000, 19000, 18000, 19000],
-		},
-	]);
+	const [series, setSeries] = useState<any[]>([]);
 
 	const [options, setOptions] = useState<any>({
 		chart: {
@@ -323,7 +358,7 @@ const PaymentsIndex = () => {
 											<tr key={payment.id}>
 												<td>{payment.id}</td>
 												<td className="text-primary whitespace-nowrap">
-													<Link to={'/customer/' + payment.customer?.id ?? 0}>{payment.customer ? payment.customer.name : 'Unknow'}</Link>
+													<Link to={'/customer/' + payment.appointment?.customer?.id ?? 0}>{payment.appointment?.customer ? payment.appointment?.customer.name : 'Unknow'}</Link>
 												</td>
 												<td className="text-primary whitespace-nowrap">
 													<Link to={'/appointment/' + payment.appointment?.id ?? 0}>
@@ -331,7 +366,7 @@ const PaymentsIndex = () => {
 													</Link>
 												</td>
 												<td className={'whitespace-nowrap' + (payment.amount > 0) ? 'text-success' : 'text-danger'}>{viewCurrency(payment.amount)}</td>
-												<td>{moment(payment.date).format('DD MMM YYYY')}</td>
+												<td>{moment(payment.created_at).format('DD MMM YYYY')}</td>
 												<td>{payment.payment_type}</td>
 												<td>
 													<div className="flex justify-center">
