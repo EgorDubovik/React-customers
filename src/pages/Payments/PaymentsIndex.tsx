@@ -44,7 +44,8 @@ const PaymentsIndex = () => {
 			labels.push(moment(element.date).format('DD MMM'));
 			element.payments.forEach((payment:any) => {
 				totalPerPeriod += payment.amount;
-				paymentsForTable.push(payment);
+				if(selectedTechs.includes(payment.tech_id))
+					paymentsForTable.push(payment);	
 				if (payment.payment_type === 'credit') {
 					creditTransaction += payment.amount;
 				}
@@ -69,7 +70,7 @@ const PaymentsIndex = () => {
 		let series:any[] = [];
 		selectedTechs.forEach((techId:any) => {
 			series.push({
-				name: techId,
+				name: techs.find((tech) => tech.id === techId)?.name ?? 'Unknow',
 				data: chartData[techId],
 			});
 		});
@@ -104,7 +105,7 @@ const PaymentsIndex = () => {
 			.get('/payments')
 			.then((response) => {
 				setPayments(response.data.paymentForGraph);
-				
+				setTechs(response.data.techs);
 				// console.log(response.data);
 				// setPayments(response.data.payments);
 				// setTechs(response.data.techs);
