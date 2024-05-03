@@ -30,7 +30,9 @@ const MyTimePicker = (props:any) => {
       onDateChange();
    }
 
-
+   // Для того что бы менялся год можно запоминать предедущий месяц
+   // потом спрвнивать и если месяц изменился из декабря на январь то год увеличивать
+   // если из января на декабрь то год уменьшать
    const onDaysNameChange = (value:any) => {
       const { baseDate } = getDateFromShortFormat(value);
       params.currentDate.setDate(baseDate.getDate());

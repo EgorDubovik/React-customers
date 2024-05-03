@@ -31,7 +31,7 @@ const LoginBoxed = () => {
                 if(res.status === 200){
                     if(signIn({
                         token: res.data.success.token,
-                        expiresIn:3600,
+                        expiresIn:360000,
                         tokenType: "Bearer",
                         authState : {'name' : 'egor'},
                     })){
