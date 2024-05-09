@@ -14,8 +14,8 @@ import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
 
 const PaymentsIndex = () => {
 	const [loadingStatus, setLoadingStatus] = useState<string>('loading');
-	const [startTime, setStartTime] = useState();
-	const [endTime, setEndTime] = useState();
+	const [startTime, setStartTime] = useState(moment().subtract(30, 'days').format('MM/DD/YYYY'));
+	const [endTime, setEndTime] = useState(moment().format('MM/DD/YYYY'));
 	const [payments, setPayments] = useState<any[]>([]);
 	const [filteredItems, setFilteredItems] = useState<any[]>([]);
 	const [techs, setTechs] = useState<any[]>([]);
@@ -82,7 +82,7 @@ const PaymentsIndex = () => {
 			tickAmount: 7,
 			labels: {
 				formatter: (value: number) => {
-					if (value > 1000) return '$' + value / 1000 + 'k';
+					//if (value >= 1000) return '$' + (Math.round((value / 10)) / 100) + 'k';
 					return viewCurrency(value);
 				},
 				offsetX: -10,
@@ -158,6 +158,9 @@ const PaymentsIndex = () => {
 		const paymentsForTable: any[] = [];
 		let totalPerPeriod = 0;
 		let creditTransaction = 0;
+		let transferTransaction = 0;
+		let cashTransaction = 0;
+		let checkTransaction = 0;
 		date.forEach((element: any) => {
 			let dataOneDayByTech: any = {};
 			labels.push(moment(element.date).format('DD MMM'));
@@ -167,6 +170,15 @@ const PaymentsIndex = () => {
 					paymentsForTable.push(payment);
 					if (payment.payment_type === 'credit') {
 						creditTransaction += payment.amount;
+					}
+					if (payment.payment_type === 'transfer') {
+						transferTransaction += payment.amount;
+					}
+					if (payment.payment_type === 'cash') {
+						cashTransaction += payment.amount;
+					}
+					if (payment.payment_type === 'check') {
+						checkTransaction += payment.amount;
 					}
 					if (dataOneDayByTech[payment.tech_id]) {
 						dataOneDayByTech[payment.tech_id] += payment.amount;
@@ -199,6 +211,9 @@ const PaymentsIndex = () => {
 		setSeries(series);
 		setTotalPerPeriod(totalPerPeriod);
 		setCreditTransaction(creditTransaction);
+		setTransferTransaction(transferTransaction);
+		setCashTransaction(cashTransaction);
+		setCheckTransaction(checkTransaction);
 		setFilteredItems(paymentsForTable.sort((a, b) => b.id - a.id));
 	};
 
@@ -227,15 +242,6 @@ const PaymentsIndex = () => {
 			.then((response) => {
 				setPayments(response.data.paymentForGraph);
 				setTechs(response.data.techs);
-				// console.log(response.data);
-				// setPayments(response.data.payments);
-				// setTechs(response.data.techs);
-				// setTotalPerPeriod(response.data.totalPerPeriod);
-				// setCreditTransaction(response.data.creditTransaction);
-				// setTransferTransaction(response.data.transferTransaction);
-				// setCashTransaction(response.data.cashTransaction);
-				// setCheckTransaction(response.data.checkTransaction);
-
 				setLoadingStatus('success');
 			})
 			.catch((error) => {
@@ -293,6 +299,7 @@ const PaymentsIndex = () => {
 			{loadingStatus === 'error' && <PageLoadError />}
 			{loadingStatus === 'success' && (
 				<div className="grid grid-flow-row gap-4">
+					<div className='flex justify-start items-center text-lg'><h1>Payments</h1><div className='ml-3 p-2 dark:bg-gray-900 rounded cursor-pointer'>from: {startTime} <span className='ml-2'>to: {endTime}</span></div></div>
 					<div className="panel p-2">
 						<ul className="">
 							{techs.map((tech: any, index: number) => (
