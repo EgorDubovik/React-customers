@@ -37,6 +37,7 @@ const initialState = {
         phone: '',
         roles: [0],
         color: '#ccc',
+        isAdmin: false,
     },
 };
 
@@ -47,6 +48,8 @@ const themeConfigSlice = createSlice({
         setUserInformation(state, { payload }) {
             payload = payload || state.user;
             state.user = payload;
+            if(payload.roles.includes(1))
+                state.user.isAdmin = true;
         },
         toggleTheme(state, { payload }) {
             payload = payload || state.theme; // light | dark | system
