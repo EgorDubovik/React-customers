@@ -7,6 +7,7 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import IconEye from '../../components/Icon/IconEye';
 import moment from 'moment';
 import axiosClient from '../../store/axiosClient';
+import { viewCurrency } from '../../helpers/helper';
 
 const Invoice = () => {
    const dispatch = useDispatch();
@@ -115,7 +116,7 @@ const Invoice = () => {
                            accessor: 'amount',
                            sortable: true,
                            titleClassName: 'text-left',
-                           render: ({ amount, id }) => <div className="text-left font-semibold">{`$${amount}`}</div>,
+                           render: ({ amount, id }) => <div className="text-left font-semibold">{viewCurrency(amount)}</div>,
                         },
                         {
                            accessor: 'action',
