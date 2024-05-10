@@ -2,7 +2,7 @@ Company services
    FIXES:
       ✔ After add new service dont update wholw list, just recive id from server and add to list @done(24-02-29 18:56)
       ✔ View "delete" and "edit" buttons only for admin @done(24-02-29 18:43)
-      ☐ View empty mesaage if no customers + link to create new customer
+      ✔ View empty mesaage if no customers + link to create new customer @done(24-05-10 08:31)
 
    
    COMPLYTIONS:
