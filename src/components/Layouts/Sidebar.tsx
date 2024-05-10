@@ -15,13 +15,21 @@ import IconMenuDocumentation from '../Icon/Menu/IconMenuDocumentation';
 import IconMenuContacts from '../Icon/Menu/IconMenuContacts';
 import IconMenuDatatables from '../Icon/Menu/IconMenuDatatables';
 import IconMenuWidgets from '../Icon/Menu/IconMenuWidgets';
+import IconCaretDown from '../Icon/IconCaretDown';
+import AnimateHeight from 'react-animate-height';
 
 const Sidebar = () => {
+	const [currentMenu, setCurrentMenu] = useState<string>('');
 	const themeConfig = useSelector((state: IRootState) => state.themeConfig);
 	const semidark = useSelector((state: IRootState) => state.themeConfig.semidark);
 	const user = useSelector((state: IRootState) => state.themeConfig.user);
 	const location = useLocation();
 	const dispatch = useDispatch();
+	const toggleMenu = (value: string) => {
+		setCurrentMenu((oldValue) => {
+			return oldValue === value ? '' : value;
+		});
+	};
 
 	useEffect(() => {
 		const selector = document.querySelector('.sidebar ul a[href="' + window.location.pathname + '"]');
@@ -35,6 +43,23 @@ const Sidebar = () => {
 			dispatch(toggleSidebar());
 		}
 	}, [location]);
+
+	useEffect(() => {
+		const selector = document.querySelector('.sidebar ul a[href="' + window.location.pathname + '"]');
+		if (selector) {
+			selector.classList.add('active');
+			const ul: any = selector.closest('ul.sub-menu');
+			if (ul) {
+				let ele: any = ul.closest('li.menu').querySelectorAll('.nav-link') || [];
+				if (ele.length) {
+					ele = ele[0];
+					setTimeout(() => {
+						ele.click();
+					});
+				}
+			}
+		}
+	}, []);
 
 	return (
 		<div className={semidark ? 'dark' : ''}>
@@ -75,12 +100,6 @@ const Sidebar = () => {
 										<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Customers</span>
 									</div>
 								</NavLink>
-								<NavLink to="/services" className="group">
-									<div className="flex items-center">
-										<IconMenuDocumentation className="group-hover:!text-primary shrink-0" />
-										<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Services</span>
-									</div>
-								</NavLink>
 								<NavLink to="/invoices" className="group">
 									<div className="flex items-center">
 										<IconMenuDatatables className="group-hover:!text-primary shrink-0" />
@@ -100,12 +119,29 @@ const Sidebar = () => {
 									</div>
 								</NavLink>
 								{user.isAdmin && (
-									<NavLink to="/settings" className="group">
-										<div className="flex items-center">
-											<IconMenuWidgets className="group-hover:!text-primary shrink-0" />
-											<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Company settings</span>
-										</div>
-									</NavLink>
+									<>
+										<button type="button" className={`${currentMenu === 'company_settings' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('company_settings')}>
+											<div className="flex items-center">
+												<IconMenuWidgets className="group-hover:!text-primary shrink-0" />
+												<span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Company settings</span>
+											</div>
+
+											<div className={currentMenu !== 'company_settings' ? 'rtl:rotate-90 -rotate-90' : ''}>
+												<IconCaretDown />
+											</div>
+										</button>
+
+										<AnimateHeight duration={300} height={currentMenu === 'company_settings' ? 'auto' : 0}>
+											<ul className="sub-menu text-gray-500">
+												<li>
+													<NavLink to="/company-settings/services">Company services</NavLink>
+													<NavLink to="/company-settings/book-online">Book appointments</NavLink>
+                                                    <NavLink to="/company-settings/tags">Tags</NavLink>
+                                                    <NavLink to="/company-settings/deposit">Deposit settings</NavLink>
+												</li>
+											</ul>
+										</AnimateHeight>
+									</>
 								)}
 							</li>
 						</ul>

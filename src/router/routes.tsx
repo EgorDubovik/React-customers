@@ -67,7 +67,11 @@ const routes = [
                 element : <DefaultLayout> <CreateCustomer /></DefaultLayout>,
             },
             {
-                path: '/services',
+                path: '/company-settings/services',
+                element : <DefaultLayout> <Services /></DefaultLayout>,
+            },
+            {
+                path: '/company-settings/book-online',
                 element : <DefaultLayout> <Services /></DefaultLayout>,
             },
             {

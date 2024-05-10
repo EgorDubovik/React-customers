@@ -2,3 +2,17 @@ Company services
    FIXES:
       ✔ After add new service dont update wholw list, just recive id from server and add to list @done(24-02-29 18:56)
       ✔ View "delete" and "edit" buttons only for admin @done(24-02-29 18:43)
+      ☐ View empty mesaage if no customers + link to create new customer
+
+   
+   COMPLYTIONS:
+      ☐ Finish pagination on customer page with grid view
+
+   FEATURES:
+      ☐ Add tags
+         ☐ Asign tags to customers
+         ☐ Create settings page to company setting to create tags
+      ☐ View sent invoice on appointment page
+      ☐ Create seting page for book appointment
+      ☐ Create setting page for deposit settings
+
