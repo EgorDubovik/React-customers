@@ -74,10 +74,10 @@ const CreateCustomer = () => {
 	};
 	const handleParseAddress = () => {
 		const result = parseAddress(parseAddressValue);
-		if (result.addressLine1){ 
-         dataForm.address1 = result.addressLine1;
-         searchSuggestions(result.addressLine1);
-      }
+		if (result.addressLine1) {
+			dataForm.address1 = result.addressLine1;
+			searchSuggestions(result.addressLine1);
+		}
 		if (result.addressLine2) dataForm.address2 = result.addressLine2;
 		if (result.placeName) dataForm.city = result.placeName;
 		if (result.stateAbbreviation) dataForm.state = result.stateAbbreviation;
@@ -88,14 +88,14 @@ const CreateCustomer = () => {
 	const [suggestionResult, setSuggestionResult] = useState([]);
 	const searchSuggestions = (search: string) => {
 		axiosClient.get('/customers', { params: { search } }).then((res) => {
-         if(res.data.data.length > 0){
-            setSuggestionResult(res.data.data);
-         }
+			if (res.data.data.length > 0) {
+				setSuggestionResult(res.data.data);
+			}
 		});
 	};
-   const searchSuggestionsByPhone = () => {
-      searchSuggestions(dataForm.phone);
-   }
+	const searchSuggestionsByPhone = () => {
+		searchSuggestions(dataForm.phone);
+	};
 
 	return (
 		<div>
@@ -121,7 +121,7 @@ const CreateCustomer = () => {
 						</div>
 						<div className={`${phoneError && 'has-error'}`}>
 							<label>Customer number</label>
-							<input type="text" placeholder="Phone" name="phone" className="form-input w-full" value={dataForm.phone} onChange={handleChangeFomr} onBlur={searchSuggestionsByPhone}/>
+							<input type="text" placeholder="Phone" name="phone" className="form-input w-full" value={dataForm.phone} onChange={handleChangeFomr} onBlur={searchSuggestionsByPhone} />
 							{phoneError && <span className="text-danger text-[11px]">Phone number must be 10 digits</span>}
 						</div>
 						<div>
@@ -173,18 +173,17 @@ const CreateCustomer = () => {
 						{suggestionResult.length > 0 && (
 							<div className="my-2">
 								<p>Suggetion customer</p>
-                        {suggestionResult.map((customer: any) => (
-                           <Link to={`/customer/${customer.id}`} key={customer.id}>
-									<div className="dark:bg-zinc-900 p-2 rounded mt-2">
-										<p>
-											<span className="font-bold">{customer.name}</span>
-											<span className="ml-2">{customer.phone}</span>
-										</p>
-										<p className="mt-1">{customer.address[0].full}</p>
-									</div>
-								</Link>
-                        ))}
-								
+								{suggestionResult.map((customer: any) => (
+									<Link to={`/customer/${customer.id}`} key={customer.id}>
+										<div className="dark:bg-zinc-900 p-2 rounded mt-2">
+											<p>
+												<span className="font-bold">{customer.name}</span>
+												<span className="ml-2">{customer.phone}</span>
+											</p>
+											<p className="mt-1">{customer.address[0].full}</p>
+										</div>
+									</Link>
+								))}
 							</div>
 						)}
 
