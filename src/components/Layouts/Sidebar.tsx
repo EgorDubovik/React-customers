@@ -106,18 +106,19 @@ const Sidebar = () => {
 										<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Invoices</span>
 									</div>
 								</NavLink>
-								<NavLink to="/employees" className="group">
-									<div className="flex items-center">
-										<IconMenuContacts className="group-hover:!text-primary shrink-0" />
-										<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Employees</span>
-									</div>
-								</NavLink>
 								<NavLink to="/payments" className="group">
 									<div className="flex items-center">
 										<IconMenuInvoice className="group-hover:!text-primary shrink-0" />
 										<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Payments</span>
 									</div>
 								</NavLink>
+								<NavLink to="/employees" className="group">
+									<div className="flex items-center">
+										<IconMenuContacts className="group-hover:!text-primary shrink-0" />
+										<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Employees</span>
+									</div>
+								</NavLink>
+								
 								{user.isAdmin && (
 									<>
 										<button type="button" className={`${currentMenu === 'company_settings' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('company_settings')}>
