@@ -39,7 +39,7 @@ const ServicesList = (props:any) => {
       setModal(true);
    }
    const serviceFormChangeHandler = (e:any) => {
-      if(e.target.name === 'price' && isNaN(e.target.value)) return;
+      if(e.target.name === 'price' && isNaN(e.target.value) && e.target.value !== '-') return;
       if(e.target.name === 'taxable')
          setServiceForm({...serviceForm, [e.target.name]: e.target.checked});
       else 
