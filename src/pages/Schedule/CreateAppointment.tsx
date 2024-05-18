@@ -121,6 +121,7 @@ const CreateAppointment = () => {
 
    const createNewAppointment = () => {
       if(loadingCreate) return;
+      setLoadingCreate(true);
       axiosClient.post('appointment', {
          timeFrom: manualIsoString(timeFrom),
          timeTo: manualIsoString(timeTo),
@@ -138,7 +139,7 @@ const CreateAppointment = () => {
             alert('Error, please try again')
          })
          .finally(() => {
-
+            setLoadingCreate(false);
          });
    }
 
