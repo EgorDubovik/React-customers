@@ -51,7 +51,7 @@ const Index = () => {
                      </div>
                      {/* Images for web*/}
                      <div className='panel p-0 hidden md:block'>
-                        <Images />
+                        <Images appointmentId={appointment?.id}/>
                      </div>
                   </div>
                   {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
@@ -69,7 +69,7 @@ const Index = () => {
 
                      {/* Images for mobile*/}
                      <div className='panel p-0 block md:hidden'>
-                        <Images />
+                        <Images appointmentId={appointment?.id}/>
                      </div>
                   </div>
                </div>
