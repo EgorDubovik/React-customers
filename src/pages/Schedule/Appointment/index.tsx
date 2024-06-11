@@ -8,6 +8,7 @@ import CustomerInfoBlock from './CustomerInfoBlock';
 import {useAppointmentContext} from '../../../context/AppointmentContext';
 import CalendarBlock from './CalendarBlock';
 import Header from './Header';
+import Images from './Images';
 
 const Index = () => {
    const {appointment, setAppointment,updateStatus, updatePayments} = useAppointmentContext();
@@ -49,8 +50,8 @@ const Index = () => {
                         <TechBlock techs={appointment?.techs} appointmentId = {appointment?.id} />
                      </div>
                      {/* Images for web*/}
-                     <div className='panel p-4 hidden md:block'>
-                        <h3 className="font-semibold text-lg dark:text-white-light">Images</h3>
+                     <div className='panel p-0 hidden md:block'>
+                        <Images />
                      </div>
                   </div>
                   {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
@@ -67,8 +68,8 @@ const Index = () => {
                      </div>
 
                      {/* Images for mobile*/}
-                     <div className='panel p-4 block md:hidden'>
-                        <h3 className="font-semibold text-lg dark:text-white-light">Images</h3>
+                     <div className='panel p-0 block md:hidden'>
+                        <Images />
                      </div>
                   </div>
                </div>
