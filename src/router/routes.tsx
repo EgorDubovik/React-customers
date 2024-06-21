@@ -18,6 +18,7 @@ import CreateAppointment from '../pages/Schedule/CreateAppointment';
 import ViewCustomer from '../pages/Customers/ViewCustomer';
 import ProfilePage from '../pages/Profile/ProfilePage';
 import PaymentsIndex from '../pages/Payments/PaymentsIndex';
+const BookAppointment = lazy(() => import('../pages/CompanySettings/BookAppointment'));
 
 
 const routes = [
@@ -72,7 +73,7 @@ const routes = [
             },
             {
                 path: '/company-settings/book-online',
-                element : <DefaultLayout> <Services /></DefaultLayout>,
+                element : <DefaultLayout> <BookAppointment /></DefaultLayout>,
             },
             {
                 path: '/employees',
