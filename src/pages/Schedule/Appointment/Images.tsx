@@ -6,16 +6,18 @@ import axiosClient from '../../../store/axiosClient';
 import { useAppointmentContext } from '../../../context/AppointmentContext';
 
 const Images = (props: any) => {
-   const appointmentId = props.appointmentId || 0;
+	const appointmentId = props.appointmentId || 0;
 	const { appointment, updateImages } = useAppointmentContext();
+	const [images, setImages] = useState<any[]>(appointment?.images || []);
 	const [uploadingStatus, setUploadingStatus] = useState(false);
 	const fileInputRef = useRef(null);
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+	const [showGallery, setShowGallery] = useState(false);
+	const [showImage, setShowImage] = useState<string>('');
 
-
-   useEffect(() => {
-      handleUpload();
-   }, [selectedFiles]);
+	useEffect(() => {
+		handleUpload();
+	}, [selectedFiles]);
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSelectedFiles([...event.target.files!]);
@@ -29,13 +31,13 @@ const Images = (props: any) => {
 
 	const handleUpload = async () => {
 		setUploadingStatus(true);
-      
+
 		const uploadPromises = selectedFiles.map(async (file) => {
 			const formData = new FormData();
 			formData.append('image', file);
-         console.log('start uploading file:');
+			console.log('start uploading file:');
 			try {
-				const response = await axiosClient.post('appointment/images/'+appointmentId, formData, {
+				const response = await axiosClient.post('appointment/images/' + appointmentId, formData, {
 					headers: {
 						'Content-Type': 'multipart/form-data',
 					},
@@ -53,11 +55,16 @@ const Images = (props: any) => {
 			console.log('All files uploaded successfully:', results);
 		} catch (error) {
 			console.error('Error uploading one or more files:', error);
+		} finally {
+			setUploadingStatus(false);
 		}
-      finally {
-         setUploadingStatus(false);
-      }
-      
+	};
+
+	const openGallery = (path:string) => {
+		console.log('open gallery');
+		setShowImage(path);
+		setShowGallery(true);
+
 	};
 
 	return (
@@ -70,20 +77,23 @@ const Images = (props: any) => {
 				<input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} accept="image/*" multiple />
 			</div>
 			<div className="px-4 py-1 text-center">{uploadingStatus && <div>Uploading...</div>}</div>
-			<div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-3 p-4">
-				{appointment?.images?.map((image: any, index: number) => (
-					
+			<div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 p-4">
+				{images.map((image: any, index: number) => (
 					<div key={index} className="relative">
-
-						<img src={image.path} alt={image.name} className="w-full h-20 object-cover rounded-lg" />
-						<Link to={image.url} target="_blank" className="absolute top-0 right-0 p-1 bg-white bg-opacity-50 rounded-bl-lg rounded-tr-lg">
-							<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-								<path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 10a2 2 0 114 0 2 2 0 01-4 0z" clipRule="evenodd" />
-							</svg>
-						</Link>
-					</div>)
-				)}
+						<img src={image.path} className="w-full h-20 object-cover rounded-lg cursor-pointer" onClick={()=>openGallery(image.path)} />
+					</div>
+				))}
 			</div>
+			{showGallery && (
+				<>
+					<div className="z-30 fixed bottom-0 top-0 left-0 right-0 bg-black bg-opacity-80" ></div>
+					<div className="z-30 fixed bottom-0 top-0 left-0 right-0" onClick={() => setShowGallery(false)}>
+						<div className="absolute z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+							<img src={showImage} className="w-full h-full object-cover rounded-lg" />
+						</div>
+					</div>
+				</>
+			)}
 		</>
 	);
 };
