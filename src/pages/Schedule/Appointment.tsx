@@ -6,6 +6,7 @@ import axiosClient from '../../store/axiosClient';
 import moment from 'moment';
 import Index from './Appointment/index';
 import { AppointmentProvider } from '../../context/AppointmentContext';
+
 const Appointment = () => {
 
    const { id } = useParams();
@@ -21,7 +22,7 @@ const Appointment = () => {
       setLoadingStatus('loading');
       axiosClient.get(`/appointment/${id}`)
          .then((res) => {
-            
+            console.log(res.data);
             let appointment = res.data.appointment;
             appointment.start = moment(appointment.start);
             appointment.end = moment(appointment.end);
