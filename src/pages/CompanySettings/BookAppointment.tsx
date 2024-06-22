@@ -15,14 +15,14 @@ interface WorkingTime {
 	sunday: DayTime;
 }
 const BookAppointment = () => {
-	const week = [
-		{ day: 'Monday', value: 'monday' },
-		{ day: 'Tuesday', value: 'tuesday' },
-		{ day: 'Wednesday', value: 'wednesday' },
-		{ day: 'Thursday', value: 'thursday' },
-		{ day: 'Friday', value: 'friday' },
-		{ day: 'Saturday', value: 'saturday' },
-		{ day: 'Sunday', value: 'sunday' },
+	const days: Array<{ value: keyof WorkingTime; label: string }> = [
+		{ value: 'monday', label: 'Monday' },
+		{ value: 'tuesday', label: 'Tuesday' },
+		{ value: 'wednesday', label: 'Wednesday' },
+		{ value: 'thursday', label: 'Thursday' },
+		{ value: 'friday', label: 'Friday' },
+		{ value: 'saturday', label: 'Saturday' },
+		{ value: 'sunday', label: 'Sunday' },
 	];
 	const times = [
 		{ time: '12:00 AM', value: 0 },
@@ -73,15 +73,28 @@ const BookAppointment = () => {
 		}));
 	};
 
-   const saveWorkingTime = () => {
-      axiosClient.post('/company/settings/book-appointment/working-time', {"workingTime" : JSON.stringify(workingTime)})
-         .then((res) => {
-            console.log(res.data);
-         })
-         .catch((err) => {
-            console.log(err);
-         });
-   }
+	const saveWorkingTime = () => {
+		axiosClient
+			.post('/company/settings/book-appointment/working-time', { workingTime: JSON.stringify(workingTime) })
+			.then((res) => {
+				console.log(res.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
+	useEffect(() => {
+		axiosClient
+			.get('/company/settings/book-appointment')
+			.then((res) => {
+				console.log(res.data.settings);
+				setWorkingTime(JSON.parse(res.data.settings.working_time));
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
 
 	return (
 		<div>
@@ -93,17 +106,17 @@ const BookAppointment = () => {
 					<div className="panel p-4">
 						<div className="mt-1 text-center font-bold text-lg mb-4">Working time</div>
 						<div className="grid grid-flow-row gap-3">
-							{week.map((day, index) => (
+							{days.map((day, index) => (
 								<div key={index} className="grid grid-cols-3 gap-3">
-									<label htmlFor={day.value}>{day.day}</label>
-									<select id={day.value} name={day.value + '-from'} className="form-select text-white-dark" onChange={handleChangeTime}>
+									<label htmlFor={day.value}>{day.value}</label>
+									<select id={day.value} value={workingTime[day.value].from} name={day.value + '-from'} className="form-select text-white-dark" onChange={handleChangeTime}>
 										{times.map((time, index) => (
 											<option key={index} value={time.value}>
 												{time.time}
 											</option>
 										))}
 									</select>
-									<select id={day.value} name={day.value + '-to'} className="form-select text-white-dark" onChange={handleChangeTime}>
+									<select id={day.value} value={workingTime[day.value].to} name={day.value + '-to'} className="form-select text-white-dark" onChange={handleChangeTime}>
 										{times.map((time, index) => (
 											<option key={index} value={time.value}>
 												{time.time}
@@ -112,8 +125,10 @@ const BookAppointment = () => {
 									</select>
 								</div>
 							))}
-							<div className='mt-4 w-full'>
-								<button className="btn btn-primary w-full" onClick={saveWorkingTime}>Save</button>
+							<div className="mt-4 w-full">
+								<button className="btn btn-primary w-full" onClick={saveWorkingTime}>
+									Save
+								</button>
 							</div>
 						</div>
 					</div>
