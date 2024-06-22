@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axiosClient from '../../store/axiosClient';
 interface DayTime {
 	from: number;
 	to: number;
@@ -71,9 +72,17 @@ const BookAppointment = () => {
 			},
 		}));
 	};
-	useEffect(() => {
-		console.log(workingTime);
-	}, [workingTime]);
+
+   const saveWorkingTime = () => {
+      axiosClient.post('/company/settings/book-appointment/working-time', {"workingTime" : JSON.stringify(workingTime)})
+         .then((res) => {
+            console.log(res.data);
+         })
+         .catch((err) => {
+            console.log(err);
+         });
+   }
+
 	return (
 		<div>
 			<div className="flex justify-start items-center text-lg">
@@ -104,7 +113,7 @@ const BookAppointment = () => {
 								</div>
 							))}
 							<div className='mt-4 w-full'>
-								<button className="btn btn-primary w-full">Save</button>
+								<button className="btn btn-primary w-full" onClick={saveWorkingTime}>Save</button>
 							</div>
 						</div>
 					</div>
