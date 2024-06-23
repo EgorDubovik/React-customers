@@ -3,9 +3,11 @@ import axiosClient from '../../../store/axiosClient';
 import WorkingTime from "./WorkingTime";
 import { PageLoadError } from '../../../components/loading/Errors';
 import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading';
+import LinkAndActiveBlock from './LinkAndActiveBlock';
 
 const BookAppointmentSettings = () => {
    const [loadingStatus, setLoadingStatus] = useState<string>('loading');
+   const [settings, setSettings] = useState<any>({});
    const [workingTime, setWorkingTime] = useState<WorkingTime>({
 		monday: { from: 0, to: 0 },
 		tuesday: { from: 0, to: 0 },
@@ -23,6 +25,7 @@ const BookAppointmentSettings = () => {
 			.then((res) => {
 				console.log(res.data.settings);
 				setWorkingTime(JSON.parse(res.data.settings.working_time));
+            setSettings(res.data.settings);
             setLoadingStatus('success');
 			})
 			.catch((err) => {
@@ -42,6 +45,9 @@ const BookAppointmentSettings = () => {
                <div className="py-4">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
                      <WorkingTime workingTime={workingTime} />
+                     <div className='md:col-span-2'>
+                        <LinkAndActiveBlock settings={settings}/>
+                     </div>
                   </div>
                </div>
             }
