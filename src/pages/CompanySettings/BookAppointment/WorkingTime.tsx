@@ -51,7 +51,16 @@ const WorkingTime = (prop:any) => {
 		{ time: '10:00 PM', value: 22 },
 		{ time: '11:00 PM', value: 23 },
 	];
-	const [workingTime, setWorkingTime] = useState<WorkingTime>(prop.workingTime);
+	const [workingTime, setWorkingTime] = useState<WorkingTime>(prop.workingTime || {
+		monday: { from: 8, to: 17 },
+		tuesday: { from: 8, to: 17 },
+		wednesday: { from: 8, to: 17 },
+		thursday: { from: 8, to: 17 },
+		friday: { from: 8, to: 17 },
+		saturday: { from: 8, to: 17 },
+		sunday: { from: 8, to: 17 },
+	
+	});
 	const [loading, setLoading] = useState(false);
 
 	const handleChangeTime = (e: any) => {
