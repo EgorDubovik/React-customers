@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom";
+import CustomerProvider from "./CustomerContext";
+import MainPage from "./MainPage";
+
 const BookAppointment = () => {
-   const key = useParams().key;
-	return (
-		<div>
-			<h1>Book Appointment {key}</h1>
-		</div>
-	);
+   return (
+      <CustomerProvider>
+         <MainPage />
+      </CustomerProvider>
+   )
 };
 export default BookAppointment;

@@ -19,6 +19,7 @@ import ViewCustomer from '../pages/Customers/ViewCustomer';
 import ProfilePage from '../pages/Profile/ProfilePage';
 import PaymentsIndex from '../pages/Payments/PaymentsIndex';
 import BookAppointment from '../pages/BookAppointment';
+import ViewAppointment from '../pages/BookAppointment/ViewAppointment';
 const BookAppointmentSettings = lazy(() => import('../pages/CompanySettings/BookAppointment/Index'));
 
 
@@ -96,8 +97,12 @@ const routes = [
         element: <BlankLayout><LoginBoxed /></BlankLayout>,
     },
     {
-        path: '/appointment/book/:key',
+        path: '/appointment/book/:paramKey',
         element: <BookAppointment />,
+    },
+    {
+        path: '/appointment/book/view/:providerKey',
+        element: <ViewAppointment />,
     },
     {
         path: '*',
