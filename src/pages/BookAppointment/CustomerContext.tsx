@@ -12,7 +12,7 @@ const CustomerProvider = ({children}: {children: React.ReactNode}) => {
          logo: '',
       });
       const [key, setKey] = useState<string>('');
-      const [selectedDateTime, setSelectedDateTime] = useState<Date>(new Date());
+      const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
       const [sliderIndex, setSliderIndex] = useState(1);
       const [customer, setCustomer] = useState<CustomerInfoType>({
          name: '',

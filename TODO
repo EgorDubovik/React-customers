@@ -15,9 +15,10 @@ Company services
 
    FEATURES:
       ☐ BookAppointment Online
-         ☐ Disable times on calendar if already booked
-         ☐ Add settings with working time by days
-         ☐ Disable times on calendar if not working time
+         ✔ Disable times on calendar if already booked @done(24-06-24 11:12)
+         ✔ Add settings with working time by days @done(24-06-24 11:12)
+         ✔ Change title of booking appointment time !!! @done(24-06-24 17:04)
+         ✔ Disable times on calendar if not working time @done(24-06-24 16:59)
          
       ☐ Add tags
          ☐ Asign tags to customers

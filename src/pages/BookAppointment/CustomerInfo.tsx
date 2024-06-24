@@ -33,6 +33,11 @@ const CustomerInfo = () => {
       updateCustomer(customerInfo);
       setLoading(true);
       setSliderIndex(4);
+      if(selectedDateTime === undefined || selectedDateTime === null){
+         alert('Please select a date and time');
+         return;
+      }
+      
       fetch(env.API_URL+'/appointment/book/'+key, {
          method: 'POST',
          headers: {
@@ -50,7 +55,7 @@ const CustomerInfo = () => {
                zip: customerInfo.zip
             },
             services: selectedServices,
-            selectedDateTime: selectedDateTime?.getFullYear()+'-'+(selectedDateTime?.getMonth() || 0 + 1)+'-'+selectedDateTime?.getDate()+' '+selectedDateTime?.getHours()+':'+((selectedDateTime?.getMinutes() || 0 <= 9 ? '0' : '' )+selectedDateTime?.getMinutes())+':00',
+            selectedDateTime: selectedDateTime?.getFullYear()+'-'+(selectedDateTime?.getMonth() + 1)+'-'+selectedDateTime?.getDate()+' '+selectedDateTime?.getHours()+':'+((selectedDateTime?.getMinutes() || 0 <= 9 ? '0' : '' )+selectedDateTime?.getMinutes())+':00',
          }),
       })
          .then(response => response.json())

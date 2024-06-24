@@ -5,7 +5,14 @@ import Loading from './Loading';
 import ErrorLoad from './ErrorLoad';
 import Header from './Header';
 import { AppointmentInfoType } from './@types';
+import { useDispatch } from 'react-redux';
+import { setPageTitle } from '../../store/themeConfigSlice';
+
 const ViewAppointment = () => {
+   const dispatch = useDispatch();
+   useEffect(() => {
+      dispatch(setPageTitle('View Appointment'));
+   });
    const { providerKey } = useParams();
    const [loadingStatus, setLoadingStatus] = useState('loading');
    const [appointmentInfo, setAppointmentInfo] = useState<AppointmentInfoType>({
@@ -66,7 +73,7 @@ const ViewAppointment = () => {
          {loadingStatus === 'loading' && <Loading />}
          {loadingStatus === 'error' && <ErrorLoad />}
          {loadingStatus === 'success' &&
-         ( <div>
+         ( <div className='text-center'>
                <Header { ...appointmentInfo.company}/>  
                <div className="w-full sm:w-3/4 m-auto">
                   <div className="header border-b border-gray-300 p-2 pb-4 mt-10">

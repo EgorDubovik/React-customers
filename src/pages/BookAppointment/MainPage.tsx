@@ -11,7 +11,17 @@ import Information from './Information';
 import Services from './Services';
 import SelectDateTime from './SelectDateTime';
 import CustomerInfo from './CustomerInfo';
+import { useDispatch } from 'react-redux';
+import { setPageTitle } from '../../store/themeConfigSlice';
+
 const BookAppointment = () => {
+
+	const dispatch = useDispatch();
+	useEffect(() => {
+		console.log('BookAppointment');
+		dispatch(setPageTitle('Book Appointment'));
+	});
+
 	const { paramKey } = useParams() as { paramKey: string };
 	const { updateKey, setServices, setCompanyInfo, companyInfo, sliderIndex, setWorkingTime } = useContext(CustomerContext) as CustomerContextType;
 	const [loadingStatus, setLoadingStatus] = useState('loading');

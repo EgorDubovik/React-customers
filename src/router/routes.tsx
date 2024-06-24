@@ -20,6 +20,7 @@ import ProfilePage from '../pages/Profile/ProfilePage';
 import PaymentsIndex from '../pages/Payments/PaymentsIndex';
 import BookAppointment from '../pages/BookAppointment';
 import ViewAppointment from '../pages/BookAppointment/ViewAppointment';
+import AppointmentCanceled from '../pages/BookAppointment/AppointmentCanceled';
 const BookAppointmentSettings = lazy(() => import('../pages/CompanySettings/BookAppointment/Index'));
 
 
@@ -103,6 +104,10 @@ const routes = [
     {
         path: '/appointment/book/view/:providerKey',
         element: <ViewAppointment />,
+    },
+    {
+        path: '/appointment/book/cancel/:paramKey',
+        element: <AppointmentCanceled />,
     },
     {
         path: '*',
