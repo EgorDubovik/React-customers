@@ -7,6 +7,7 @@ import Header from './Header';
 import { AppointmentInfoType } from './@types';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
+import {ButtonLoader} from '../../components/loading/ButtonLoader';
 
 const ViewAppointment = () => {
    const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const ViewAppointment = () => {
       dispatch(setPageTitle('View Appointment'));
    });
    const { providerKey } = useParams();
+   const [btnStatus, setBtnStatus] = useState(false);
    const [loadingStatus, setLoadingStatus] = useState('loading');
    const [appointmentInfo, setAppointmentInfo] = useState<AppointmentInfoType>({
       company: {
@@ -55,6 +57,8 @@ const ViewAppointment = () => {
 
    const navigate = useNavigate();
    const cancelAppointment = () => {
+      if(btnStatus) return;
+      setBtnStatus(true);
       fetch(env.API_URL+'/appointment/book/remove/'+providerKey)
       .then(response => {
          if (!response.ok)
@@ -66,6 +70,9 @@ const ViewAppointment = () => {
       }).catch((error) => {
          console.error('Error:', error);
       })
+      .finally(() => {
+         setBtnStatus(false);
+      });
    }
 
    return (
@@ -112,7 +119,9 @@ const ViewAppointment = () => {
                         <button className="bg-blue-600 text-white p-2 rounded w-full">Change appointment</button>
                      </div> */}
                      <div className="mt-3">
-                        <button onClick={cancelAppointment} className="bg-blue-100 text-blue-600 p-2 rounded w-full">Cancel appointment</button>
+                        <button onClick={cancelAppointment} className="bg-blue-100 text-blue-600 p-2 rounded w-full">
+                           Cancel appointment {btnStatus && <ButtonLoader />}
+                        </button>
                      </div>
                   </div>
                </div>

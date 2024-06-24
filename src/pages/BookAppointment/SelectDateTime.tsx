@@ -12,6 +12,7 @@ const SelectDateTime = () => {
    const [selectedDate, setSelectedDate] = useState(new Date());
    const daysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
    function getTimeArray(startTime:number, endTime:number, interval:number) : SelectedTimeType[]{
+      
       let timeArray = [];
       let start = new Date();
       start.setHours(startTime);
@@ -75,8 +76,8 @@ const SelectDateTime = () => {
    
    const days = getDaysArrayForCalendar(viewDate.getFullYear(), viewDate.getMonth() + 1);
    const dayOfWeek = selectedDate.getDay();
-   const workingDay = (workingTime && workingTime[daysName[dayOfWeek]]) ? workingTime[daysName[dayOfWeek].toLowerCase()] : {from: 8, to: 17};
-   
+   const workingDay = (workingTime && workingTime[daysName[dayOfWeek].toLocaleLowerCase()]) ? workingTime[daysName[dayOfWeek].toLowerCase()] : {from: 8, to: 17};
+   console.log('workingDay:',workingDay);
    const timeArray = getTimeArray(workingDay.from, workingDay.to, 60);
 
    const nextMonthHandel = () => {
