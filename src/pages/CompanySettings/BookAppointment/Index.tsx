@@ -58,7 +58,7 @@ const BookAppointmentSettings = () => {
 	const moveToBookService = (service: CompanyServiceType) => {
 		let servicesIds = bookService.map((item) => item.id);
 		servicesIds.push(service.id);
-		axiosClient.post('/company/settings/book-appointment/add-services', { services: servicesIds })
+		axiosClient.post('/company/settings/book-appointment/update-services', { services: servicesIds })
 		.then((res) => {
 			console.log(res.data);
 		})
@@ -69,6 +69,23 @@ const BookAppointmentSettings = () => {
 		});
 		setCompanyServices(companyServices.filter((item) => item.id !== service.id));
 		setBookService([...bookService, service]);
+	}
+
+	const removeBookService = (service: CompanyServiceType) => {
+		let servicesIds = bookService.map((item) => item.id);
+		servicesIds = servicesIds.filter((id) => id !== service.id);
+		axiosClient.post('/company/settings/book-appointment/update-services', { services: servicesIds })
+		.then((res) => {
+			console.log(res.data);
+		})
+		.catch((err) => {
+			setBookService([...bookService, service]);
+			setCompanyServices(companyServices.filter((item) => item.id !== service.id));
+			console.log(err);
+		});
+		setBookService(bookService.filter((item) => item.id !== service.id));
+		setCompanyServices([...companyServices, service]);
+	
 	}
 
 	return (
@@ -105,7 +122,7 @@ const BookAppointmentSettings = () => {
 										<div className="px-2 border-l dark:border-gray-800">
 											{bookService.map((service: CompanyServiceType, index: number) => {
 												return (
-													<div key={index} className="flex justify-between p-2 bg-slate-950 mt-2 rounded">
+													<div key={index} className="flex justify-between p-2 bg-slate-950 mt-2 rounded cursor-pointer" onClick={()=>{removeBookService(service)}}>
 														<div>
 															<p className="text-white">{service.title}</p>
 															<p>{service.description}</p>
