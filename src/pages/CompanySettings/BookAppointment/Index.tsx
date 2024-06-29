@@ -6,6 +6,7 @@ import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading
 import LinkAndActiveBlock from './LinkAndActiveBlock';
 import { ReactSortable } from 'react-sortablejs';
 import axios from 'axios';
+import { use } from 'i18next';
 interface CompanyServiceType {
 	id: number;
 	title: string;
@@ -17,6 +18,7 @@ const BookAppointmentSettings = () => {
 	const [loadingStatus, setLoadingStatus] = useState<string>('loading');
 	const [settings, setSettings] = useState<any>({});
 	const [companyServices, setCompanyServices] = useState<CompanyServiceType[]>([]);
+	const [loadedCompanyServices, setLoadetCompanyServices] = useState<CompanyServiceType[]>([]);
 	const [bookService, setBookService] = useState<CompanyServiceType[]>([]);
 	const [workingTime, setWorkingTime] = useState<WorkingTime>({
 		monday: { from: 0, to: 0 },
@@ -32,9 +34,11 @@ const BookAppointmentSettings = () => {
 		axiosClient
 			.get('/company/settings/book-appointment')
 			.then((res) => {
+				console.log(res.data);
 				setWorkingTime(JSON.parse(res.data.settings.working_time));
 				setSettings(res.data.settings);
-				setCompanyServices(res.data.companyServices);
+				setLoadetCompanyServices(res.data.companyServices || []);
+				setBookService(res.data.bookAppointmentServices || []);
 				setLoadingStatus('success');
 			})
 			.catch((err) => {
@@ -43,8 +47,18 @@ const BookAppointmentSettings = () => {
 			});
 	}, []);
 
+	useEffect(() => {
+		if(loadingStatus === 'success') {
+			setCompanyServices(loadedCompanyServices.filter((item) => {
+				return !bookService.some((service) => service.id === item.id);
+			}));
+		}
+	}, [loadingStatus]);
+
 	const moveToBookService = (service: CompanyServiceType) => {
-		axiosClient.post('/company/settings/book-appointment/change-services', { serviceId: service.id })
+		let servicesIds = bookService.map((item) => item.id);
+		servicesIds.push(service.id);
+		axiosClient.post('/company/settings/book-appointment/add-services', { services: servicesIds })
 		.then((res) => {
 			console.log(res.data);
 		})
