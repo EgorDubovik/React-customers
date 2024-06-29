@@ -49,6 +49,7 @@ const Services = (props: any) => {
 	return (
 		<div className="grid grid-cols-2">
 			<div className="px-2">
+				<p className='my-2 mb-4'>Click to add</p>
 				{companyServices.map((service: CompanyServiceType, index: number) => {
 					return (
 						<div
@@ -70,6 +71,7 @@ const Services = (props: any) => {
 				})}
 			</div>
 			<div className="px-2 border-l dark:border-gray-800">
+				<p className='my-2 mb-4'>Click to remove</p>
 				{bookService.map((service: CompanyServiceType, index: number) => {
 					return (
 						<div

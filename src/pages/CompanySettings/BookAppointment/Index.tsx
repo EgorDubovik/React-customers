@@ -62,7 +62,7 @@ const BookAppointmentSettings = () => {
 							<WorkingTime workingTime={workingTime} />
 							<div className="md:col-span-2">
 								<LinkAndActiveBlock settings={settings} />
-								<div className="panel mt-5">
+								<div className="panel p-2 mt-5 pb-4">
 									<Services loadedCompanyServices={loadedCompanyServices} bookService={bookService} />
 								</div>
 							</div>
