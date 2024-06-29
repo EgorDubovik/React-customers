@@ -4,7 +4,8 @@ import WorkingTime from './WorkingTime';
 import { PageLoadError } from '../../../components/loading/Errors';
 import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading';
 import LinkAndActiveBlock from './LinkAndActiveBlock';
-
+import { ReactSortable } from 'react-sortablejs';
+import axios from 'axios';
 interface CompanyServiceType {
 	id: number;
 	title: string;
@@ -16,6 +17,7 @@ const BookAppointmentSettings = () => {
 	const [loadingStatus, setLoadingStatus] = useState<string>('loading');
 	const [settings, setSettings] = useState<any>({});
 	const [companyServices, setCompanyServices] = useState<CompanyServiceType[]>([]);
+	const [bookService, setBookService] = useState<CompanyServiceType[]>([]);
 	const [workingTime, setWorkingTime] = useState<WorkingTime>({
 		monday: { from: 0, to: 0 },
 		tuesday: { from: 0, to: 0 },
@@ -30,7 +32,6 @@ const BookAppointmentSettings = () => {
 		axiosClient
 			.get('/company/settings/book-appointment')
 			.then((res) => {
-				console.log(res.data.settings);
 				setWorkingTime(JSON.parse(res.data.settings.working_time));
 				setSettings(res.data.settings);
 				setCompanyServices(res.data.companyServices);
@@ -41,6 +42,21 @@ const BookAppointmentSettings = () => {
 				setLoadingStatus('error');
 			});
 	}, []);
+
+	const moveToBookService = (service: CompanyServiceType) => {
+		axiosClient.post('/company/settings/book-appointment/change-services', { serviceId: service.id })
+		.then((res) => {
+			console.log(res.data);
+		})
+		.catch((err) => {
+			setCompanyServices([...companyServices, service]);
+			setBookService(bookService.filter((item) => item.id !== service.id));
+			console.log(err);
+		});
+		setCompanyServices(companyServices.filter((item) => item.id !== service.id));
+		setBookService([...bookService, service]);
+	}
+
 	return (
 		<div>
 			<div>
@@ -60,7 +76,7 @@ const BookAppointmentSettings = () => {
 										<div className="px-2">
 											{companyServices.map((service: CompanyServiceType, index: number) => {
 												return (
-													<div key={index} className="flex justify-between p-2 bg-slate-950 mt-2 rounded cursor-pointer" draggable={true}>
+													<div key={index} className="flex justify-between p-2 bg-slate-950 mt-2 rounded cursor-pointer" onClick={()=>{moveToBookService(service)}}>
 														<div>
 															<p className="text-white">{service.title}</p>
 															<p>{service.description}</p>
@@ -72,7 +88,21 @@ const BookAppointmentSettings = () => {
 												);
 											})}
 										</div>
-										<div className="px-2 border-l dark:border-gray-800"></div>
+										<div className="px-2 border-l dark:border-gray-800">
+											{bookService.map((service: CompanyServiceType, index: number) => {
+												return (
+													<div key={index} className="flex justify-between p-2 bg-slate-950 mt-2 rounded">
+														<div>
+															<p className="text-white">{service.title}</p>
+															<p>{service.description}</p>
+														</div>
+														<div>
+															<p className="text-white">{service.price}</p>
+														</div>
+													</div>
+												);
+											})}
+										</div>
 									</div>
 								</div>
 							</div>
