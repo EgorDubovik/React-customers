@@ -103,8 +103,8 @@ const ViewCustomer = () => {
 											</div>
 											<div className="border-l border-gray-700 h-full px-4 flex justify-between w-full items-center">
 												<div>
-													<p className="font-bold dark:text-gray-300">{appointment?.services[0].title}</p>
-													<p>{appointment?.services[0].description}</p>
+													<p className="font-bold dark:text-gray-300">{appointment?.services[0]?.title}</p>
+													<p>{appointment?.services[0]?.description}</p>
 												</div>
 
 												{appointment.remainingBalance > 0 ? (
