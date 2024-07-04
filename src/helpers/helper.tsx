@@ -1,4 +1,4 @@
-
+import Swal from 'sweetalert2';
 export const viewCurrency = (amount:number) => {
    if(isNaN(amount)) return '$0.00';
    return amount.toLocaleString('en-US', {
@@ -34,3 +34,18 @@ export const getTechAbr = (name:string) => {
 export const manualIsoString = (date:Date) => {
    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}Z`;
 }
+
+export const showMessage = (msg = '', type = 'success') => {
+   const toast: any = Swal.mixin({
+       toast: true,
+       position: 'top',
+       showConfirmButton: false,
+       timer: 3000,
+       customClass: { container: 'toast' },
+   });
+   toast.fire({
+       icon: type,
+       title: msg,
+       padding: '10px 20px',
+   });
+};
