@@ -11,11 +11,16 @@ import ReactApexChart, { Props } from 'react-apexcharts';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/flatpickr.css';
+import { use } from 'i18next';
+import {ButtonLoader} from '../../components/loading/ButtonLoader';
 
 const PaymentsIndex = () => {
-	const [loadingStatus, setLoadingStatus] = useState<string>('loading');
-	const [startTime, setStartTime] = useState(moment().subtract(30, 'days').format('MM/DD/YYYY'));
-	const [endTime, setEndTime] = useState(moment().format('MM/DD/YYYY'));
+	const [loadingStatus, setLoadingStatus] = useState<string>('success');
+	const [newDateStatus, setNewDateStatus] = useState<string>('success');
+	const [startDate, setstartDate] = useState(moment().subtract(30, 'days').format('MM/DD/YYYY'));
+	const [endDate, setendDate] = useState(moment().format('MM/DD/YYYY'));
 	const [payments, setPayments] = useState<any[]>([]);
 	const [filteredItems, setFilteredItems] = useState<any[]>([]);
 	const [techs, setTechs] = useState<any[]>([]);
@@ -149,10 +154,11 @@ const PaymentsIndex = () => {
 				colors.push(tech.color);
 			}
 		});
-		console.log('set colors');
+		
 		setOptions((prevOptions: any) => ({ ...prevOptions, colors: colors }));
 	};
 	const ParseDate = (date: any) => {
+		console.log('ParseDate', date);
 		const labels: string[] = [];
 		const chartData: any = {};
 		const paymentsForTable: any[] = [];
@@ -201,13 +207,14 @@ const PaymentsIndex = () => {
 		});
 		let series: any[] = [];
 		selectedTechs.forEach((techId: any) => {
+
 			series.push({
 				name: techs.find((tech) => tech.id === techId)?.name ?? 'Unknow',
 				data: chartData[techId],
 			});
 		});
-		console.log('set labels');
 		setOptions((prevOptions: any) => ({ ...prevOptions, labels: labels }));
+		console.log('set series:', series);
 		setSeries(series);
 		setTotalPerPeriod(totalPerPeriod);
 		setCreditTransaction(creditTransaction);
@@ -227,7 +234,6 @@ const PaymentsIndex = () => {
 				}
 			});
 		});
-		console.log(techs);
 		setSelectedTechs(techs);
 	};
 
@@ -235,19 +241,29 @@ const PaymentsIndex = () => {
 		getTechsList(payments);
 	}, [payments]);
 
-	useEffect(() => {
-		setLoadingStatus('loading');
+
+	const getPayments = (setStatus: (status: string) => void) => {
+		setStatus('loading');
 		axiosClient
-			.get('/payments')
+			.get('/payments', { params: { startDate, endDate } })
 			.then((response) => {
+				console.log(response.data.paymentForGraph);
 				setPayments(response.data.paymentForGraph);
 				setTechs(response.data.techs);
-				setLoadingStatus('success');
+				setStatus('success');
 			})
 			.catch((error) => {
 				console.log(error);
-				setLoadingStatus('error');
+				setStatus('error');
 			});
+	}
+
+	useEffect(() => {
+		getPayments(setNewDateStatus);
+	}, [startDate, endDate]);
+
+	useEffect(() => {
+		getPayments(setLoadingStatus);
 	}, []);
 
 	const toogleViewTech = (techId: number) => {
@@ -299,7 +315,32 @@ const PaymentsIndex = () => {
 			{loadingStatus === 'error' && <PageLoadError />}
 			{loadingStatus === 'success' && (
 				<div className="grid grid-flow-row gap-4">
-					<div className='flex justify-start items-center text-lg'><h1>Payments</h1><div className='ml-3 p-2 dark:bg-gray-900 rounded cursor-pointer'>from: {startTime} <span className='ml-2'>to: {endTime}</span></div></div>
+					<div className='flex justify-start items-center text-lg'>
+						<h1>Payments</h1>
+						<div className='ml-3 p-2 dark:bg-gray-900 bg-gray-200 rounded cursor-pointer'>
+							{/* from: {startDate} <span className='ml-2'>to: {endDate}</span> */}
+							From:
+							<Flatpickr
+								options={{ dateFormat: 'm/d/Y' }}
+								value={startDate}
+								onChange={(date) => {
+									setstartDate(moment(date[0]).format('MM/DD/YYYY'));
+								}}
+								className='border-0 bg-transparent text-primary dark:text-white ml-3 w-32'
+							/>
+							To:
+							<Flatpickr
+								options={{ dateFormat: 'm/d/Y' }}
+								value={endDate}
+								onChange={(date) => {
+									setendDate(moment(date[0]).format('MM/DD/YYYY'));
+								}}
+								className='border-0 bg-transparent text-primary dark:text-white w-32'
+							/>
+						</div>
+						{newDateStatus === 'loading' && <ButtonLoader />}
+						
+					</div>
 					<div className="panel p-2">
 						<ul className="">
 							{techs.map((tech: any, index: number) => (
