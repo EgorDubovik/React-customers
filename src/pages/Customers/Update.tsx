@@ -217,7 +217,7 @@ const Update = () => {
 							</div>
 							<div>
 								<label>Customer Email</label>
-								<input type="text" placeholder="Email" name="email" className="form-input w-full" value={customer.email} onChange={handleChangeFomr} />
+								<input type="email" placeholder="Email" name="email" className="form-input w-full" value={customer.email} onChange={handleChangeFomr} />
 							</div>
 							<div className="flex items-center justify-between mb-5">
 								<h5 className="font-semibold text-lg dark:text-white-light">Addresses</h5>

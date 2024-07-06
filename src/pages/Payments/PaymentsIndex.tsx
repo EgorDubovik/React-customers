@@ -335,7 +335,7 @@ const PaymentsIndex = () => {
 								onChange={(date) => {
 									setendDate(moment(date[0]).format('MM/DD/YYYY'));
 								}}
-								className='border-0 bg-transparent text-primary dark:text-white w-32'
+								className='border-0 bg-transparent text-primary dark:text-white ml-3 w-32'
 							/>
 						</div>
 						{newDateStatus === 'loading' && <ButtonLoader />}

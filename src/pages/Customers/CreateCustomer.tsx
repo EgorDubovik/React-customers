@@ -126,7 +126,7 @@ const CreateCustomer = () => {
 						</div>
 						<div>
 							<label>Customer Email</label>
-							<input type="text" placeholder="Email" name="email" className="form-input w-full" value={dataForm.email} onChange={handleChangeFomr} />
+							<input type="email" placeholder="Email" name="email" className="form-input w-full" value={dataForm.email} onChange={handleChangeFomr} />
 						</div>
 						<div className={`${addressError && 'has-error'}`}>
 							<div className="flex justify-between">
