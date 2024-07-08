@@ -275,6 +275,7 @@ const Employees = () => {
                            <div className="bg-white dark:bg-[#1a294166] rounded-md shadow" key={employee.id}>
                               <div className="p-4">
                                  <div className='flex items-center relative'>
+                                    {user.roles.includes(1) && (
                                     <div className='absolute top-0 right-0 z-10'>
                                        <div className="dropdown">
                                           <Dropdown
@@ -299,6 +300,7 @@ const Employees = () => {
                                           </Dropdown>
                                        </div>
                                     </div>
+                                    )}
                                     <div className='avatar'>
                                        <span className="flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-'bg-danger text-white" style={{ backgroundColor:employee.color }} >{getTechAbr(employee.name)}</span>
                                     </div>

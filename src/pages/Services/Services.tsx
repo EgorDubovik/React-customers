@@ -12,6 +12,12 @@ import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
 import { showMessage } from '../../helpers/helper';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
 import { PageLoadError } from '../../components/loading/Errors';
+import { Link } from 'react-router-dom';
+import IconMapPin from '../../components/Icon/IconMapPin';
+import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
+import IconPencilPaper from '../../components/Icon/IconPencilPaper';
+import IconEye from '../../components/Icon/IconEye';
+import Dropdown from '../../components/Dropdown';
 
 const Services = () => {
 	const dispatch = useDispatch();
@@ -173,9 +179,45 @@ const Services = () => {
 							</div>
 						</div>
 					</div>
-					<div className="mt-5 panel p-0 border-0 overflow-hidden">
-                  
-						{/* <div className="table-responsive">
+					<div className="mt-5 p-0 border-0 w-2/3 m-auto">
+						{/* <div className="grid grid-cols-3 gap-3">
+
+							<div className="bg-white dark:bg-[#1a294166] rounded-md shadow">
+								<div className="p-3">
+									<div className="flex items-center justify-between relative">
+										<div className="absolute top-0 right-0 z-10">
+											<div className="dropdown">
+												<Dropdown offset={[0, 5]} btnClassName="align-middle" button={<IconHorizontalDots className="rotate-90 opacity-70" />}>
+													<ul className="whitespace-nowrap">
+														<li>
+															<button type="button" onClick={() => {}}>
+																<IconPencilPaper className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
+																Edit
+															</button>
+														</li>
+														<li>
+															<button type="button" onClick={() => {}}>
+																<IconEye className="w-4.5 h-4.5 mr-2 shrink-0" />
+																View
+															</button>
+														</li>
+													</ul>
+												</Dropdown>
+											</div>
+										</div>
+										<div className='flex items-center justify-between w-full'>
+											<div className="user-info w-full">
+												<div className="user-name w-3/4 font-bold dark:text-white">Title</div>
+												<div className="">Description</div>
+											</div>
+											<div className='pr-6'>$60.00</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div> */}
+						<div className="table-responsive">
 							<table className="table-striped table-hover">
 								<thead>
 									<tr>
@@ -221,7 +263,7 @@ const Services = () => {
 									})}
 								</tbody>
 							</table>
-						</div> */}
+						</div>
 					</div>
 				</div>
 			)}

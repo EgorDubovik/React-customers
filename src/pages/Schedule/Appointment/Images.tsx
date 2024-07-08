@@ -15,6 +15,7 @@ const Images = (props: any) => {
 	const [showImageIndex, setShowImageIndex] = useState(0);
 
 	useEffect(() => {
+		console.log('selectedFiles:', selectedFiles);
 		handleUpload();
 	}, [selectedFiles]);
 
@@ -23,7 +24,9 @@ const Images = (props: any) => {
 	};
 
 	const handleLinkClick = () => {
+		console.log(fileInputRef.current, uploadingStatus);
 		if (fileInputRef.current && !uploadingStatus) {
+			console.log('clicking file input');
 			(fileInputRef.current as HTMLInputElement).click();
 		}
 	};
@@ -42,6 +45,7 @@ const Images = (props: any) => {
 					},
 				});
 				console.log('File uploaded successfully:', response.data);
+				setImages([...images, response.data]);
 				return response.data;
 			} catch (error) {
 				console.error('Error uploading file:', error);

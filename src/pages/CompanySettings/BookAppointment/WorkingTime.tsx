@@ -100,7 +100,7 @@ const WorkingTime = (prop:any) => {
 			<div className="grid grid-flow-row gap-3">
 				{days.map((day, index) => (
 					<div key={index} className="grid grid-cols-3 gap-3">
-						<label htmlFor={day.value}>{day.value}</label>
+						<label htmlFor={day.value}>{day.label}</label>
 						<select id={day.value} value={workingTime[day.value].from} name={day.value + '-from'} className="form-select text-white-dark" onChange={handleChangeTime}>
 							{times.map((time, index) => (
 								<option key={index} value={time.value}>
