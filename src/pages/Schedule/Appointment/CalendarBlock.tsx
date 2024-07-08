@@ -22,14 +22,14 @@ const CalendarBlock = () => {
    const [timeToIsSelected, setTimeToIsSelected] = useState(false);
    const [updateStatus, setUpdateStatus] = useState(false);
    const onTimeFromChanged = (date:any) => {
-      setTimeFrom(new Date(date));
+      setTimeFrom(date);
       if(!timeToIsSelected) 
          setTimeTo(new Date(date.getTime() + 60*120*1000));
    }
 
    const onTimeToChanged = (date:any) => {
       setTimeToIsSelected(true);
-      setTimeTo(new Date(date));
+      setTimeTo(date);
    }
 
    const updateAppointmentTimeHandle = () => {
@@ -105,7 +105,7 @@ const CalendarBlock = () => {
                appointments={appointments}
                currentDate={appointment?.start}
                isHeader={false}
-               isDaysNames={false}
+               // isDaysNames={false}
                viewType={'day'}
                startTime={'07:00'}
                endTime={'21:00'}

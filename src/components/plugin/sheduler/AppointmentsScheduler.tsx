@@ -21,6 +21,10 @@ const AppointmentsScheduler = (props:any) => {
    const [currentDate, setCurrentDate] = useState(moment(props.currentDate) || moment());
    const [appointmentForCurentDate, setAppointmentForCurentDate] = useState([]);
 
+   useEffect(() => {
+      setCurrentDate(moment(props.currentDate));
+   }, [props.currentDate]);
+
    const helper = {
       calculateTimePercentage : (time:any) => {
          const relativeTime = time.clone().set({hour: startTime.hour(), minute: startTime.minute()});
@@ -205,4 +209,4 @@ const AppointmentsScheduler = (props:any) => {
    );
 }
 
-export default AppointmentsScheduler;
+export default React.memo(AppointmentsScheduler);

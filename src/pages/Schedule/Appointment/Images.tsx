@@ -15,7 +15,7 @@ const Images = (props: any) => {
 	const [showImageIndex, setShowImageIndex] = useState(0);
 
 	useEffect(() => {
-		console.log('selectedFiles:', selectedFiles);
+		
 		handleUpload();
 	}, [selectedFiles]);
 
@@ -24,9 +24,8 @@ const Images = (props: any) => {
 	};
 
 	const handleLinkClick = () => {
-		console.log(fileInputRef.current, uploadingStatus);
 		if (fileInputRef.current && !uploadingStatus) {
-			console.log('clicking file input');
+			
 			(fileInputRef.current as HTMLInputElement).click();
 		}
 	};
@@ -37,7 +36,6 @@ const Images = (props: any) => {
 		const uploadPromises = selectedFiles.map(async (file) => {
 			const formData = new FormData();
 			formData.append('image', file);
-			console.log('start uploading file:');
 			try {
 				const response = await axiosClient.post('appointment/images/' + appointmentId, formData, {
 					headers: {
