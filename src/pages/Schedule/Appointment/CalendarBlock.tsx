@@ -40,7 +40,6 @@ const CalendarBlock = () => {
          timeTo: manualIsoString(timeTo),
       })
       .then((res) => {
-         console.log(res);
          updateTime(timeFrom.toString(), timeTo.toString());
          setModal(false);
       })
@@ -105,7 +104,7 @@ const CalendarBlock = () => {
                appointments={appointments}
                currentDate={appointment?.start}
                isHeader={false}
-               // isDaysNames={false}
+               isDaysNames={false}
                viewType={'day'}
                startTime={'07:00'}
                endTime={'21:00'}

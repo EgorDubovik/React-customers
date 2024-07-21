@@ -7,7 +7,7 @@ import { IRootState } from '../../../store'
 import axiosClient from '../../../store/axiosClient'
 
 const TechBlock = (props:any) => {
-   
+
    const [techs, setTechs]  = useState(props.techs || []);
    const [techsIds, setTechsIds] = useState<Number[]>([]);
    const [companyTechs, setCompanyTechs] = useState([]);
@@ -196,4 +196,4 @@ const TechBlock = (props:any) => {
    )
 }
 
-export default TechBlock
+export default  TechBlock;

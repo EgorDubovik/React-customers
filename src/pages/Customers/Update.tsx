@@ -8,6 +8,7 @@ import IconTrashLines from '../../components/Icon/IconTrashLines';
 import { Dialog, Transition } from '@headlessui/react';
 import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
 
+
 interface Address {
 	id: string;
 	line1: string;
@@ -152,8 +153,10 @@ const Update = () => {
 	};
 
 	const handleChangeFomr = (e: any) => {
+		let value = e.target.value;
 		if (e.target.name === 'phone') setPhoneError(false);
-		setCustomer({ ...customer, [e.target.name]: e.target.value });
+		if(e.target.name === 'email') value = value.toLowerCase();
+		setCustomer({ ...customer, [e.target.name]: value });
 	};
 
 	const handleChangeParse = (e: any) => {
@@ -205,6 +208,7 @@ const Update = () => {
 								</span>
 							</div>
 						)}
+						
 						<form className="space-y-6">
 							<div>
 								<label>Customer name</label>
@@ -217,7 +221,7 @@ const Update = () => {
 							</div>
 							<div>
 								<label>Customer Email</label>
-								<input type="email" placeholder="Email" name="email" className="form-input w-full" value={customer.email} onChange={handleChangeFomr} />
+								<input type="email" autoComplete='off' placeholder="Email" name="email" className="form-input w-full" value={customer.email} onChange={handleChangeFomr} />
 							</div>
 							<div className="flex items-center justify-between mb-5">
 								<h5 className="font-semibold text-lg dark:text-white-light">Addresses</h5>
