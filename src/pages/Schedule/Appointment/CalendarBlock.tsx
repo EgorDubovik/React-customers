@@ -6,7 +6,7 @@ import { useAppointmentContext } from '../../../context/AppointmentContext';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../../store';
-import MyTimePicker from '../../../components/plugin/mytimepicker/src';
+import TimePicker from 'edtimepicker';
 import axiosClient from '../../../store/axiosClient';
 import {manualIsoString} from '../../../helpers/helper';
 import {ButtonLoader} from '../../../components/loading/ButtonLoader';
@@ -156,14 +156,24 @@ const CalendarBlock = () => {
                                        </div>
                                     </div>
                                     { selectedTime === "timeFrom" &&
-                                       <MyTimePicker 
+                                       <TimePicker 
                                           currentDate = {timeFrom}
+                                          options={{
+                                             itemsHeight: 45,
+                                             daysNameFormat: 'MMM DD, DDDD',
+                                             borderColor: '#077afe',
+                                          }}
                                           onDateChange={onTimeFromChanged}
                                        />
                                     }
                                     { selectedTime === "timeTo" &&
-                                       <MyTimePicker 
+                                       <TimePicker 
                                           currentDate = {timeTo}
+                                          options={{
+                                             itemsHeight: 45,
+                                             daysNameFormat: 'MMM DD, DDDD',
+                                             borderColor: '#077afe',
+                                          }}
                                           onDateChange={onTimeToChanged}
                                        />
                                     }

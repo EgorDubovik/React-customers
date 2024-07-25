@@ -1,6 +1,7 @@
 import {useState, useEffect, Fragment} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import MyTimePicker from '../../components/plugin/mytimepicker/src';
+// import MyTimePicker from '../../components/plugin/mytimepicker/src';
+import TimePicker from 'edtimepicker';
 import moment from 'moment';
 import IconEdit from '../../components/Icon/IconEdit';
 import { Dialog, Transition } from '@headlessui/react';
@@ -188,18 +189,30 @@ const CreateAppointment = () => {
                         </div>
                      </div>
                   </div>
+                  <div className='text-[16px] dark:text-white text-right'>
                   { selectedTime === "timeFrom" &&
-                     <MyTimePicker 
+                     <TimePicker 
                         currentDate = {timeFrom}
+                        options={{
+                           itemsHeight: 45,
+                           daysNameFormat: 'MMM DD, DDDD',
+                           borderColor: '#077afe',
+                        }}
                         onDateChange={onTimeFromChanged}
                      />
                   }
                   { selectedTime === "timeTo" &&
-                     <MyTimePicker 
+                     <TimePicker 
                         currentDate = {timeTo}
+                        options={{
+                           itemsHeight: 45,
+                           daysNameFormat: 'MMM DD, DDDD',
+                           borderColor: '#077afe',
+                        }}
                         onDateChange={onTimeToChanged}
                      />
                   }
+                  </div>
                   
                </div>
                <div className='mt-5'>

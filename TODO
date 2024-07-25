@@ -19,7 +19,7 @@ Company services
          ✔ Add settings with working time by days @done(24-06-24 11:12)
          ✔ Change title of booking appointment time !!! @done(24-06-24 17:04)
          ✔ Disable times on calendar if not working time @done(24-06-24 16:59)
-         
+      ☐ USE useForm from react lib for all forms   
       ☐ Add tags
          ☐ Asign tags to customers
          ☐ Create settings page to company setting to create tags
