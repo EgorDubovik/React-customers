@@ -195,7 +195,7 @@ const CreateAppointment = () => {
                         currentDate = {timeFrom}
                         options={{
                            itemsHeight: 45,
-                           daysNameFormat: 'MMM DD, DDDD',
+                           textAlign: 'right',
                            borderColor: '#077afe',
                         }}
                         onDateChange={onTimeFromChanged}

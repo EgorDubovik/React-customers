@@ -155,29 +155,30 @@ const CalendarBlock = () => {
                                           </div>
                                        </div>
                                     </div>
-                                    { selectedTime === "timeFrom" &&
-                                       <TimePicker 
-                                          currentDate = {timeFrom}
-                                          options={{
-                                             itemsHeight: 45,
-                                             daysNameFormat: 'MMM DD, DDDD',
-                                             borderColor: '#077afe',
-                                          }}
-                                          onDateChange={onTimeFromChanged}
-                                       />
-                                    }
-                                    { selectedTime === "timeTo" &&
-                                       <TimePicker 
-                                          currentDate = {timeTo}
-                                          options={{
-                                             itemsHeight: 45,
-                                             daysNameFormat: 'MMM DD, DDDD',
-                                             borderColor: '#077afe',
-                                          }}
-                                          onDateChange={onTimeToChanged}
-                                       />
-                                    }
-                                    
+                                    <div className='text-[16px] dark:text-white-light'>
+                                       { selectedTime === "timeFrom" &&
+                                          <TimePicker 
+                                             currentDate = {timeFrom}
+                                             options={{
+                                                itemsHeight: 45,
+                                                daysNameFormat: 'MMM DD, DDDD',
+                                                borderColor: '#077afe',
+                                             }}
+                                             onDateChange={onTimeFromChanged}
+                                          />
+                                       }
+                                       { selectedTime === "timeTo" &&
+                                          <TimePicker 
+                                             currentDate = {timeTo}
+                                             options={{
+                                                itemsHeight: 45,
+                                                daysNameFormat: 'MMM DD, DDDD',
+                                                borderColor: '#077afe',
+                                             }}
+                                             onDateChange={onTimeToChanged}
+                                          />
+                                       }
+                                    </div>
                                  </div>
                                  <div className='flex justify-center mt-4'>
                                     <button onClick={updateAppointmentTimeHandle} className='btn btn-primary w-full'>
