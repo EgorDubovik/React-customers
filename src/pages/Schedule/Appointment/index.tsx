@@ -37,8 +37,24 @@ const Index = () => {
          <Header />
          <div className='py-4'>
             <div className='grid grid-cols-1 md:grid-cols-4 gap-5'>
-               <div className='panel p-4'>
-                  <CalendarBlock />
+               <div className='grid grid-rows-none gap-5'>
+                  <div className='panel p-4'>
+                     <CalendarBlock />
+                  </div>
+                  <div className='panel p-4'>
+                     <h3 className="font-semibold text-lg dark:text-white-light">All Visits</h3>
+                     <div className='text-right'>
+                        <div className='rounded-md p-2 '>
+                           <div className='text-sm font-semibold'>9:00 AM - 10:00 AM Jul 23, 2024</div>
+                        </div>
+                        <div className='rounded-md p-2 '>
+                           <div className='text-sm font-semibold'>9:00 AM - 10:00 AM Jul 23, 2024</div>
+                        </div>
+                        <div className='rounded-md p-2 '>
+                           <div className='text-sm font-semibold'>9:00 AM - 10:00 AM Jul 23, 2024</div>
+                        </div>
+                     </div>
+                  </div>
                </div>
                <div className='md:col-span-3 grid grid-cols-1 xl:grid-cols-2 gap-5'>
                   {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
@@ -56,13 +72,18 @@ const Index = () => {
                   </div>
                   {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
                   <div className='grid grid-flow-row gap-5'>
+                     
                      {/* Services */}
                      <ServicesBlock />
+
+                     {/* Costs */}
+                     <div className='panel p-4'>
+                        <h3 className="font-semibold text-lg dark:text-white-light">Costs</h3>
+                     </div>
                      {/* Notes */}
                      <NotesBlock />
 
                      {/* Tech for mobile */}
-                     
                      <div className='panel p-4 block md:hidden'>
                         <TechBlock techs={appointment?.techs} appointmentId={appointment?.id} />
                      </div>

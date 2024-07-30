@@ -5,11 +5,14 @@ Company services
       ✔ View empty mesaage if no customers + link to create new customer @done(24-05-10 08:31)
       ☐ Chech why invoicec sae to DB wthi error on sending email
       ☐ Return error message if invoice not sent by wrong email
-      
+      ☐ В ноутс с другой компании показывает моем имя и не важно кто написал !!!
+      ☐ При создании клиента если не ввести имя то система подкидвыает 10 последих клиентов как рпохожие !!!
 
    
    COMPLYTIONS:
       ☐ Finish pagination on customer page with grid view
+      ☐ Hinish issue refund
+      ☐ Update company info from admin profile page
       ✔ Upload images for appointments @done(24-06-11 09:36)
       ✔ view uploaded images on appointment page @started(24-06-11 09:36) @done(24-06-21 10:02) @lasted(1w3d26m11s)
 
@@ -27,6 +30,7 @@ Company services
       ✔ Create seting page for book appointment @done(24-07-04 07:19)
       ☐ Create setting page for deposit settings
       ☐ Add signUP page
+      ☐ Add "default number" button in create customer if customer not provided phone number
       ✔ Download invoice as PDF wthout sending to email @done(24-07-04 07:19)
       ✔ Chech in exisitng customer on add new !!! @done(24-05-15 08:22)
 
