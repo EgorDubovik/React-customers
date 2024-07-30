@@ -79,8 +79,8 @@ const Index = () => {
                      <ServicesBlock />
 
                      {/* Costs */}
-                     <Expense />
-                     
+                     <Expense appointmentId = {appointment?.id}/>
+
                      {/* Notes */}
                      <NotesBlock />
 
