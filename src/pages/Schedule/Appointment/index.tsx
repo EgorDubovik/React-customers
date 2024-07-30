@@ -9,11 +9,13 @@ import {useAppointmentContext} from '../../../context/AppointmentContext';
 import CalendarBlock from './CalendarBlock';
 import Header from './Header';
 import Images from './Images';
+import Expense from './Expense';
 
 const Index = () => {
    const {appointment, setAppointment,updateStatus, updatePayments} = useAppointmentContext();
    const navigate = useNavigate();
    const [loadingStatus, setLoadingStatus] = useState(false);
+
    const cancelAppointment = () => {
       if(!window.confirm('Are you sure you want to cancel this appointment?')) return;
       if(loadingStatus) return;
@@ -77,9 +79,8 @@ const Index = () => {
                      <ServicesBlock />
 
                      {/* Costs */}
-                     <div className='panel p-4'>
-                        <h3 className="font-semibold text-lg dark:text-white-light">Costs</h3>
-                     </div>
+                     <Expense />
+                     
                      {/* Notes */}
                      <NotesBlock />
 

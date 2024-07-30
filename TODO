@@ -17,6 +17,7 @@ Company services
       ✔ view uploaded images on appointment page @started(24-06-11 09:36) @done(24-06-21 10:02) @lasted(1w3d26m11s)
 
    FEATURES:
+      ☐ Add storage for left menu
       ☐ BookAppointment Online
          ✔ Disable times on calendar if already booked @done(24-06-24 11:12)
          ✔ Add settings with working time by days @done(24-06-24 11:12)
