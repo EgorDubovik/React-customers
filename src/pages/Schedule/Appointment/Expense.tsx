@@ -3,6 +3,7 @@ import { viewCurrency } from '../../../helpers/helper';
 import IconTrash from '../../../components/Icon/IconTrash';
 import axiosClient from '../../../store/axiosClient';
 import {ButtonLoader} from '../../../components/loading/ButtonLoader';
+import { useAppointmentContext } from '../../../context/AppointmentContext';
 
 interface IExpense {
    title: string;
@@ -12,11 +13,14 @@ interface IExpense {
 
 const Expense = (props:any) => {
    const COST_DEFAULT = '$0.00';
-   const [expensesList, setExpensesList] = useState<IExpense[]>([]);
+
+   const {appointment} = useAppointmentContext();
+   const [expensesList, setExpensesList] = useState<IExpense[]>(appointment?.expance || []);
    const [formData, setFormData] = useState<IExpense>({title: '', amount: 0, id: 0});
    const [cost, setCost] = useState(COST_DEFAULT);
    const appointmentId = props.appointmentId || 0;
-   const [storeStatus, setStoreStatus] = useState(false);
+   const [storeStatus, setStoreStatus] = useState(false)
+
 
    const costInput = (e:any) => {
       const value = parseFloat(e.target.value.replace(/\D/g, ''))/100;
@@ -39,10 +43,7 @@ const Expense = (props:any) => {
       axiosClient.post(`/appointment/expance/${appointmentId}`, formData)
       .then((res) => {
          if(res.status === 200){
-
-            console.log(res.data.expense);
             setExpensesList([...expensesList, res.data.expance]);
-
             setFormData({title: '', amount: 0, id: 0});
             setCost(COST_DEFAULT);
          }
