@@ -8,14 +8,20 @@ interface IExpense {
 }
 
 const Expense = () => {
+   const COST_DEFAULT = '$0.00';
    const [expensesList, setExpensesList] = useState<IExpense[]>([]);
    const [formData, setFormData] = useState<IExpense>({partNumber: '', cost: 0});
-   
+   const [cost, setCost] = useState(COST_DEFAULT);
 
+
+   const costInput = (e:any) => {
+      const value = parseFloat(e.target.value.replace(/\D/g, ''))/100;
+      setCost(viewCurrency(value));
+      setFormData({...formData, cost: value});
+   }
    const onKeyPress = (e:any) => {
       if(e.key === 'Enter')
          addExpense();
-
    }
 
    const formDataChange = (e:any) => {
@@ -26,6 +32,11 @@ const Expense = () => {
       if(formData.partNumber === '' || formData.cost === 0) return;
       setExpensesList([...expensesList, formData]);
       setFormData({partNumber: '', cost: 0});
+      setCost(COST_DEFAULT);
+   }
+
+   const removeExpense = (index:number) => {
+
    }
 
 
@@ -37,7 +48,7 @@ const Expense = () => {
                <input className="form-input" value={formData.partNumber} placeholder="Part number" name='partNumber' onChange={formDataChange} onKeyDown={onKeyPress} />
             </div>
             <div className="">
-               <input className="form-input" value={formData.cost} placeholder="Cost" name='cost' onChange={formDataChange} onKeyDown={onKeyPress}/>
+               <input className="form-input" value={cost} placeholder="Cost" name='cost' onChange={costInput} onKeyDown={onKeyPress}/>
             </div>
             <div className="">
                <button className="btn btn-primary" onClick={addExpense}>Add</button>
@@ -50,8 +61,10 @@ const Expense = () => {
                      <div key={index} className="grid grid-cols-4 mt-3">
                         <div className="text-sm font-semibold col-span-2">{expense.partNumber}</div>
                         <div className="text-sm font-semibold">{viewCurrency(expense.cost)}</div>
-                        <div className="action text-danger">
-                           <IconTrash />
+                        <div className="action ">
+                           <span className='text-danger cursor-pointer' onClick={() => removeExpense(index)}>
+                              <IconTrash/>
+                           </span>
                         </div>
                      </div>
                   ))}
