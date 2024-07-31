@@ -22,7 +22,7 @@ const BookAppointment = lazy(()=> import('../pages/BookAppointment'));
 const ViewAppointment = lazy(()=> import('../pages/BookAppointment/ViewAppointment'));
 const AppointmentCanceled = lazy(()=> import('../pages/BookAppointment/AppointmentCanceled'));
 const BookAppointmentSettings = lazy(() => import('../pages/CompanySettings/BookAppointment/Index'));
-
+const Storage = lazy(() => import('../pages/Storage'));
 
 const routes = [
     // dashboard
@@ -90,6 +90,10 @@ const routes = [
                 path: '/payments',
                 element: <DefaultLayout><PaymentsIndex /></DefaultLayout>
             },
+            {
+                path: '/storage',
+                element: <DefaultLayout><Storage /></DefaultLayout>
+            }
         ]
     },
     //Authentication

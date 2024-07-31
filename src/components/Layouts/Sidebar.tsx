@@ -1,5 +1,4 @@
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { toggleSidebar } from '../../store/themeConfigSlice';
@@ -7,16 +6,15 @@ import { IRootState } from '../../store';
 import { useState, useEffect } from 'react';
 import IconCaretsDown from '../Icon/IconCaretsDown';
 import IconMenuDashboard from '../Icon/Menu/IconMenuDashboard';
-import IconMenuScrumboard from '../Icon/Menu/IconMenuScrumboard';
 import IconMenuInvoice from '../Icon/Menu/IconMenuInvoice';
 import IconMenuCalendar from '../Icon/Menu/IconMenuCalendar';
 import IconMenuUsers from '../Icon/Menu/IconMenuUsers';
-import IconMenuDocumentation from '../Icon/Menu/IconMenuDocumentation';
 import IconMenuContacts from '../Icon/Menu/IconMenuContacts';
 import IconMenuDatatables from '../Icon/Menu/IconMenuDatatables';
 import IconMenuWidgets from '../Icon/Menu/IconMenuWidgets';
 import IconCaretDown from '../Icon/IconCaretDown';
 import AnimateHeight from 'react-animate-height';
+import IconMenuForms from '../Icon/Menu/IconMenuForms';
 
 const Sidebar = () => {
 	const [currentMenu, setCurrentMenu] = useState<string>('');
@@ -116,6 +114,12 @@ const Sidebar = () => {
 									<div className="flex items-center">
 										<IconMenuContacts className="group-hover:!text-primary shrink-0" />
 										<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Employees</span>
+									</div>
+								</NavLink>
+								<NavLink to="/storage" className="group">
+									<div className="flex items-center">
+										<IconMenuForms className="group-hover:!text-primary shrink-0" />
+										<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Storage</span>
 									</div>
 								</NavLink>
 								
