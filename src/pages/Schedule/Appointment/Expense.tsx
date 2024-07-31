@@ -4,6 +4,7 @@ import IconTrash from '../../../components/Icon/IconTrash';
 import axiosClient from '../../../store/axiosClient';
 import {ButtonLoader} from '../../../components/loading/ButtonLoader';
 import { useAppointmentContext } from '../../../context/AppointmentContext';
+import { SmallDangerLoader } from '../../../components/loading/SmallCirculeLoader';
 
 interface IExpense {
    title: string;
@@ -15,11 +16,12 @@ const Expense = (props:any) => {
    const COST_DEFAULT = '$0.00';
 
    const {appointment} = useAppointmentContext();
-   const [expensesList, setExpensesList] = useState<IExpense[]>(appointment?.expance || []);
+   const [expensesList, setExpensesList] = useState<IExpense[]>(appointment?.expanse || []);
    const [formData, setFormData] = useState<IExpense>({title: '', amount: 0, id: 0});
    const [cost, setCost] = useState(COST_DEFAULT);
    const appointmentId = props.appointmentId || 0;
    const [storeStatus, setStoreStatus] = useState(false)
+   const [removeExpenseId, setRemoveExpenseId] = useState(0);
 
 
    const costInput = (e:any) => {
@@ -40,7 +42,7 @@ const Expense = (props:any) => {
       if(storeStatus) return;
       if(formData.title === '' || formData.amount === 0) return;
       setStoreStatus(true);
-      axiosClient.post(`/appointment/expance/${appointmentId}`, formData)
+      axiosClient.post(`/appointment/expanse/${appointmentId}`, formData)
       .then((res) => {
          if(res.status === 200){
             setExpensesList([...expensesList, res.data.expance]);
@@ -56,8 +58,20 @@ const Expense = (props:any) => {
       });
    }
 
-   const removeExpense = (index:number) => {
-
+   const removeExpense = (id:number) => {
+      setRemoveExpenseId(id);
+      axiosClient.delete(`/appointment/expanse/${appointmentId}/${id}`)
+      .then((res) => {
+         if(res.status === 200){
+            setExpensesList(expensesList.filter((expense) => expense.id !== id));
+         }
+      })
+      .catch((err) => {
+         console.log(err);
+      })
+      .finally(() => {
+         setRemoveExpenseId(0);
+      });
    }
 
 
@@ -86,8 +100,8 @@ const Expense = (props:any) => {
                         <div className="text-sm font-semibold col-span-2">{expense.title}</div>
                         <div className="text-sm font-semibold text-center">{viewCurrency(expense.amount)}</div>
                         <div className="action flex justify-end">
-                           <span className='text-danger cursor-pointer' onClick={() => removeExpense(index)}>
-                              <IconTrash/>
+                           <span className='text-danger cursor-pointer' onClick={() => removeExpense(expense.id)}>
+                              {removeExpenseId === expense.id ? <SmallDangerLoader /> :<IconTrash/>}
                            </span>
                         </div>
                      </div>

@@ -30,7 +30,7 @@ interface Appointment {
   address : any;
   techs: Techs[];
   images: any[];
-  expance: any[];
+  expanse: any[];
 }
 
 interface AppointmentContextType {
