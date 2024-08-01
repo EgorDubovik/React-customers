@@ -19,25 +19,37 @@ interface IRecords {
 const Storage = () => {
 	const [loadingStatus, setLoadingStatus] = useState('loading');
 	const [records, setRecords] = useState<IRecords[]>([]);
+	const PAGE_SIZES = [2, 20, 30, 50, 100];
 	const [page, setPage] = useState(1);
-	const [pageSize, setPageSize] = useState(10);
+	const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
 	const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
 		columnAccessor: 'firstName',
 		direction: 'asc',
 	});
 	const [search, setSearch] = useState('');
 	const [searchLoading, setSearchLoading] = useState(false);
-	const PAGE_SIZES = [10, 20, 30, 50, 100];
+	
 	const [initialRecords, setInitialRecords] = useState<IRecords[]>([]);
+
+	const sliceData = (data: IRecords[]) => {
+		const from = (page - 1) * pageSize;
+		const to = from + pageSize;
+		return data.slice(from, to);
+	}
 
 	useEffect(() => {
 		setPage(1);
 	}, [pageSize]);
 
 	useEffect(() => {
-		const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
+		const data2 = sliceData(sortBy(initialRecords, sortStatus.columnAccessor));
+
 		setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
 	}, [sortStatus, initialRecords]);
+
+	useEffect(() => {
+		setRecords(sliceData(initialRecords));
+  	}, [page, pageSize]);
 
 	useEffect(() => {
 		setLoadingStatus('success');
@@ -50,27 +62,37 @@ const Storage = () => {
 				expectedQuantity: 10,
 			},
 			{
-				id: 1,
-				title: 'title 1',
-				quantity: 10,
-				expectedQuantity: 5,
+				id: 2,
+				title: 'title 2',
+				quantity: 20,
 				lastUpdated: '2021-10-10',
+				expectedQuantity: 20,
 			},
 			{
-				id: 1,
-				title: 'title 1',
-				quantity: 10,
-				expectedQuantity: 5,
+				id: 3,
+				title: 'title 3',
+				quantity: 30,
 				lastUpdated: '2021-10-10',
+				expectedQuantity: 30,
 			},
 			{
-				id: 1,
-				title: 'title 1',
-				quantity: 10,
-				expectedQuantity: 0,
+				id: 4,
+				title: 'title 4',
+				quantity: 40,
 				lastUpdated: '2021-10-10',
+				expectedQuantity: 40,
 			},
+			{
+				id: 5,
+				title: 'title 5',
+				quantity: 50,
+				lastUpdated: '2021-10-10',
+				expectedQuantity: 50,
+			},
+			
 		]);
+
+
 
 		// setLoadingStatus('loading');
 		// axiosClient
@@ -187,6 +209,7 @@ const Storage = () => {
 									onRecordsPerPageChange={setPageSize}
 									sortStatus={sortStatus}
 									onSortStatusChange={setSortStatus}
+									paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
 								/>
 							</div>
 						</div>
