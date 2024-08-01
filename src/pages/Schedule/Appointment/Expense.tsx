@@ -45,7 +45,8 @@ const Expense = (props:any) => {
       axiosClient.post(`/appointment/expanse/${appointmentId}`, formData)
       .then((res) => {
          if(res.status === 200){
-            setExpensesList([...expensesList, res.data.expance]);
+            console.log(res.data.expanse);
+            setExpensesList([...expensesList, res.data.expanse]);
             setFormData({title: '', amount: 0, id: 0});
             setCost(COST_DEFAULT);
          }
