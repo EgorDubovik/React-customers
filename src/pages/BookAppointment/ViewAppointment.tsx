@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import env from '../../store/env';
-import Loading from './Loading';
-import ErrorLoad from './ErrorLoad';
 import Header from './Header';
 import { AppointmentInfoType } from './@types';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import {ButtonLoader} from '../../components/loading/ButtonLoader';
+import { SinglePageErrorLoading, SinglePageLoading } from '../../components/loading/Loadings';
 
 const ViewAppointment = () => {
    const dispatch = useDispatch();
@@ -77,8 +76,8 @@ const ViewAppointment = () => {
 
    return (
       <div className="App h-full">
-         {loadingStatus === 'loading' && <Loading />}
-         {loadingStatus === 'error' && <ErrorLoad />}
+         {loadingStatus === 'loading' && <SinglePageLoading />}
+         {loadingStatus === 'error' && <SinglePageErrorLoading />}
          {loadingStatus === 'success' &&
          ( <div className='text-center'>
                <Header { ...appointmentInfo.company}/>  

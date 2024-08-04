@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import env from '../../store/env';
 import { useParams } from 'react-router-dom';
-import Loading from './Loading';
-import ErrorLoad from './ErrorLoad';
 import { CustomerContext } from './CustomerContext';
 import { CustomerContextType } from './@types';
 import Header from './Header';
@@ -13,6 +11,7 @@ import SelectDateTime from './SelectDateTime';
 import CustomerInfo from './CustomerInfo';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
+import { SinglePageErrorLoading, SinglePageLoading } from '../../components/loading/Loadings';
 
 const BookAppointment = () => {
 
@@ -52,8 +51,8 @@ const BookAppointment = () => {
 	}, []);
 	return (
 		<div className="App h-full">
-			{loadingStatus === 'loading' && <Loading />}
-			{loadingStatus === 'error' && <ErrorLoad />}
+			{loadingStatus === 'loading' && <SinglePageLoading/>}
+			{loadingStatus === 'error' && <SinglePageErrorLoading />}
 			{loadingStatus === 'notActive' && <NotActive phone={phone} />}
 			{loadingStatus === 'success' && (
 				<div>

@@ -1,20 +1,39 @@
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import IconStar from '../../components/Icon/IconStar';
-
+import axiosClient from '../../store/axiosClient';
+import { SinglePageErrorLoading, SinglePageLoading } from '../../components/loading/Loadings';
 export default function ReviewFeedback(props: any) {
-
 	const { paramKey } = useParams();
-   const [mouseOverat, setMouseOverAt] = useState(0);
-   const [rating, setRating] = useState(0);
+	const [mouseOverat, setMouseOverAt] = useState(0);
+	const [rating, setRating] = useState(0);
+   const [invoice, setInvoice] = useState<any>(null);
+   const [loading, setLoading] = useState('loading');
+   useEffect(() => {
+      setLoading('loading');
+      axiosClient.get('/review-feedback/' + paramKey)
+      .then((response) => {
+         console.log(response.data.invoice);
+         setInvoice(response.data.invoice);
+         setLoading('success');
+      }).
+      catch((error) => {
+         console.error('Error:', error);
+         setLoading('error');
+      });
+   }, []);
 
 	return (
 		<div>
+         {loading === 'loading' && <SinglePageLoading />}
+         {loading === 'error' && <SinglePageErrorLoading />}
+         {loading === 'success' &&
+         <>
 			{/* Header */}
 			<div className="bg-gray-100 py-2 flex items-center justify-between border-b-2 border-gray-300">
 				<div className="pl-4 flex items-center">
-					<img src={props.logo ?? 'defoultLogo'} alt="logo" className="h-10" />
-					<span className="ml-2">{props.phone ?? ''}</span>
+					<img src={invoice.company.logo ?? 'defoultLogo'} alt="logo" className="h-10" />
+					<span className="ml-2">{invoice.company.phone ?? ''}</span>
 				</div>
 
 				<div className="pr-4">
@@ -36,19 +55,33 @@ export default function ReviewFeedback(props: any) {
 				<div className="p-4">
 					<div className="flex items-center justify-center">
 						<div className="w-full sm:w-3/4">
-                     <div className='flex items-center justify-center mb-4'>
-                        <div className='w-1/2 flex gap-2'>
-                           <label className="block text-gray-700 text-sm font-bold mb-2">Rating:</label>
-                           {
-                              [1,2,3,4,5].map((i) => (
-                                 <span onMouseOver={()=>{setMouseOverAt(i)}} onMouseOut={()=>{if(mouseOverat === 1) setMouseOverAt(0)}} onClick={()=>{setRating(i)}} className='cursor-pointer'>
-                                    <IconStar key={i} className={`text-warning ${mouseOverat >= i || rating>=i ? 'fill-warning' : ''}`}/>
-                                 </span>
-                              ))
-                           }
-                           
-                        </div>
-                     </div>
+							<div className="flex items-center justify-center mb-4">
+								<div className="w-1/2">
+									<p>Tel us how was your experience?</p>
+								</div>
+							</div>
+							<div className="flex items-center justify-center mb-4">
+								<div className="w-1/2 flex gap-2">
+									<label className="block text-gray-700 text-sm font-bold mb-2">Rating:</label>
+									{[1, 2, 3, 4, 5].map((i) => (
+										<span
+                                 key={i}
+											onMouseOver={() => {
+												setMouseOverAt(i);
+											}}
+											onMouseOut={() => {
+												if (mouseOverat === 1) setMouseOverAt(0);
+											}}
+											onClick={() => {
+												setRating(i);
+											}}
+											className="cursor-pointer"
+										>
+											<IconStar  className={`text-warning ${mouseOverat >= i || rating >= i ? 'fill-warning' : ''}`} />
+										</span>
+									))}
+								</div>
+							</div>
 							<div className="flex items-center justify-center">
 								<div className="w-1/2">
 									<label className="block text-gray-700 text-sm font-bold mb-2">Review:</label>
@@ -67,6 +100,7 @@ export default function ReviewFeedback(props: any) {
 				</div>
 			</div>
 			{/* END Main */}
+         </>}
 		</div>
 	);
 }
