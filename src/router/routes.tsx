@@ -12,6 +12,7 @@ const Error404 = lazy(() => import('../components/Error404'));
 import CreateCustomer from '../pages/Customers/CreateCustomer';
 import Create from '../pages/Invoice/Create';
 import {Update as CustomerUpdate} from '../pages/Customers/Update';
+import ReviewFeedback from '../pages/ReviewFeedback/Index';
 const Invoices = lazy(() => import('../pages/Invoice/Invoices'));
 const Employees = lazy(() => import('../pages/Employees'));
 const CreateAppointment = lazy(() => import('../pages/Schedule/CreateAppointment'));
@@ -112,6 +113,10 @@ const routes = [
     {
         path: '/appointment/book/cancel/:paramKey',
         element: <AppointmentCanceled />,
+    },
+    {
+        path: '/review-feedback/:paramKey',
+        element: <ReviewFeedback/>,
     },
     {
         path: '*',
