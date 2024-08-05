@@ -5,6 +5,7 @@ import axiosClient from '../../store/axiosClient';
 import { SinglePageErrorLoading, SinglePageLoading } from '../../components/loading/Loadings';
 import { formatDate, viewCurrency } from '../../helpers/helper';
 import IconDownload from '../../components/Icon/IconDownload';
+
 export default function ReviewFeedback(props: any) {
 	const { paramKey } = useParams();
 	const [mouseOverat, setMouseOverAt] = useState(0);
@@ -48,143 +49,97 @@ export default function ReviewFeedback(props: any) {
 
 					{/* Main */}
 					<div className="w-full sm:w-3/4 m-auto">
-						<div className="grid grid-cols-1 md:grid-cols-2 text-sm">
+						<div className="w-full p-2 md:w-1/2  m-auto grid grid-cols-1 md:grid-cols-2 text-sm">
 							<div>
-								<div className="header p-2 pb-4 mt-10">
+								<div className="header pb-4 mt-10">
 									<h2 className="font-bold">
-										<div className="flex items-center justify-center">
-											<span className="text-xl">Customer Info</span>
-										</div>
+										<span className="text-lg">Customer Info</span>
 									</h2>
 								</div>
-								<div className="p-4">
-									<div className="flex items-center justify-center">
-										<div className="w-full sm:w-3/4">
-											<div className="flex items-center justify-center mb-2">
-												<div className="w-1/2">
-													<p>Customer name</p>
-												</div>
-												<div className="w-1/2 text-gray-500">
-													<p>{invoice.customer_name}</p>
-												</div>
-											</div>
-											<div className="flex items-center justify-center mb-2">
-												<div className="w-1/2">
-													<p>Appointment date</p>
-												</div>
-												<div className="w-1/2 text-gray-500">
-													<p>{formatDate(invoice.created_at, 'MMMM DD YYYY')}</p>
-												</div>
-											</div>
-											<div className="flex items-center justify-center mb-2">
-												<div className="w-1/2">
-													<p>Customer Address</p>
-												</div>
-												<div className="w-1/2 text-gray-500">
-													<p>{invoice.address}</p>
-												</div>
-											</div>
-										</div>
-									</div>
+								<div className="flex flex-col gap-2">
+                           <div>{invoice.customer_name}</div>
+                           <div>{invoice.email}</div>
+                           <div>{invoice.appointment.customer.phone}</div>
+                           <address>{invoice.address}</address>
 								</div>
 							</div>
-							<div>
-								<div className="header p-2 pb-4 mt-10">
+							<div className='text-right'>
+								<div className="header pb-4 mt-10">
 									<h2 className="font-bold">
-										<div className="flex items-center justify-center">
-											<span className="text-xl">Company Info</span>
-										</div>
+										<span className="text-lg">Company Info</span>
 									</h2>
 								</div>
-								<div className="p-4">
-									<div className="flex items-center justify-center">
-										<div className="w-full sm:w-3/4">
-											<div className="flex items-center justify-center mb-2">
-												<div className="w-1/2">
-													<p>Company name</p>
-												</div>
-												<div className="w-1/2 text-gray-500">
-													<p>{invoice.company.name}</p>
-												</div>
-											</div>
-											<div className="flex items-center justify-center mb-2">
-												<div className="w-1/2 ">
-													<p>Phone number</p>
-												</div>
-												<div className="w-1/2 text-gray-500">
-													<p>{invoice.company.phone}</p>
-												</div>
-											</div>
+								<div className="flex flex-col gap-2">
+                           <div>{invoice.company.name}</div>
+                           <div>{invoice.company.email}</div>
+                           <div>{invoice.company.phone}</div>
+                           
+								</div>
+							</div>
+						</div>
+						<div className="w-full md:w-2/4 m-auto mt-6 text-sm p-2">
+							<p>
+								<span className="font-bold">Services</span>
+							</p>
+							<div className="mt-2">
+								{invoice.appointment.services.map((service: any, index: number) => (
+									<div key={index} className="flex justify-between border-b border-gray-300 py-2">
+										<div className="w-1/2">
+											<p>{service.title}</p>
+											<p className="text-gray-500">{service.description}</p>
+										</div>
+										<div className="w-1/2 text-right">
+											<p>{viewCurrency(service.price)}</p>
+										</div>
+									</div>
+								))}
+								<div className="total">
+									<div className="flex justify-end border-b border-gray-300 py-2">
+										<div className="w-3/4 text-right">
+											<p>Tax:</p>
+										</div>
+										<div className="w-1/4 text-right">
+											<p>{viewCurrency(invoice.appointment.tax)}</p>
+										</div>
+									</div>
+									<div className="flex justify-end border-b border-gray-300 py-2">
+										<div className="w-3/4 text-right">
+											<p>Total:</p>
+										</div>
+										<div className="w-1/4 text-right">
+											<p>{viewCurrency(invoice.appointment.total)}</p>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div className="w-full md:w-2/4 m-auto mt-4 text-sm p-2">
-                     <p>
-                        <span className="font-bold">Services</span>
-                     </p>
-                     <div className='mt-2'>
-                        {
-                           invoice.appointment.services.map((service: any, index:number) => (
-                              <div key={index} className="flex justify-between border-b border-gray-300 py-2">
-                                 <div className="w-1/2">
-                                    <p>{service.title}</p>
-                                    <p className='text-gray-500'>{service.description}</p>
-                                 </div>
-                                 <div className="w-1/2 text-right">
-                                    <p>{viewCurrency(service.price)}</p>
-                                 </div>
-                              </div>   
-                           ))
-                        }
-                        <div className='total'>
-                           <div className="flex justify-end border-b border-gray-300 py-2">
-                              <div className="w-3/4 text-right">
-                                 <p>Tax:</p>
-                              </div>
-                              <div className="w-1/4 text-right">
-                                 <p>{viewCurrency(invoice.appointment.tax)}</p>
-                              </div>
-                           </div>
-                           <div className="flex justify-end border-b border-gray-300 py-2">
-                              <div className="w-3/4 text-right">
-                                 <p>Total:</p>
-                              </div>
-                              <div className="w-1/4 text-right">
-                                 <p>{viewCurrency(invoice.appointment.total)}</p>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div className="w-full md:w-2/4 m-auto grid grid-cols-2 mt-4 text-sm p-2">
-                     <div>
-                        <a target='_blank' href={invoice.pdf_path} className="bg-blue-500 w-40 flex hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
-                           <IconDownload className="w-4" />
-                           <span className="ml-2">Download PDF</span>
-                        </a>
-                     </div>
-                     <div className=''>
-                        <span className="text-gray-500">Payments</span>
-                        {
-                           invoice.appointment.payments.map((payment: any, index: number) => (
-                              <div key={index} className="flex justify-between border-b border-gray-300 py-2">
-                                 <div className='w-2/4'>
-                                    {formatDate(payment.created_at, 'MMMM DD YYYY')}
-                                 </div>
-                                 <div className="w-1/4">
-                                    <p>{payment.payment_type}</p>
-                                 </div>
-                                 <div className="w-1/4 text-right">
-                                    <p>{viewCurrency(payment.amount)}</p>
-                                 </div>
-                              </div>
-                           ))
-                        }
-                        
-                     </div>
-                  </div>
+						<div className="w-full md:w-2/4 m-auto grid grid-cols-2 mt-4 text-sm p-2">
+							<div>
+								<a
+									target="_blank"
+									href={invoice.pdf_path}
+									className="bg-blue-500 w-40 flex hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+									type="button"
+								>
+									<IconDownload className="w-4" />
+									<span className="ml-2">Download PDF</span>
+								</a>
+							</div>
+							<div className="">
+								<span className="text-gray-500">Payments</span>
+								{invoice.appointment.payments.map((payment: any, index: number) => (
+									<div key={index} className="flex justify-between border-b border-gray-300 py-2">
+										<div className="w-2/4">{formatDate(payment.created_at, 'MMMM DD YYYY')}</div>
+										<div className="w-1/4">
+											<p>{payment.payment_type}</p>
+										</div>
+										<div className="w-1/4 text-right">
+											<p>{viewCurrency(payment.amount)}</p>
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
 						<div className="header border-b border-gray-300 p-2 pb-4 mt-10">
 							<h2 className="font-bold">
 								<div className="flex items-center justify-center">
