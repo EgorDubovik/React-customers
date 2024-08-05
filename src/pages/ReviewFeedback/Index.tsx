@@ -12,6 +12,8 @@ export default function ReviewFeedback(props: any) {
 	const [rating, setRating] = useState(0);
 	const [invoice, setInvoice] = useState<any>(null);
 	const [loading, setLoading] = useState('loading');
+   const [feedback, setFeedback] = useState('');
+   const [storeStatus, setStoreStatus] = useState(false);
 	useEffect(() => {
 		setLoading('loading');
 		axiosClient
@@ -26,6 +28,27 @@ export default function ReviewFeedback(props: any) {
 				setLoading('error');
 			});
 	}, []);
+
+   const storeReview = () => {
+      if(storeStatus) return;
+
+      axiosClient
+         .post('/review-feedback/' + paramKey, {
+            rating: rating,
+            feedback: feedback,
+         })
+         .then((response) => {
+            console.log(response.data);
+            setFeedback('');
+            setRating(0);
+         })
+         .catch((error) => {
+            console.error('Error:', error);
+         })
+         .finally(() => {
+            setStoreStatus(false);
+         });
+   }
 
 	return (
 		<div>
@@ -177,11 +200,11 @@ export default function ReviewFeedback(props: any) {
 									</div>
 									<div className="w-full">
 										<label className="block text-gray-700 text-sm font-bold mb-2">Review:</label>
-										<textarea className="shadow appearance-none border rounded w-full h-40 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+										<textarea onChange={(e:any)=>{setFeedback(e.target.value)}} className="shadow appearance-none border rounded w-full h-40 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
 									</div>
 									<div className="w-full mt-4">
-										<button className="bg-blue-500 hover:bg-blue-700 w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
-											Submit
+										<button onClick={storeReview} className="bg-blue-500 hover:bg-blue-700 w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+											{storeStatus ? 'Sending...' : 'Submit'}
 										</button>
 									</div>
 								</div>
