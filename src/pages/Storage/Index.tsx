@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import IconUserPlus from '../../components/Icon/IconUserPlus';
 import IconSearch from '../../components/Icon/IconSearch';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
@@ -8,6 +8,9 @@ import { Link } from 'react-router-dom';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
 import { formatDate } from '../../helpers/helper';
+import { Dialog, Transition } from '@headlessui/react';
+import IconX from '../../components/Icon/IconX';
+import { ButtonLoader } from '../../components/loading/ButtonLoader';
 
 interface IRecords {
 	id: number;
@@ -26,16 +29,22 @@ const Storage = () => {
 		columnAccessor: 'firstName',
 		direction: 'asc',
 	});
+	const [loadingDataForm, setLoadingDataForm] = useState(false);
 	const [search, setSearch] = useState('');
 	const [searchLoading, setSearchLoading] = useState(false);
-	
+	const [modal, setModal] = useState(false);
 	const [initialRecords, setInitialRecords] = useState<IRecords[]>([]);
-
+	const [dataForm, setDataForm] = useState({
+		id: 0,
+		title: '',
+		quantity: 0,
+		expectedQuantity: 0,
+	});
 	const sliceData = (data: IRecords[]) => {
 		const from = (page - 1) * pageSize;
 		const to = from + pageSize;
 		return data.slice(from, to);
-	}
+	};
 
 	useEffect(() => {
 		setPage(1);
@@ -49,7 +58,7 @@ const Storage = () => {
 
 	useEffect(() => {
 		setRecords(sliceData(initialRecords));
-  	}, [page, pageSize]);
+	}, [page, pageSize]);
 
 	useEffect(() => {
 		setLoadingStatus('success');
@@ -89,10 +98,7 @@ const Storage = () => {
 				lastUpdated: '2021-10-10',
 				expectedQuantity: 50,
 			},
-			
 		]);
-
-
 
 		// setLoadingStatus('loading');
 		// axiosClient
@@ -110,7 +116,10 @@ const Storage = () => {
 	}, []);
 
 	const searchHandler = (e: any) => {};
-
+	const storeItem = () => {};
+	const changeValue = (e: any) => {
+		setDataForm({ ...dataForm, [e.target.name]: e.target.value });
+	};
 	return (
 		<div>
 			<div className="flex items-center justify-between flex-wrap gap-4">
@@ -118,7 +127,13 @@ const Storage = () => {
 				<div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
 					<div className="flex gap-3">
 						<div>
-							<button type="button" className="btn btn-primary" onClick={() => {}}>
+							<button
+								type="button"
+								className="btn btn-primary"
+								onClick={() => {
+									setModal(true);
+								}}
+							>
 								<IconUserPlus className="ltr:mr-2 rtl:ml-2" />
 								Add Item
 							</button>
@@ -181,7 +196,7 @@ const Storage = () => {
 										{
 											accessor: 'lastUpdated',
 											sortable: true,
-											render: ({ lastUpdated }) => <span>{formatDate(new Date(lastUpdated),"MMMM DD, YYYY")}</span>,
+											render: ({ lastUpdated }) => <span>{formatDate(new Date(lastUpdated), 'MMMM DD, YYYY')}</span>,
 										},
 										{
 											accessor: 'action',
@@ -216,6 +231,71 @@ const Storage = () => {
 					)}
 				</>
 			)}
+			<Transition appear show={modal} as={Fragment}>
+				<Dialog as="div" open={modal} onClose={() => setModal(false)} className="relative z-[51]">
+					<Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+						<div className="fixed inset-0 bg-[black]/60" />
+					</Transition.Child>
+					<div className="fixed inset-0 overflow-y-auto">
+						<div className="flex min-h-full items-center justify-center px-4 py-8">
+							<Transition.Child
+								as={Fragment}
+								enter="ease-out duration-300"
+								enterFrom="opacity-0 scale-95"
+								enterTo="opacity-100 scale-100"
+								leave="ease-in duration-200"
+								leaveFrom="opacity-100 scale-100"
+								leaveTo="opacity-0 scale-95"
+							>
+								<Dialog.Panel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg text-black dark:text-white-dark">
+									<button
+										type="button"
+										onClick={() => setModal(false)}
+										className="absolute top-4 ltr:right-4 rtl:left-4 text-gray-400 hover:text-gray-800 dark:hover:text-gray-600 outline-none"
+									>
+										<IconX />
+									</button>
+									<div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{dataForm.id ? 'Edit Contact' : 'Add Contact'}</div>
+									<div className="p-5">
+										<form>
+											<div className="mb-5">
+												<label htmlFor="name">Title</label>
+												<input id="title" type="text" name="title" placeholder="Enter Name" className="form-input" value={dataForm.title} onChange={(e) => changeValue(e)} />
+											</div>
+											<div className="mb-5">
+												<label htmlFor="email">Quantity</label>
+												<input id="quantity" type="number" name="quantity" placeholder="Enter Email" className="form-input" value={dataForm.quantity} onChange={(e) => changeValue(e)} />
+											</div>
+											<div className="mb-5">
+												<label htmlFor="number">Expected Quantity</label>
+												<input
+													id="expectedQuantity"
+													type="number"
+													name="expectedQuantity"
+													placeholder="Enter Phone Number"
+													className="form-input"
+													value={dataForm.expectedQuantity}
+													onChange={(e) => changeValue(e)}
+												/>
+											</div>
+
+											<div className="flex justify-end items-center mt-8">
+												<button type="button" className="btn btn-outline-danger" onClick={() => setModal(false)}>
+													Cancel
+												</button>
+												<button type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4" onClick={storeItem}>
+													{dataForm.id ? 'Update' : 'Add'}
+													{loadingDataForm && <ButtonLoader />}
+												</button>
+											</div>
+										</form>
+									</div>
+								</Dialog.Panel>
+							</Transition.Child>
+						</div>
+					</div>
+				</Dialog>
+			</Transition>
 		</div>
 	);
 };

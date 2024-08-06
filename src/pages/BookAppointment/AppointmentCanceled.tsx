@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import env from '../../store/env';
-import Loading from './Loading';
-import ErrorLoad from './ErrorLoad';
 import { CompanyInfoType } from './@types';
 import Header from './Header';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
+import { SinglePageErrorLoading, SinglePageLoading } from '../../components/loading/Loadings';
 const AppointmentCanceled = () => {
    const dispatch = useDispatch();
    useEffect(() => {
@@ -42,8 +41,8 @@ const AppointmentCanceled = () => {
    }
    return (
       <div className="App h-full">
-      {loadingStatus === 'loading' && <Loading />}
-      {loadingStatus === 'error' && <ErrorLoad />}
+      {loadingStatus === 'loading' && <SinglePageLoading />}
+      {loadingStatus === 'error' && <SinglePageErrorLoading />}
       {loadingStatus === 'success' &&
         ( <div className='text-center'>
             <Header { ...companyInfo}/>

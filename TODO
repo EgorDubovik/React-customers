@@ -11,14 +11,14 @@ Company services
    
    COMPLYTIONS:
       ☐ Finish pagination on customer page with grid view
-      ☐ Hinish issue refund
+      ☐ Finish issue refund
       ☐ Update company info from admin profile page
       ✔ Upload images for appointments @done(24-06-11 09:36)
       ✔ view uploaded images on appointment page @started(24-06-11 09:36) @done(24-06-21 10:02) @lasted(1w3d26m11s)
 
    FEATURES:
       ☐ Add storage for left menu
-      ☐ BookAppointment Online
+      ✔ BookAppointment Online @done(24-08-06 10:24)
          ✔ Disable times on calendar if already booked @done(24-06-24 11:12)
          ✔ Add settings with working time by days @done(24-06-24 11:12)
          ✔ Change title of booking appointment time !!! @done(24-06-24 17:04)
