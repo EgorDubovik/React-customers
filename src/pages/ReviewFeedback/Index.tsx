@@ -14,6 +14,8 @@ export default function ReviewFeedback(props: any) {
 	const [loading, setLoading] = useState('loading');
    const [feedback, setFeedback] = useState('');
    const [storeStatus, setStoreStatus] = useState(false);
+   const [customerReview, setCustomerReview] = useState<any>(null);
+
 	useEffect(() => {
 		setLoading('loading');
 		axiosClient
@@ -21,6 +23,7 @@ export default function ReviewFeedback(props: any) {
 			.then((response) => {
 				console.log(response.data.invoice);
 				setInvoice(response.data.invoice);
+            setCustomerReview(response.data.invoice.review);
 				setLoading('success');
 			})
 			.catch((error) => {
@@ -31,14 +34,15 @@ export default function ReviewFeedback(props: any) {
 
    const storeReview = () => {
       if(storeStatus) return;
-
+      setStoreStatus(true);
       axiosClient
          .post('/review-feedback/' + paramKey, {
             rating: rating,
             feedback: feedback,
          })
          .then((response) => {
-            console.log(response.data);
+            console.log(response.data.review);
+            setCustomerReview(response.data.review);
             setFeedback('');
             setRating(0);
          })
@@ -49,7 +53,7 @@ export default function ReviewFeedback(props: any) {
             setStoreStatus(false);
          });
    }
-
+   
 	return (
 		<div>
 			{loading === 'loading' && <SinglePageLoading />}
@@ -173,40 +177,62 @@ export default function ReviewFeedback(props: any) {
 						<div className="p-4">
 							<div className="w-full md:w-3/4 m-auto">
 								<div className="w-full md:w-1/2 m-auto">
-									<div className="mb-4">
-										<p>Tel us how was your experience?</p>
-									</div>
-									<div className="mb-4">
-										<div className="flex text-[16px]">
-											<label className="block text-gray-700 text-sm font-bold mb-2 mr-2">Rating:</label>
-											{[1, 2, 3, 4, 5].map((i) => (
-												<span
-													key={i}
-													onMouseOver={() => {
-														setMouseOverAt(i);
-													}}
-													onMouseOut={() => {
-														setMouseOverAt(0);
-													}}
-													onClick={() => {
-														setRating(i);
-													}}
-													className="cursor-pointer px-1"
-												>
-													<IconStar className={`text-warning ${mouseOverat >= i || rating >= i ? 'fill-warning' : ''}`} />
-												</span>
-											))}
-										</div>
-									</div>
-									<div className="w-full">
-										<label className="block text-gray-700 text-sm font-bold mb-2">Review:</label>
-										<textarea onChange={(e:any)=>{setFeedback(e.target.value)}} className="shadow appearance-none border rounded w-full h-40 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
-									</div>
-									<div className="w-full mt-4">
-										<button onClick={storeReview} className="bg-blue-500 hover:bg-blue-700 w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
-											{storeStatus ? 'Sending...' : 'Submit'}
-										</button>
-									</div>
+                           {!customerReview ? (
+                              <>
+                              <div className="mb-4">
+                                 <p>Tel us how was your experience?</p>
+                              </div>
+                              <div className="mb-4">
+                                 <div className="flex text-[16px]">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2 mr-2">Rating:</label>
+                                    {[1, 2, 3, 4, 5].map((i) => (
+                                       <span
+                                          key={i}
+                                          onMouseOver={() => {
+                                             setMouseOverAt(i);
+                                          }}
+                                          onMouseOut={() => {
+                                             setMouseOverAt(0);
+                                          }}
+                                          onClick={() => {
+                                             setRating(i);
+                                          }}
+                                          className="cursor-pointer px-1"
+                                       >
+                                          <IconStar className={`text-warning ${mouseOverat >= i || rating >= i ? 'fill-warning' : ''}`} />
+                                       </span>
+                                    ))}
+                                 </div>
+                              </div>
+                              <div className="w-full">
+                                 <label className="block text-gray-700 text-sm font-bold mb-2">Review:</label>
+                                 <textarea onChange={(e:any)=>{setFeedback(e.target.value)}} className="shadow appearance-none border rounded w-full h-40 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                              </div>
+                              <div className="w-full mt-4">
+                                 <button onClick={storeReview} className="bg-blue-500 hover:bg-blue-700 w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                                    {storeStatus ? 'Sending...' : 'Submit'}
+                                 </button>
+                              </div>
+                              </>
+                           ):(
+                              <>
+                                 <div className=''> Thank you for your feedback!</div>
+                                    
+                                 <div className="mb-4 mt-4">
+                                    <div className="flex text-[16px] gap-2">
+                                       <label className="block text-gray-700 text-sm font-bold mb-2 mr-2">Rating:</label>
+                                       {[1, 2, 3, 4, 5].map((i) => (
+                                          <span >
+                                             <IconStar className={`text-warning ${customerReview.rating>=i ? 'fill-warning' : ''}`} />
+                                          </span>
+                                       ))}
+                                    </div>
+                                 </div>
+                                 <div className=''>
+                                    <p className='pl-3 text-gray-500'>{customerReview.feedback}</p>
+                                 </div>
+                              </>
+                           )}
 								</div>
 							</div>
 						</div>
