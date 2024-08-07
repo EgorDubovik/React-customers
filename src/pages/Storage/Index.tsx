@@ -11,6 +11,7 @@ import { formatDate } from '../../helpers/helper';
 import { Dialog, Transition } from '@headlessui/react';
 import IconX from '../../components/Icon/IconX';
 import { ButtonLoader } from '../../components/loading/ButtonLoader';
+import axiosClient from '../../store/axiosClient';
 
 interface IRecords {
 	id: number;
@@ -115,8 +116,21 @@ const Storage = () => {
 		// 	});
 	}, []);
 
+
+
 	const searchHandler = (e: any) => {};
-	const storeItem = () => {};
+	const storeItem = () => {
+		axiosClient.post('/storage', dataForm)
+			.then((res) => {
+				if (res.status === 200)
+					setModal(false);
+				setInitialRecords([...initialRecords, res.data.storageItem]);
+
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 	const changeValue = (e: any) => {
 		setDataForm({ ...dataForm, [e.target.name]: e.target.value });
 	};
@@ -262,23 +276,24 @@ const Storage = () => {
 												<label htmlFor="name">Title</label>
 												<input id="title" type="text" name="title" placeholder="Enter Name" className="form-input" value={dataForm.title} onChange={(e) => changeValue(e)} />
 											</div>
-											<div className="mb-5">
-												<label htmlFor="email">Quantity</label>
-												<input id="quantity" type="number" name="quantity" placeholder="Enter Email" className="form-input" value={dataForm.quantity} onChange={(e) => changeValue(e)} />
+											<div className='flex gap-4'>
+												<div className="mb-5 w-1/2">
+													<label htmlFor="email">Quantity</label>
+													<input id="quantity" type="number" name="quantity" placeholder="Enter Email" className="form-input" value={dataForm.quantity} onChange={(e) => changeValue(e)} />
+												</div>
+												<div className="mb-5 w-1/2">
+													<label htmlFor="number">Expected Quantity</label>
+													<input
+														id="expectedQuantity"
+														type="number"
+														name="expectedQuantity"
+														placeholder="Enter Phone Number"
+														className="form-input"
+														value={dataForm.expectedQuantity}
+														onChange={(e) => changeValue(e)}
+													/>
+												</div>
 											</div>
-											<div className="mb-5">
-												<label htmlFor="number">Expected Quantity</label>
-												<input
-													id="expectedQuantity"
-													type="number"
-													name="expectedQuantity"
-													placeholder="Enter Phone Number"
-													className="form-input"
-													value={dataForm.expectedQuantity}
-													onChange={(e) => changeValue(e)}
-												/>
-											</div>
-
 											<div className="flex justify-end items-center mt-8">
 												<button type="button" className="btn btn-outline-danger" onClick={() => setModal(false)}>
 													Cancel
