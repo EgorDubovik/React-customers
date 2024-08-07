@@ -17,13 +17,13 @@ interface IRecords {
 	id: number;
 	title: string;
 	quantity: number;
-	lastUpdated: string;
-	expectedQuantity: number;
+	updated_at: string;
+	expexted_quantity: number;
 }
 const Storage = () => {
 	const [loadingStatus, setLoadingStatus] = useState('loading');
 	const [records, setRecords] = useState<IRecords[]>([]);
-	const PAGE_SIZES = [2, 20, 30, 50, 100];
+	const PAGE_SIZES = [10, 20, 30, 50, 100];
 	const [page, setPage] = useState(1);
 	const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
 	const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
@@ -39,7 +39,7 @@ const Storage = () => {
 		id: 0,
 		title: '',
 		quantity: 0,
-		expectedQuantity: 0,
+		expexted_quantity: 0,
 	});
 	const sliceData = (data: IRecords[]) => {
 		const from = (page - 1) * pageSize;
@@ -63,43 +63,7 @@ const Storage = () => {
 
 	useEffect(() => {
 		setLoadingStatus('success');
-		setInitialRecords([
-			{
-				id: 1,
-				title: 'title 1',
-				quantity: 10,
-				lastUpdated: '2021-10-10',
-				expectedQuantity: 10,
-			},
-			{
-				id: 2,
-				title: 'title 2',
-				quantity: 20,
-				lastUpdated: '2021-10-10',
-				expectedQuantity: 20,
-			},
-			{
-				id: 3,
-				title: 'title 3',
-				quantity: 30,
-				lastUpdated: '2021-10-10',
-				expectedQuantity: 30,
-			},
-			{
-				id: 4,
-				title: 'title 4',
-				quantity: 40,
-				lastUpdated: '2021-10-10',
-				expectedQuantity: 40,
-			},
-			{
-				id: 5,
-				title: 'title 5',
-				quantity: 50,
-				lastUpdated: '2021-10-10',
-				expectedQuantity: 50,
-			},
-		]);
+		
 
 		// setLoadingStatus('loading');
 		// axiosClient
@@ -124,6 +88,8 @@ const Storage = () => {
 			.then((res) => {
 				if (res.status === 200)
 					setModal(false);
+
+				console.log(res.data.storageItem);
 				setInitialRecords([...initialRecords, res.data.storageItem]);
 
 			})
@@ -203,14 +169,14 @@ const Storage = () => {
 											render: ({ quantity }) => <span>{quantity}</span>,
 										},
 										{
-											accessor: 'expectedQuantity',
+											accessor: 'expexted_quantity',
 											sortable: true,
-											render: ({ expectedQuantity }) => <span>{expectedQuantity}</span>,
+											render: ({ expexted_quantity }) => <span>{expexted_quantity}</span>,
 										},
 										{
-											accessor: 'lastUpdated',
+											accessor: 'updated_at',
 											sortable: true,
-											render: ({ lastUpdated }) => <span>{formatDate(new Date(lastUpdated), 'MMMM DD, YYYY')}</span>,
+											render: ({ updated_at }) => <span>{formatDate(new Date(updated_at), 'MMMM DD, YYYY')}</span>,
 										},
 										{
 											accessor: 'action',
@@ -284,12 +250,12 @@ const Storage = () => {
 												<div className="mb-5 w-1/2">
 													<label htmlFor="number">Expected Quantity</label>
 													<input
-														id="expectedQuantity"
+														id="expected_quantity"
 														type="number"
-														name="expectedQuantity"
+														name="expected_quantity"
 														placeholder="Enter Phone Number"
 														className="form-input"
-														value={dataForm.expectedQuantity}
+														value={dataForm.expected_quantity}
 														onChange={(e) => changeValue(e)}
 													/>
 												</div>
