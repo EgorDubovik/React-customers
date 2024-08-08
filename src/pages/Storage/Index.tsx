@@ -3,15 +3,13 @@ import IconUserPlus from '../../components/Icon/IconUserPlus';
 import IconSearch from '../../components/Icon/IconSearch';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
 import { PageLoadError } from '../../components/loading/Errors';
-import { SmallPrimaryLoader } from '../../components/loading/SmallCirculeLoader';
-import { Link } from 'react-router-dom';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
 import { formatDate } from '../../helpers/helper';
 import { Dialog, Transition } from '@headlessui/react';
 import IconX from '../../components/Icon/IconX';
 import { ButtonLoader } from '../../components/loading/ButtonLoader';
-import axiosClient from '../../store/axiosClient';
+import useStorageItem from './useStorageItem';
 
 interface IRecords {
 	id: number;
@@ -21,7 +19,8 @@ interface IRecords {
 	expexted_quantity: number;
 }
 const Storage = () => {
-	const [loadingStatus, setLoadingStatus] = useState('loading');
+	const { openModal, modal, setModal, removeItem, storeItem, changeValue, dataForm, initialRecords, loadingStatus, loadingDataForm ,removeId } = useStorageItem();
+	console.log('removeID:', removeId);
 	const [records, setRecords] = useState<IRecords[]>([]);
 	const PAGE_SIZES = [10, 20, 30, 50, 100];
 	const [page, setPage] = useState(1);
@@ -30,23 +29,14 @@ const Storage = () => {
 		columnAccessor: 'firstName',
 		direction: 'asc',
 	});
-	const [loadingDataForm, setLoadingDataForm] = useState(false);
+
 	const [search, setSearch] = useState('');
-	const [modal, setModal] = useState(false);
-	const [initialRecords, setInitialRecords] = useState<IRecords[]>([]);
-	const [dataForm, setDataForm] = useState({
-		id: 0,
-		title: '',
-		quantity: 0,
-		expexted_quantity: 0,
-	});
+
 	const sliceData = (data: IRecords[]) => {
 		const from = (page - 1) * pageSize;
 		const to = from + pageSize;
 		return data.slice(from, to);
 	};
-
-	const [removeId, setRemoveId] = useState(0);
 
 	useEffect(() => {
 		setPage(1);
@@ -62,100 +52,11 @@ const Storage = () => {
 		setRecords(sliceData(initialRecords));
 	}, [page, pageSize]);
 
-	useEffect(() => {
-		setLoadingStatus('loading');
-		axiosClient
-			.get('/storage')
-			.then((res: any) => {
-				console.log('data:', res.data);
-				setInitialRecords(res.data.storageItems);
-				setLoadingStatus('success');
-			})
-			.catch((err) => {
-				setLoadingStatus('error');
-				console.log(err);
-			});
-	}, []);
-
-	const searchHandler = (e: any) => {};
-
-	const addNewItem = () => {
-		setDataForm({
-			id: 0,
-			title: '',
-			quantity: 0,
-			expexted_quantity: 0,
-		});
-		setModal(true);
-	};
-	const storeItem = () => {
-		if (loadingDataForm) return;
-		setLoadingDataForm(true);
-		if (dataForm.id !== 0) updateItem(dataForm.id);
-		else {
-			axiosClient
-				.post('/storage', dataForm)
-				.then((res) => {
-					if (res.status === 200) setModal(false);
-
-					let newRecords = [...initialRecords];
-					newRecords.unshift(res.data.storageItem);
-					setInitialRecords(newRecords);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
-	};
-
-	const editItem = (id: number) => {
-		setDataForm(initialRecords.find((item) => item.id === id)!);
-		setModal(true);
-	};
-
-	const updateItem = (id: number) => {
-		if (loadingDataForm) return;
-		setLoadingDataForm(true);
-		axiosClient
-			.put(`/storage/${id}`, dataForm)
-			.then((res) => {
-				if (res.status === 200) setModal(false);
-				const index = initialRecords.findIndex((item) => item.id === id);
-				const newRecords = [...initialRecords];
-				newRecords[index] = res.data.storageItem;
-				setInitialRecords(newRecords);
-				
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-			.finally(() => {
-				setLoadingDataForm(true);
-			});
-	};
-
-	const removeItem = (id: number) => {
-		if (removeId !== 0) return;
-		setRemoveId(id);
-		axiosClient
-			.delete(`/storage/${id}`)
-			.then((res) => {
-				if (res.status === 200) {
-					const newRecords = initialRecords.filter((item) => item.id !== id);
-					setInitialRecords(newRecords);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-			.finally(() => {
-				setRemoveId(0);
-			});
+	const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearch(e.target.value);
+		const data = initialRecords.filter((item) => item.title.toLowerCase().includes(e.target.value.toLowerCase()));
+		setRecords(data);
 	}
-
-	const changeValue = (e: any) => {
-		setDataForm({ ...dataForm, [e.target.name]: e.target.value });
-	};
 	return (
 		<div>
 			<div className="flex items-center justify-between flex-wrap gap-4">
@@ -167,7 +68,7 @@ const Storage = () => {
 								type="button"
 								className="btn btn-primary"
 								onClick={() => {
-									addNewItem();
+									openModal(0);
 								}}
 							>
 								<IconUserPlus className="ltr:mr-2 rtl:ml-2" />
@@ -176,7 +77,7 @@ const Storage = () => {
 						</div>
 					</div>
 					<div className="relative">
-						<input type="text" placeholder="Search Item" className="form-input py-2 pr-11 peer" value={search} onChange={(e) => searchHandler(e)} />
+						<input type="text" placeholder="Search Item" className="form-input py-2 pr-11 peer" value={search} onChange={searchHandler} />
 						<button type="button" className="absolute right-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
 							<IconSearch className="mx-auto" />
 						</button>
@@ -243,13 +144,19 @@ const Storage = () => {
 														type="button"
 														className="btn btn-sm btn-outline-warning"
 														onClick={() => {
-															editItem(id);
+															openModal(id);
 														}}
 													>
 														Edit
 													</button>
-													<button type="button" className="btn btn-sm btn-outline-danger" onClick={() => {removeItem(id)}}>
-														Delete { removeId === id  && <ButtonLoader />	}
+													<button
+														type="button"
+														className="btn btn-sm btn-outline-danger"
+														onClick={() => {
+															removeItem(id);
+														}}
+													>
+														Delete {removeId === id && <ButtonLoader />}
 													</button>
 												</div>
 											),
