@@ -32,7 +32,6 @@ const Storage = () => {
 	});
 	const [loadingDataForm, setLoadingDataForm] = useState(false);
 	const [search, setSearch] = useState('');
-	const [searchLoading, setSearchLoading] = useState(false);
 	const [modal, setModal] = useState(false);
 	const [initialRecords, setInitialRecords] = useState<IRecords[]>([]);
 	const [dataForm, setDataForm] = useState({
@@ -46,6 +45,8 @@ const Storage = () => {
 		const to = from + pageSize;
 		return data.slice(from, to);
 	};
+
+	const [removeId, setRemoveId] = useState(0);
 
 	useEffect(() => {
 		setPage(1);
@@ -62,41 +63,96 @@ const Storage = () => {
 	}, [page, pageSize]);
 
 	useEffect(() => {
-		setLoadingStatus('success');
-		
-
-		// setLoadingStatus('loading');
-		// axiosClient
-		// 	.get('/customers?page=' + page + '&limit=' + pageSize)
-		// 	.then((res: any) => {
-		// 		console.log('data:', res.data);
-		// 		setInitialRecords(res.data.data);
-		// 		setTotalRecords(res.data.total);
-		// 		setLoadingStatus('success');
-		// 	})
-		// 	.catch((err) => {
-		// 		setLoadingStatus('error');
-		// 		console.log(err);
-		// 	});
+		setLoadingStatus('loading');
+		axiosClient
+			.get('/storage')
+			.then((res: any) => {
+				console.log('data:', res.data);
+				setInitialRecords(res.data.storageItems);
+				setLoadingStatus('success');
+			})
+			.catch((err) => {
+				setLoadingStatus('error');
+				console.log(err);
+			});
 	}, []);
 
-
-
 	const searchHandler = (e: any) => {};
+
+	const addNewItem = () => {
+		setDataForm({
+			id: 0,
+			title: '',
+			quantity: 0,
+			expexted_quantity: 0,
+		});
+		setModal(true);
+	};
 	const storeItem = () => {
-		axiosClient.post('/storage', dataForm)
+		if (loadingDataForm) return;
+		setLoadingDataForm(true);
+		if (dataForm.id !== 0) updateItem(dataForm.id);
+		else {
+			axiosClient
+				.post('/storage', dataForm)
+				.then((res) => {
+					if (res.status === 200) setModal(false);
+
+					let newRecords = [...initialRecords];
+					newRecords.unshift(res.data.storageItem);
+					setInitialRecords(newRecords);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
+	};
+
+	const editItem = (id: number) => {
+		setDataForm(initialRecords.find((item) => item.id === id)!);
+		setModal(true);
+	};
+
+	const updateItem = (id: number) => {
+		if (loadingDataForm) return;
+		setLoadingDataForm(true);
+		axiosClient
+			.put(`/storage/${id}`, dataForm)
 			.then((res) => {
-				if (res.status === 200)
-					setModal(false);
-
-				console.log(res.data.storageItem);
-				setInitialRecords([...initialRecords, res.data.storageItem]);
-
+				if (res.status === 200) setModal(false);
+				const index = initialRecords.findIndex((item) => item.id === id);
+				const newRecords = [...initialRecords];
+				newRecords[index] = res.data.storageItem;
+				setInitialRecords(newRecords);
+				
 			})
 			.catch((err) => {
 				console.log(err);
+			})
+			.finally(() => {
+				setLoadingDataForm(true);
 			});
 	};
+
+	const removeItem = (id: number) => {
+		if (removeId !== 0) return;
+		setRemoveId(id);
+		axiosClient
+			.delete(`/storage/${id}`)
+			.then((res) => {
+				if (res.status === 200) {
+					const newRecords = initialRecords.filter((item) => item.id !== id);
+					setInitialRecords(newRecords);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {
+				setRemoveId(0);
+			});
+	}
+
 	const changeValue = (e: any) => {
 		setDataForm({ ...dataForm, [e.target.name]: e.target.value });
 	};
@@ -111,7 +167,7 @@ const Storage = () => {
 								type="button"
 								className="btn btn-primary"
 								onClick={() => {
-									setModal(true);
+									addNewItem();
 								}}
 							>
 								<IconUserPlus className="ltr:mr-2 rtl:ml-2" />
@@ -122,7 +178,7 @@ const Storage = () => {
 					<div className="relative">
 						<input type="text" placeholder="Search Item" className="form-input py-2 pr-11 peer" value={search} onChange={(e) => searchHandler(e)} />
 						<button type="button" className="absolute right-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
-							{searchLoading ? <SmallPrimaryLoader /> : <IconSearch className="mx-auto" />}
+							<IconSearch className="mx-auto" />
 						</button>
 					</div>
 				</div>
@@ -139,10 +195,8 @@ const Storage = () => {
 						<div className="mt-4">
 							<div className="flex items-center justify-center">
 								<div className="text-center">
-									<h2 className="text-xl">No Customers Found</h2>
-									<Link to={'/customers/create'} className="text-primary">
-										Create new customer or search again
-									</Link>
+									<h2 className="text-xl">No Items Found</h2>
+									<p className="text-gray-500">Add new items to the storage</p>
 								</div>
 							</div>
 						</div>
@@ -185,11 +239,17 @@ const Storage = () => {
 											textAlignment: 'center',
 											render: ({ id }) => (
 												<div className="flex gap-4 items-center w-max mx-auto">
-													<button type="button" className="btn btn-sm btn-outline-warning" onClick={() => {}}>
+													<button
+														type="button"
+														className="btn btn-sm btn-outline-warning"
+														onClick={() => {
+															editItem(id);
+														}}
+													>
 														Edit
 													</button>
-													<button type="button" className="btn btn-sm btn-outline-danger" onClick={() => {}}>
-														Delete
+													<button type="button" className="btn btn-sm btn-outline-danger" onClick={() => {removeItem(id)}}>
+														Delete { removeId === id  && <ButtonLoader />	}
 													</button>
 												</div>
 											),
@@ -242,7 +302,7 @@ const Storage = () => {
 												<label htmlFor="name">Title</label>
 												<input id="title" type="text" name="title" placeholder="Enter Name" className="form-input" value={dataForm.title} onChange={(e) => changeValue(e)} />
 											</div>
-											<div className='flex gap-4'>
+											<div className="flex gap-4">
 												<div className="mb-5 w-1/2">
 													<label htmlFor="email">Quantity</label>
 													<input id="quantity" type="number" name="quantity" placeholder="Enter Email" className="form-input" value={dataForm.quantity} onChange={(e) => changeValue(e)} />
@@ -250,12 +310,12 @@ const Storage = () => {
 												<div className="mb-5 w-1/2">
 													<label htmlFor="number">Expected Quantity</label>
 													<input
-														id="expected_quantity"
+														id="expexted_quantity"
 														type="number"
-														name="expected_quantity"
+														name="expexted_quantity"
 														placeholder="Enter Phone Number"
 														className="form-input"
-														value={dataForm.expected_quantity}
+														value={dataForm.expexted_quantity}
 														onChange={(e) => changeValue(e)}
 													/>
 												</div>
