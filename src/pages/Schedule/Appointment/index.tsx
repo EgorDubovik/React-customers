@@ -49,12 +49,6 @@ const Index = () => {
                         <div className='rounded-md p-2 '>
                            <div className='text-sm font-semibold'>9:00 AM - 10:00 AM Jul 23, 2024</div>
                         </div>
-                        <div className='rounded-md p-2 '>
-                           <div className='text-sm font-semibold'>9:00 AM - 10:00 AM Jul 23, 2024</div>
-                        </div>
-                        <div className='rounded-md p-2 '>
-                           <div className='text-sm font-semibold'>9:00 AM - 10:00 AM Jul 23, 2024</div>
-                        </div>
                      </div>
                   </div>
                </div>

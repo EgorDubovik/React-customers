@@ -125,33 +125,20 @@ const Header = () => {
    return (
       <div className="flex gap-2 md:justify-end justify-around mt-4 mb-2 ">
          <div>
-            {
-               appointment?.status === 0 && 
-               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-primary h-full text-[13px] px-4 md:px-4">
-                  {
-                     updateAppointmentLoading 
-                        ? <ButtonLoader/> 
-                        : <IconChecks />
-                  }
-                  <span className='ml-1'>Finish Appointment</span>
-               </button>   
-            }
-            {
-               appointment?.status === 1 && 
-               <button onClick={handaleFinishOrActivateAppointment} type="button" className="btn btn-outline-dark h-full text-[13px] px-3 md:px-4">
-                  {
-                     updateAppointmentLoading 
-                        ? <ButtonLoader/> 
-                        : <IconArrowBackward/>
-                  }
-                  <span className='ml-1'>Back to Active</span>
-               </button>   
-            }
+            <button onClick={handaleFinishOrActivateAppointment} type="button" className={`btn ${appointment?.status === 0 ? 'btn-primary' : 'btn-outline-dark'} h-full text-[13px] px-4 md:px-4`}>
+               {
+                  updateAppointmentLoading 
+                     ? <ButtonLoader/> 
+                     : appointment?.status === 0 ? <IconChecks /> : <IconArrowBackward/>
+               }
+               <span className='ml-1'>{appointment?.status === 0 ? 'Finish Appointment' : 'Back to Active'}</span>
+            </button>
          </div>
+         
          <div>
             <button type="button" className="btn btn-primary h-full text-[13px] px-3 md:px-4">
                <IconClock className='mr-1'/>
-               Start job
+               Create copy
             </button>
          </div>
          <div>
