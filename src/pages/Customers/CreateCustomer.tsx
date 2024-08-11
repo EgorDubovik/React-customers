@@ -43,7 +43,7 @@ const CreateCustomer = () => {
 		return isValid;
 	};
 
-	const handleCreateCustomer = (e: any) => {
+	const storeCustomer = (e: any) => {
 		e.preventDefault();
 
 		if (!validateForm()) return;
@@ -87,6 +87,7 @@ const CreateCustomer = () => {
 
 	const [suggestionResult, setSuggestionResult] = useState([]);
 	const searchSuggestions = (search: string) => {
+		if(search.length < 5) return;
 		axiosClient.get('/customers', { params: { search } }).then((res) => {
 			if (res.data.data.length > 0) {
 				setSuggestionResult(res.data.data);
@@ -188,7 +189,7 @@ const CreateCustomer = () => {
 						)}
 
 						<div className="button">
-							<button type="submit" className="btn btn-primary w-full" onClick={handleCreateCustomer}>
+							<button type="submit" className="btn btn-primary w-full" onClick={storeCustomer}>
 								Create
 								{loading && <ButtonLoader />}
 							</button>
