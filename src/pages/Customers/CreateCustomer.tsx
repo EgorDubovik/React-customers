@@ -97,6 +97,9 @@ const CreateCustomer = () => {
 	const searchSuggestionsByPhone = () => {
 		searchSuggestions(dataForm.phone);
 	};
+	const searchSuggestionsByAddress = () => {
+		searchSuggestions(dataForm.address1);
+	};
 
 	return (
 		<div>
@@ -149,7 +152,7 @@ const CreateCustomer = () => {
 									/>
 								</div>
 							)}
-							<input id="gridAddress1" type="text" placeholder="1234 Main St" name="address1" className="form-input" value={dataForm.address1} onChange={handleChangeFomr} />
+							<input id="gridAddress1" type="text" placeholder="1234 Main St" name="address1" className="form-input" value={dataForm.address1} onChange={handleChangeFomr} onBlur={searchSuggestionsByAddress} />
 							{addressError && <span className="text-danger text-[11px]">Address must be at least 5 characters</span>}
 						</div>
 
