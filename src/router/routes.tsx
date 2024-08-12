@@ -13,6 +13,7 @@ import CreateCustomer from '../pages/Customers/CreateCustomer';
 import Create from '../pages/Invoice/Create';
 import {Update as CustomerUpdate} from '../pages/Customers/Update';
 import ReviewFeedback from '../pages/ReviewFeedback/Index';
+import path from 'path';
 const Invoices = lazy(() => import('../pages/Invoice/Invoices'));
 const Employees = lazy(() => import('../pages/Employees'));
 const CreateAppointment = lazy(() => import('../pages/Schedule/CreateAppointment'));
@@ -78,6 +79,10 @@ const routes = [
             {
                 path: '/company-settings/book-online',
                 element : <DefaultLayout> <BookAppointmentSettings /></DefaultLayout>,
+            },
+            {
+                path: '/company-settings/general',
+                element : <DefaultLayout> <Services /></DefaultLayout>,
             },
             {
                 path: '/employees',

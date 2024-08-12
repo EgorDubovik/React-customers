@@ -122,7 +122,7 @@ const Sidebar = () => {
 										<span className="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Storage</span>
 									</div>
 								</NavLink>
-								
+
 								{user.isAdmin && (
 									<>
 										<button type="button" className={`${currentMenu === 'company_settings' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('company_settings')}>
@@ -139,10 +139,11 @@ const Sidebar = () => {
 										<AnimateHeight duration={300} height={currentMenu === 'company_settings' ? 'auto' : 0}>
 											<ul className="sub-menu text-gray-500">
 												<li>
+													<NavLink to="/company-settings/general">General Info</NavLink>
 													<NavLink to="/company-settings/services">Company services</NavLink>
 													<NavLink to="/company-settings/book-online">Book appointments</NavLink>
-                                                    <NavLink to="/company-settings/tags">Tags</NavLink>
-                                                    <NavLink to="/company-settings/deposit">Deposit settings</NavLink>
+													<NavLink to="/company-settings/tags">Tags</NavLink>
+													<NavLink to="/company-settings/deposit">Deposit settings</NavLink>
 												</li>
 											</ul>
 										</AnimateHeight>
