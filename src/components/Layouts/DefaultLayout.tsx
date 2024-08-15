@@ -2,17 +2,35 @@ import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import App from '../../App';
 import { IRootState } from '../../store';
-import { toggleSidebar } from '../../store/themeConfigSlice';
+import { toggleSidebar, setUserInformation } from '../../store/themeConfigSlice';
 import Footer from './Footer';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Portals from '../../components/Portals';
+import axiosClient from '../../store/axiosClient';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
 
     const [showLoader, setShowLoader] = useState(true);
+
+    function loadHeadData(){
+        axiosClient.get('/user')
+        .then((res)=>{
+            if(res.status == 200){
+                const user = {
+                    id : res.data.user.id,
+                    name: res.data.user.name,
+                    email: res.data.user.email,
+                    phone: res.data.user.phone,
+                    roles: res.data.user.rolesArray,
+                    color: res.data.user.color,
+                }
+                dispatch(setUserInformation(user));
+            }
+        });
+    }
 
     useEffect(() => {
 
@@ -23,6 +41,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                 setShowLoader(false);
             }, 200);
         }
+        loadHeadData();
 
     }, []);
 
@@ -58,8 +77,9 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
 
                         {/* BEGIN CONTENT AREA */}
                         
-                        <div className={`${themeConfig.animation} p-2 md:p-6 animate__animated`}>{children}</div> 
-                        
+                        <div className={`${themeConfig.animation} p-2 md:p-6 animate__animated`}>
+                            {children}
+                        </div> 
                         
                         {/* END CONTENT AREA */}
 

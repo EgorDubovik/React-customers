@@ -31,28 +31,6 @@ const Header = () => {
     const singOut = useSignOut();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        loadHeadData();
-    },[]);
-
-
-    function loadHeadData(){
-        axiosClient.get('/user')
-        .then((res)=>{
-            if(res.status == 200){
-                const user = {
-                    id : res.data.user.id,
-                    name: res.data.user.name,
-                    email: res.data.user.email,
-                    phone: res.data.user.phone,
-                    roles: res.data.user.rolesArray,
-                    color: res.data.user.color,
-                }
-                dispatch(setUserInformation(user));
-            }
-        });
-    }
-
     function logOut(e: any){
         e.preventDefault();
         singOut();
