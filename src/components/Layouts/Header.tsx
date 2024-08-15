@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, NavLink, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IRootState } from '../../store';
-import { toggleTheme, toggleSidebar, setUserInformation } from '../../store/themeConfigSlice';
+import { toggleTheme, toggleSidebar} from '../../store/themeConfigSlice';
 import { useSignOut } from 'react-auth-kit';
 
 import Dropdown from '../Dropdown';
@@ -13,10 +13,7 @@ import IconMoon from '../Icon/IconMoon';
 import IconInfoCircle from '../Icon/IconInfoCircle';
 import IconBellBing from '../Icon/IconBellBing';
 import IconUser from '../Icon/IconUser';
-import IconMail from '../Icon/IconMail';
-import IconLockDots from '../Icon/IconLockDots';
 import IconLogout from '../Icon/IconLogout';
-import axiosClient from '../../store/axiosClient';
 
 interface Notification {
     id: number;
