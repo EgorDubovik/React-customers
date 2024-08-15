@@ -14,6 +14,7 @@ import Create from '../pages/Invoice/Create';
 import {Update as CustomerUpdate} from '../pages/Customers/Update';
 import ReviewFeedback from '../pages/ReviewFeedback/Index';
 import path from 'path';
+import GeneralInfo from '../pages/CompanySettings/GeneralInfo';
 const Invoices = lazy(() => import('../pages/Invoice/Invoices'));
 const Employees = lazy(() => import('../pages/Employees'));
 const CreateAppointment = lazy(() => import('../pages/Schedule/CreateAppointment'));
@@ -82,7 +83,7 @@ const routes = [
             },
             {
                 path: '/company-settings/general',
-                element : <DefaultLayout> <Services /></DefaultLayout>,
+                element : <DefaultLayout> <GeneralInfo /></DefaultLayout>,
             },
             {
                 path: '/employees',
