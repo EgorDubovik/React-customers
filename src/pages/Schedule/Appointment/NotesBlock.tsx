@@ -12,6 +12,7 @@ const NotesBlock = () => {
    const {appointment, updateNotes} = useAppointmentContext();
    
    const notes = appointment?.notes;
+   console.log(notes);
    const appointmentId = appointment?.id;
    const [newNote, setNewNote] = useState<string>('');
    const [loadingSaveNote, setLoadingSaveNote] = useState<boolean>(false);
@@ -84,7 +85,7 @@ const NotesBlock = () => {
                            <tr key={index}>
                               <td>
                                  <div className='creator dark:text-gray-600 text-gray-400'>
-                                    Yahor Dubovik ({new Date(note.created_at).toLocaleString('en-US',{month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})})
+                                    {note.creator?.name} ({new Date(note.created_at).toLocaleString('en-US',{month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})})
                                  </div>
                                  <div className='note mt-1 ml-3 dark:text-gray-300 text-gray-500'  dangerouslySetInnerHTML={{ __html: note.text.replace(/\n/g, '<br>') }}>
                                     
