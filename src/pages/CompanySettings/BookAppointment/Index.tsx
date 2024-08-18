@@ -4,9 +4,6 @@ import WorkingTime from './WorkingTime';
 import { PageLoadError } from '../../../components/loading/Errors';
 import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading';
 import LinkAndActiveBlock from './LinkAndActiveBlock';
-import { ReactSortable } from 'react-sortablejs';
-import axios from 'axios';
-import { use } from 'i18next';
 import Services from './Services'; // Add this line
 
 export interface CompanyServiceType {

@@ -9,6 +9,24 @@ import moment from 'moment';
 import axiosClient from '../../store/axiosClient';
 import { viewCurrency } from '../../helpers/helper';
 
+
+interface IInvoice {
+   id: number;
+   invoice: string;
+   appointment: {
+      id: number;
+   };
+   customer_name: string;
+   customer_id: number;
+   creator: {
+      name: string;
+   };
+   email: string;
+   created_at: string;
+   amount: number;
+   pdf_path: string;
+}
+
 const Invoice = () => {
    const dispatch = useDispatch();
    useEffect(() => {
@@ -20,8 +38,8 @@ const Invoice = () => {
    const [totalRecords, setTotalRecords] = useState(0);
    const PAGE_SIZES = [10, 20, 30, 50, 100];
    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-   const [initialRecords, setInitialRecords] = useState(sortBy(items, 'invoice'));
-   const [records, setRecords] = useState(initialRecords);
+   const [initialRecords, setInitialRecords] = useState<IInvoice[]>(sortBy(items, 'invoice'));
+   const [records, setRecords] = useState<IInvoice[]>(initialRecords);
    const [loadingStatus, setLoadingStatus] = useState('loading');
    const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
       columnAccessor: 'firstName',
@@ -77,27 +95,27 @@ const Invoice = () => {
                         {
                            accessor: 'invoice',
                            sortable: true,
-                           render: ({ id }) => (
-                              <NavLink to="/apps/invoice/preview">
+                           render: ({ id, appointment }) => (
+                              <NavLink to={`/appointment/${appointment.id}`}>
                                  <div className="text-primary underline hover:no-underline font-semibold">{`#Invoice${id}`}</div>
                               </NavLink>
                            ),
                         },
-                        // {
-                        //    accessor: 'appointment',
-                        //    sortable: true,
-                        //    render: ({ appointment }) => (
-                        //       <NavLink to="/apps/invoice/preview">
-                        //          <div className="text-primary underline hover:no-underline font-semibold">{`#${appointment.id}`}</div>
-                        //       </NavLink>
-                        //    ),
-                        // },
                         {
                            accessor: 'name',
                            sortable: true,
-                           render: ({ customer_name, customer_id }) => (
+                           render: ({ customer_name,customer_id }) => (
                               <div className="flex items-center font-semibold">  
-                                    <div>{customer_name} ({customer_id})</div>
+                                    <Link to={`/customer/${customer_id}`} className="text-primary underline hover:no-underline">{customer_name}</Link>
+                              </div>
+                           ),
+                        },
+                        {
+                           accessor: 'creator',
+                           sortable: true,
+                           render: ({ creator}) => (
+                              <div className="flex items-center font-semibold">  
+                                    <div>{creator?.name}</div>
                               </div>
                            ),
                         },
