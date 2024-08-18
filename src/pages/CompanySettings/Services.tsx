@@ -12,12 +12,6 @@ import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
 import { showMessage } from '../../helpers/helper';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
 import { PageLoadError } from '../../components/loading/Errors';
-import { Link } from 'react-router-dom';
-import IconMapPin from '../../components/Icon/IconMapPin';
-import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
-import IconPencilPaper from '../../components/Icon/IconPencilPaper';
-import IconEye from '../../components/Icon/IconEye';
-import Dropdown from '../../components/Dropdown';
 
 const Services = () => {
 	const dispatch = useDispatch();
@@ -27,7 +21,6 @@ const Services = () => {
 
 	const [loadingStatus, setLoadingStatus] = useState('loading');
 	const [loadingRequest, setLoadingRequest] = useState(false);
-	const [error, setError] = useState(false);
 	const [services, setServices] = useState<any[]>([]);
 	const [addContactModal, setAddContactModal] = useState(false);
 	const [service, setService] = useState({ id: null, title: '', description: '', price: '' });
@@ -35,12 +28,6 @@ const Services = () => {
 	const [emptyPrice, setEmptyPrice] = useState(false);
 	const [userRole, setUserRole] = useState<String[]>([]);
 	const [removeService, setRemoveService] = useState<number>(0);
-	const [updateService, setUpdateService] = useState({
-		id: null,
-		title: '',
-		price: '',
-		description: '',
-	});
 	const fetchServices = () => {
 		setLoadingStatus('loading');
 		axiosClient
@@ -179,44 +166,7 @@ const Services = () => {
 							</div>
 						</div>
 					</div>
-					<div className="mt-5 p-0 border-0 w-2/3 m-auto">
-						{/* <div className="grid grid-cols-3 gap-3">
-
-							<div className="bg-white dark:bg-[#1a294166] rounded-md shadow">
-								<div className="p-3">
-									<div className="flex items-center justify-between relative">
-										<div className="absolute top-0 right-0 z-10">
-											<div className="dropdown">
-												<Dropdown offset={[0, 5]} btnClassName="align-middle" button={<IconHorizontalDots className="rotate-90 opacity-70" />}>
-													<ul className="whitespace-nowrap">
-														<li>
-															<button type="button" onClick={() => {}}>
-																<IconPencilPaper className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
-																Edit
-															</button>
-														</li>
-														<li>
-															<button type="button" onClick={() => {}}>
-																<IconEye className="w-4.5 h-4.5 mr-2 shrink-0" />
-																View
-															</button>
-														</li>
-													</ul>
-												</Dropdown>
-											</div>
-										</div>
-										<div className='flex items-center justify-between w-full'>
-											<div className="user-info w-full">
-												<div className="user-name w-3/4 font-bold dark:text-white">Title</div>
-												<div className="">Description</div>
-											</div>
-											<div className='pr-6'>$60.00</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-						</div> */}
+					<div className="panel mt-5 p-0 border-0 w-2/3 m-auto">
 						<div className="table-responsive">
 							<table className="table-striped table-hover">
 								<thead>
@@ -242,17 +192,14 @@ const Services = () => {
 
 												<td>
 													{userRole.includes('Admin') || userRole.includes('Dispatcher') ? (
-														<div className="flex gap-4 items-center justify-center">
+														<div className="flex gap-4 items-center justify-end">
 															<button type="button" className="btn btn-sm btn-outline-primary" onClick={() => editService(service.id)}>
 																Edit
 															</button>
-															{removeService === service.id ? (
-																<SmallDangerLoader />
-															) : (
-																<button type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteService(service.id)}>
-																	Delete
-																</button>
-															)}
+															
+															<button type="button" className="btn btn-sm btn-outline-danger w-20" onClick={() => deleteService(service.id)}>
+																{removeService === service.id  ?  <SmallDangerLoader /> :"Delete"  }
+															</button>
 														</div>
 													) : (
 														<div className="text-gray-400 text-center">No action</div>

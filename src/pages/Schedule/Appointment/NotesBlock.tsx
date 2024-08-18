@@ -33,7 +33,6 @@ const NotesBlock = () => {
          .then((res) => {
             if(res.status === 200){
                notes?.unshift(res.data.note);
-               
                updateNotes(notes || []);
                setNewNote('');
             }
