@@ -3,15 +3,16 @@ import IconPlus from '../../../components/Icon/IconPlus';
 import { Dialog, Transition } from '@headlessui/react';
 import axiosClient from '../../../store/axiosClient';
 import TechItem from '../../../components/PagesLayout/TechItem';
+import TechListBlock from '../../../components/PagesLayout/TechListBlock';
 
 const TechBlock = (props: any) => {
 	const [techs, setTechs] = useState(props.techs || []);
 	const [techsIds, setTechsIds] = useState<Number[]>([]);
 	const [companyTechs, setCompanyTechs] = useState([]);
 	const appointmentId = props.appointmentId || 0;
-	const [modal, setModal] = React.useState(false);
-	const [removeTechStatus, setRemovingTechStatus] = React.useState(0);
-	const [saveNewTechStatus, setSaveNewTechStatus] = React.useState(false);
+	const [modal, setModal] = useState(false);
+	const [removeTechStatus, setRemovingTechStatus] = useState(0);
+	const [saveNewTechStatus, setSaveNewTechStatus] = useState(false);
 
 	const isTechAdded = (techId: number) => {
 		return techsIds.includes(techId);
@@ -87,7 +88,19 @@ const TechBlock = (props: any) => {
 	return (
 		<div className="">
 			<h3 className="font-semibold text-lg dark:text-white-light">Technical</h3>
-			<ul className="mt-2">
+         <TechListBlock
+            techs={techs}
+            modal={modal}
+            setModal={setModal}
+            techsIds={techsIds}
+            companyTechs={companyTechs}
+            removeTech={removeTech}
+            removeTechStatus={removeTechStatus}
+            saveNewTechs={saveNewTechs}
+            saveNewTechStatus={saveNewTechStatus}
+            addRemovetechFromList={addRemovetechFromList}
+         />
+			{/* <ul className="mt-2">
 				{techs.map((tech: any, index: number) => (
 					<TechItem
 						key={index}
@@ -153,7 +166,7 @@ const TechBlock = (props: any) => {
 						</div>
 					</div>
 				</Dialog>
-			</Transition>
+			</Transition> */}
 		</div>
 	);
 };

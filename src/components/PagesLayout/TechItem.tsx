@@ -3,18 +3,7 @@ import IconTrashLines from '../Icon/IconTrashLines';
 import { SmallDangerLoader } from '../loading/SmallCirculeLoader';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
-interface TechItemProps {
-	key: number;
-	className: string;
-	color: string;
-	id: number;
-	name: string;
-	phone: string;
-	roles: any;
-	addRemovetechFromList?: (id:number) => void;
-	removeTechHandle?: (id: number) => void;
-	removeTechStatus: number;
-}
+import { TechItemProps } from '../../types';
 const TechItem = (props: TechItemProps) => {
    const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
 	const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
