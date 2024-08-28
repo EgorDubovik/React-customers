@@ -7,7 +7,7 @@ Company services
       ☐ Return error message if invoice not sent by wrong email
       ✔ В ноутс с другой компании показывает моем имя и не важно кто написал !!! @done(24-08-16 11:16)
       ✔ При создании клиента если не ввести имя то система подкидвыает 10 последих клиентов как рпохожие !!! @done(24-08-18 09:07)
-      ☐ Исправить ошибку когда человек букает апоитмент и вводит в начале +1
+      ✔ Исправить ошибку когда человек букает апоитмент и вводит в начале +1 @done(24-08-19 07:43)
 
 
    
@@ -15,11 +15,16 @@ Company services
       ☐ Finish pagination on customer page with grid view
       ☐ Finish issue refund
       ☐ Update company info from admin profile page
+      ☐ add "Update info " for user profile
       ✔ Upload images for appointments @done(24-06-11 09:36)
       ✔ view uploaded images on appointment page @started(24-06-11 09:36) @done(24-06-21 10:02) @lasted(1w3d26m11s)
 
    FEATURES:
-      ☐ Add storage for left menu
+      ☐ Change emails templates
+         ☐ New Appointment online for customer
+         ☐ New Appointment online for company
+         ☐ Appointment canceled
+      ✔ Add storage for left menu @done(24-08-19 07:43)
       ✔ BookAppointment Online @done(24-08-06 10:24)
          ✔ Disable times on calendar if already booked @done(24-06-24 11:12)
          ✔ Add settings with working time by days @done(24-06-24 11:12)
