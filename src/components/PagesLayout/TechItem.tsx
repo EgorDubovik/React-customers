@@ -4,14 +4,13 @@ import { SmallDangerLoader } from '../loading/SmallCirculeLoader';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 interface TechItemProps {
-	index: number;
+	key: number;
 	className: string;
 	color: string;
 	id: number;
 	name: string;
 	phone: string;
 	roles: any;
-	isTechAdded: any;
 	addRemovetechFromList?: (id:number) => void;
 	removeTechHandle?: (id: number) => void;
 	removeTechStatus: number;
@@ -20,7 +19,7 @@ const TechItem = (props: TechItemProps) => {
    const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
 	const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
 	return (
-		<li key={props.index} className={props.className} onClick={()=> props.addRemovetechFromList && props.addRemovetechFromList(props.id)}>
+		<li key={props.key} className={props.className} onClick={()=> props.addRemovetechFromList && props.addRemovetechFromList(props.id)}>
 			<div className="mr-2">
 				<span className={"flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-'bg-danger text-white"} style={{ backgroundColor: props.color }}>
 					{getTechAbr(props.name)}

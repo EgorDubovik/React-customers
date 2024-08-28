@@ -1,20 +1,14 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { useSelector } from 'react-redux'
-import { IRootState } from '../../../store'
 import axiosClient from '../../../store/axiosClient'
-import IconTrashLines from '../../../components/Icon/IconTrashLines'
 import IconPlus from '../../../components/Icon/IconPlus'
-import{ getTechAbr } from '../../../helpers/helper'
-import { SmallDangerLoader } from '../../../components/loading/SmallCirculeLoader'
+import TechItem from '../../../components/PagesLayout/TechItem'
 
 const TechList = (props:any) => {
    const [removeTechStatus, setRemovingTechStatus] = useState(0); 
    const [companyTechs, setCompanyTechs] = useState([]);
    const {modal, setModal, techsIds, onAddRemovetechFromList,onSaveTeachs, onRemoveTech} = props;
    const [techs, setTechs]  = useState([]);
-   const rolesTitle = useSelector((state: IRootState) => state.themeConfig.rolesTitle);
-   const rolesColor = useSelector((state: IRootState) => state.themeConfig.rolesColor);
 
    const isTechAdded = (techId:number) => {
       return techsIds.includes(techId);
@@ -60,32 +54,17 @@ const TechList = (props:any) => {
          <ul className='mt-2'>
             {
                techs.map((tech:any, index:number) => (
-                  <li key={index} className='p-2 mb-2 flex items-center dark:bg-gray-900 bg-gray-100 rounded'>
-                     <div className='mr-2'>
-                        <span className={"flex justify-center items-center w-10 h-10 text-center rounded-full object-cover bg-'bg-danger text-white"} style={{ backgroundColor : tech.color }}>{getTechAbr(tech.name)}</span>
-                     </div>
-                     <div className="flex-grow ml-4">
-                        <p className="font-semibold">{tech.name}</p>
-                        <p className="font-semibold">{tech.phone}</p>
-                     </div>
-                     <div className='mr-4'>
-                        {
-                           tech.roles.map((role:any, roleIndex:number) => (
-                              <span key={roleIndex} className={`badge badge-outline-${rolesColor[role.role]} ml-2`}>{rolesTitle[role.role]}</span>
-                           ))
-                        }
-                     </div>
-                     <div className=''>
-                        {
-                           removeTechStatus === tech.id ? <SmallDangerLoader/> 
-                           : 
-                           <button type="button" onClick={()=>removeTechHandle(tech.id)}>
-                              <IconTrashLines />
-                           </button>
-                        }
-                        
-                     </div>
-                  </li>
+                  <TechItem
+                     key={index}
+                     className='p-2 mb-2 flex items-center dark:bg-gray-900 bg-gray-100 rounded'
+                     color={tech.color}
+                     id={tech.id}
+                     name={tech.name}
+                     phone={tech.phone}
+                     roles={tech.roles}
+                     removeTechHandle={removeTechHandle}
+                     removeTechStatus={removeTechStatus}
+                  />
                ))
             }
          </ul>
@@ -125,22 +104,17 @@ const TechList = (props:any) => {
                                  <ul className='list-group'>
                                     {
                                        companyTechs.map((tech:any, index:number) => (
-                                       <li key={index} className={'p-2 mb-2 flex items-center  '+(isTechAdded(tech.id) ? 'dark:bg-[#050b14] text-primary' : "")+' '+(isTechAdded(tech.id) ? 'bg-gray-100 text-primary' : '')+' rounded cursor-pointer'} onClick={()=>addRemovetechFromList(tech.id)}>
-                                          <div className='mr-2'>
-                                             <span className={"flex justify-center items-center w-10 h-10 text-center rounded-full object-cover text-white"} style={{ backgroundColor: tech.color }} >{getTechAbr(tech.name)}</span>
-                                          </div>
-                                          <div className="flex-grow ml-4 text-sm">
-                                             <p className="font-semibold">{tech.name}</p>
-                                             <p className="font-semibold">{tech.phone}</p>
-                                          </div>
-                                          <div className='mr-4'>
-                                             {
-                                                tech.roles.map((role:any, roleIndex:number) => (
-                                                   <span key={roleIndex} className={`badge badge-outline-${rolesColor[role.role]} ml-2`}>{rolesTitle[role.role]}</span>
-                                                ))
-                                             }
-                                          </div>
-                                       </li>
+                                          <TechItem
+                                             key={index}
+                                             className={'p-2 mb-2 flex items-center  '+(isTechAdded(tech.id) ? 'dark:bg-[#050b14] bg-gray-100 text-primary' : '')+' rounded cursor-pointer'}
+                                             color={tech.color}
+                                             id={tech.id}
+                                             name={tech.name}
+                                             phone={tech.phone}
+                                             roles={tech.roles}
+                                             removeTechStatus={-1}
+                                             addRemovetechFromList={addRemovetechFromList}
+                                          />
                                        ))
                                     }
                                  </ul>
