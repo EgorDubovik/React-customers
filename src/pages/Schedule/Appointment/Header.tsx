@@ -123,9 +123,9 @@ const Header = () => {
    }
 
    return (
-      <div className="flex gap-2 md:justify-end justify-around mt-4 mb-2 ">
-         <div>
-            <button onClick={handaleFinishOrActivateAppointment} type="button" className={`btn ${appointment?.status === 0 ? 'btn-primary' : 'btn-outline-dark'} h-full text-[13px] px-4 md:px-4`}>
+      <div className="flex gap-2 md:justify-end justify-around mt-4 mb-2">
+         <div className='flex-auto md:flex-none'>
+            <button onClick={handaleFinishOrActivateAppointment} type="button" className={`btn ${appointment?.status === 0 ? 'btn-primary' : 'btn-outline-dark'} h-full text-[13px] px-0 md:px-4 w-full whitespace-nowrap overflow-hidden text-ellipsis`}>
                {
                   updateAppointmentLoading 
                      ? <ButtonLoader/> 
@@ -135,14 +135,14 @@ const Header = () => {
             </button>
          </div>
          
-         <div>
-            <button type="button" className="btn btn-primary h-full text-[13px] px-3 md:px-4">
+         <div className='flex-auto md:flex-none '>
+            <button type="button" className="btn btn-primary h-full text-[13px] px-0 md:px-4 w-full whitespace-nowrap overflow-hidden text-ellipsis">
                <IconClock className='mr-1'/>
                Create copy
             </button>
          </div>
-         <div>
-            <button type="button" className="btn btn-primary h-full text-[13px] px-3 md:px-4"  onClick={()=>setModal(true)}>
+         <div className='flex-auto md:flex-none'>
+            <button type="button" className="btn btn-primary h-full text-[13px] px-0 md:px-4 w-full whitespace-nowrap overflow-hidden text-ellipsis"  onClick={()=>setModal(true)}>
                <IconCreditCard className='mr-1'/>
                Pay 
             </button>

@@ -10,9 +10,15 @@ export interface TechItemProps {
 	removeTechHandle?: (id: number) => void;
 	removeTechStatus: number;
 }
-
+export interface ITech {
+	id: number;
+	name: string;
+	phone: string;
+	roles: any;
+	color: string;
+}
 export interface TechListBlockProps {
-   techs: any;
+   techs: Itech[];
    companyTechs: any;
    modal: boolean;
    setModal: (modal: boolean) => void;
