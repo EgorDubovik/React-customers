@@ -4,6 +4,7 @@ import Header from "./Header";
 import { useAppointmentContext } from "../../context/AppointmentContext";
 import axiosClient from "../../store/axiosClient";
 import CalendarBlock from "./CalendarBlock";
+import CustomerInfoBlock from "./CustomerInfoBlock";
 
 const AppointmentPage = () => {
    const navigate = useNavigate();
@@ -46,10 +47,10 @@ const AppointmentPage = () => {
                   </div>
                </div>
                <div className='md:col-span-3 grid grid-cols-1 xl:grid-cols-2 gap-5'>
-                  {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
+                  
                   <div className='grid grid-flow-row gap-5'>
                      {/* Customer infor */}
-                     {/* <CustomerInfoBlock customer={appointment?.customer} address={appointment?.address} /> */}
+                     <CustomerInfoBlock customer={appointment?.customer} address={appointment?.address} />
                      {/* Tech for web*/}
                      <div className='panel p-4 hidden md:block'>
                         {/* <TechBlock techs={appointment?.techs} appointmentId = {appointment?.id} /> */}
@@ -59,7 +60,7 @@ const AppointmentPage = () => {
                         {/* <Images appointmentId={appointment?.id}/> */}
                      </div>
                   </div>
-                  {/* <div className='grid grid-col-1 md:grid-cols-2 gap-5'> */}
+                  
                   <div className='grid grid-flow-row gap-5'>
                      
                      {/* Services */}
