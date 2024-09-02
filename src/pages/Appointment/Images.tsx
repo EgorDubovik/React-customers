@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import IconPlus from '../../../components/Icon/IconPlus';
-import axiosClient from '../../../store/axiosClient';
-import { useAppointmentContext } from '../../../context/AppointmentContext';
+import IconPlus from '../../components/Icon/IconPlus';
+import axiosClient from '../../store/axiosClient';
+import { useAppointmentContext } from '../../context/AppointmentContext';
 const Images = (props: any) => {
-	const appointmentId = props.appointmentId || 0;
 	const { appointment, updateImages } = useAppointmentContext();
+	
+	const appointmentId = appointment?.id;
 	const [images, setImages] = useState<any[]>(appointment?.images || []);
 	const [uploadingStatus, setUploadingStatus] = useState(false);
 	const fileInputRef = useRef(null);

@@ -18,12 +18,22 @@ interface Techs{
   company_id: number,
 }
 
+interface Notes{
+  id: number,
+  text: string,
+  updated_at: string,
+  creator: {
+    id: number,
+    name: string,
+  }
+}
+
 interface Appointment {
   id : number;
   status : number;
   start : string;
   end : string;
-  notes : any[];
+  notes : Notes[];
   payments : Payments[];  
   services : any[];
   customer : any;
@@ -37,7 +47,7 @@ interface AppointmentContextType {
   appointment: Appointment | null;
   setAppointment: (appointment: Appointment | null) => void;
   updateStatus: (status: number) => void;
-  updateNotes: (notes: any[]) => void;
+  updateNotes: (notes: Notes[]) => void;
   updatePayments: (payments: Payments[]) => void;
   updateServices: (services: any[]) => void;
   updateTime: (start: string, end: string) => void;
@@ -64,7 +74,7 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
       setAppointment({ ...appointment, status:status });
     }
   };
-  const updateNotes = (notes: any[]) => {
+  const updateNotes = (notes: Notes[]) => {
     if (appointment) {
       setAppointment({ ...appointment, notes:notes });
     }

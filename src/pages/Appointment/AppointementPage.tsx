@@ -6,6 +6,8 @@ import axiosClient from "../../store/axiosClient";
 import CalendarBlock from "./CalendarBlock";
 import CustomerInfoBlock from "./CustomerInfoBlock";
 import TechBlock from "./TechBlock";
+import Images from "./Images";
+import NotesBlock from "./NotesBlock";
 
 const AppointmentPage = () => {
    const navigate = useNavigate();
@@ -58,7 +60,7 @@ const AppointmentPage = () => {
                      </div>
                      {/* Images for web*/}
                      <div className='panel p-0 hidden md:block'>
-                        {/* <Images appointmentId={appointment?.id}/> */}
+                        <Images appointmentId={appointment?.id}/>
                      </div>
                   </div>
                   
@@ -71,11 +73,11 @@ const AppointmentPage = () => {
                      {/* <Expense appointmentId = {appointment?.id}/> */}
 
                      {/* Notes */}
-                     {/* <NotesBlock /> */}
+                     <NotesBlock />
 
                      {/* Tech for mobile */}
                      <div className='panel p-4 block md:hidden'>
-                        {/* <TechBlock techs={appointment?.techs} appointmentId={appointment?.id} /> */}
+                        <TechBlock />
                      </div>
 
                      {/* Images for mobile*/}

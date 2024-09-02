@@ -3,7 +3,7 @@ import axiosClient from '../../store/axiosClient';
 import TechListBlock from '../../components/PagesLayout/TechListBlock';
 import { useAppointmentContext } from '../../context/AppointmentContext';
 
-const TechBlock = (props: any) => {
+const TechBlock = () => {
 
 	const { appointment, updateTechs } = useAppointmentContext();
 	

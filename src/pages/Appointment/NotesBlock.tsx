@@ -1,18 +1,17 @@
 import { useState } from 'react';
-import IconTrashLines from '../../../components/Icon/IconTrashLines';
+import IconTrashLines from '../../components/Icon/IconTrashLines';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import axiosClient from '../../../store/axiosClient';
-import { ButtonLoader } from '../../../components/loading/ButtonLoader';
-import { SmallDangerLoader } from '../../../components/loading/SmallCirculeLoader';
-import { useAppointmentContext } from '../../../context/AppointmentContext';
+import axiosClient from '../../store/axiosClient';
+import { ButtonLoader } from '../../components/loading/ButtonLoader';
+import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
+import { useAppointmentContext } from '../../context/AppointmentContext';
 import { useSelector } from 'react-redux';
-import { IRootState } from '../../../store';
+import { IRootState } from '../../store';
 
 const NotesBlock = () => {   
    const {appointment, updateNotes} = useAppointmentContext();
    
    const notes = appointment?.notes;
-   console.log(notes);
    const appointmentId = appointment?.id;
    const [newNote, setNewNote] = useState<string>('');
    const [loadingSaveNote, setLoadingSaveNote] = useState<boolean>(false);
@@ -84,7 +83,7 @@ const NotesBlock = () => {
                            <tr key={index}>
                               <td>
                                  <div className='creator dark:text-gray-600 text-gray-400'>
-                                    {note.creator?.name} ({new Date(note.created_at).toLocaleString('en-US',{month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})})
+                                    {note.creator?.name} ({new Date(note.updated_at).toLocaleString('en-US',{month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})})
                                  </div>
                                  <div className='note mt-1 ml-3 dark:text-gray-300 text-gray-500'  dangerouslySetInnerHTML={{ __html: note.text.replace(/\n/g, '<br>') }}>
                                     
@@ -95,7 +94,7 @@ const NotesBlock = () => {
                                     {
                                        loadingRemoveNote === note.id ? <SmallDangerLoader />
                                        :
-                                       note.creator_id === userInformation.id &&
+                                       note.creator.id === userInformation.id &&
                                        <button onClick={()=>handleRemoveNote(note.id)} type="button" className='ml-4'>
                                           <IconTrashLines />
                                        </button>
