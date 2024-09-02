@@ -42,6 +42,7 @@ interface AppointmentContextType {
   updateServices: (services: any[]) => void;
   updateTime: (start: string, end: string) => void;
   updateImages: (images: any[]) => void;
+  updateTechs: (techs: Techs[]) => void;
 }
 
 const AppointmentContext = createContext<AppointmentContextType | null>(null);
@@ -90,6 +91,11 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
       setAppointment({ ...appointment, images:images });
     }
   }
+  const updateTechs = (techs: Techs[]) => {
+    if (appointment) {
+      setAppointment({ ...appointment, techs:techs });
+    }
+  }
 
   const value: AppointmentContextType = {
     appointment,
@@ -100,6 +106,7 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
     updateServices,
     updateTime,
     updateImages,
+    updateTechs,
   };
 
   return (

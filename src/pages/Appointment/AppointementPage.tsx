@@ -5,6 +5,7 @@ import { useAppointmentContext } from "../../context/AppointmentContext";
 import axiosClient from "../../store/axiosClient";
 import CalendarBlock from "./CalendarBlock";
 import CustomerInfoBlock from "./CustomerInfoBlock";
+import TechBlock from "./TechBlock";
 
 const AppointmentPage = () => {
    const navigate = useNavigate();
@@ -50,10 +51,10 @@ const AppointmentPage = () => {
                   
                   <div className='grid grid-flow-row gap-5'>
                      {/* Customer infor */}
-                     <CustomerInfoBlock customer={appointment?.customer} address={appointment?.address} />
+                     <CustomerInfoBlock />
                      {/* Tech for web*/}
                      <div className='panel p-4 hidden md:block'>
-                        {/* <TechBlock techs={appointment?.techs} appointmentId = {appointment?.id} /> */}
+                        <TechBlock />
                      </div>
                      {/* Images for web*/}
                      <div className='panel p-0 hidden md:block'>

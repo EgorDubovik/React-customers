@@ -10,8 +10,6 @@ import { useAppointmentContext } from '../../context/AppointmentContext';
 const CustomerInfoBlock = (props: any) => {
 	const navigate = useNavigate();
 	const { appointment } = useAppointmentContext();
-	// const [customer, setCustomer] = useState(props.customer || {});
-	// const [address, setAddress] = useState(props.address || {});
 	return (
 		<div className="panel p-0 pb-4">
 			<div className="flex items-center justify-between p-4">
