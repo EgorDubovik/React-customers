@@ -1,15 +1,15 @@
 import { useEffect, useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import AppointmentsScheduler from '../../../components/plugin/sheduler/AppointmentsScheduler';
-import IconPencilPaper from '../../../components/Icon/IconPencilPaper';
-import { useAppointmentContext } from '../../../context/AppointmentContext';
+import AppointmentsScheduler from '../../components/plugin/sheduler/AppointmentsScheduler';
+import IconPencilPaper from '../../components/Icon/IconPencilPaper';
+import { useAppointmentContext } from '../../context/AppointmentContext';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { IRootState } from '../../../store';
+import { IRootState } from '../../store';
 import TimePicker from 'edtimepicker';
-import axiosClient from '../../../store/axiosClient';
-import {manualIsoString} from '../../../helpers/helper';
-import {ButtonLoader} from '../../../components/loading/ButtonLoader';
+import axiosClient from '../../store/axiosClient';
+import {manualIsoString} from '../../helpers/helper';
+import {ButtonLoader} from '../../components/loading/ButtonLoader';
 
 const CalendarBlock = () => {
    const {appointment, updateTime} = useAppointmentContext();
@@ -64,7 +64,7 @@ const CalendarBlock = () => {
          const {bgColor, textColor} = getTextColor(appointment);
          return {
             id: appointment.id,
-            title: appointment.title ?? appointment.customer.name,
+            title: appointment.title ?? 'Unknown',
             start: appointment.start,
             end: appointment.end,
             status: appointment.status,

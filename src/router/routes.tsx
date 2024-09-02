@@ -7,7 +7,7 @@ import AuthPrivetRoute from '../middleware/AuthPrivetRoute';
 import Customers from '../pages/Customers/Customers';
 import Services from '../pages/CompanySettings/Services';
 const Schedule = lazy(() => import('../pages/Schedule/Schedule'));
-const Appointment = lazy(() => import('../pages/Schedule/Appointment'));
+const Appointment = lazy(() => import('../pages/Appointment/Index'));
 const Error404 = lazy(() => import('../components/Error404'));
 import CreateCustomer from '../pages/Customers/CreateCustomer';
 import Create from '../pages/Invoice/Create';
@@ -40,6 +40,10 @@ const routes = [
                 path: '/schedule',
                 element : <DefaultLayout> <Schedule /></DefaultLayout>,
             },
+            // {
+            //     path: '/appointment/:id',
+            //     element : <DefaultLayout> <Appointment /></DefaultLayout>,
+            // },
             {
                 path: '/appointment/:id',
                 element : <DefaultLayout> <Appointment /></DefaultLayout>,
