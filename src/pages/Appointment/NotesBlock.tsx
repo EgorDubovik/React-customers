@@ -28,8 +28,9 @@ const NotesBlock = () => {
 
    const handelSaveNote = () => {
       setLoadingSaveNote(true);
-      axiosClient.post(`appointment/notes/${appointmentId}`, {text:newNote})
+      axiosClient.post(`appointment/notes/${appointment?.job_id}`, {text:newNote})
          .then((res) => {
+            console.log(res);
             if(res.status === 200){
                notes?.unshift(res.data.note);
                updateNotes(notes || []);
@@ -47,7 +48,7 @@ const NotesBlock = () => {
 
    const handleRemoveNote = (noteId:number) => {
       setLoadingRemoveNote(noteId);
-      axiosClient.delete(`appointment/notes/${appointmentId}/${noteId}`)
+      axiosClient.delete(`appointment/notes/${noteId}`)
          .then((res) => {
             if(res.status === 200){
                

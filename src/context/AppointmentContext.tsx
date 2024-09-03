@@ -30,6 +30,7 @@ interface Notes{
 
 interface Appointment {
   id : number;
+  job_id: number;
   status : number;
   start : string;
   end : string;
