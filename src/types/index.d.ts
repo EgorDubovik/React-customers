@@ -29,3 +29,9 @@ export interface TechListBlockProps {
    saveNewTechs: () => void;
    saveNewTechStatus?: boolean;
 }
+
+export interface IExpense {
+   title: string;
+   amount: number;
+   id: number;
+}

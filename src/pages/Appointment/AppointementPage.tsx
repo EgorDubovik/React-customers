@@ -8,6 +8,7 @@ import CustomerInfoBlock from "./CustomerInfoBlock";
 import TechBlock from "./TechBlock";
 import Images from "./Images";
 import NotesBlock from "./NotesBlock";
+import Expense from "./Expense";
 
 const AppointmentPage = () => {
    const navigate = useNavigate();
@@ -70,7 +71,7 @@ const AppointmentPage = () => {
                      {/* <ServicesBlock /> */}
 
                      {/* Costs */}
-                     {/* <Expense appointmentId = {appointment?.id}/> */}
+                     <Expense />
 
                      {/* Notes */}
                      <NotesBlock />

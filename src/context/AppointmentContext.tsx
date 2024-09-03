@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-
+import { IExpense } from '../types';
 interface Payments{
   id: number,
   appointment_id: number,
@@ -41,7 +41,7 @@ interface Appointment {
   address : any;
   techs: Techs[];
   images: any[];
-  expanse: any[];
+  expenses: IExpense[];
 }
 
 interface AppointmentContextType {

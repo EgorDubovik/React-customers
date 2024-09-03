@@ -1,25 +1,21 @@
 import { useContext, useState } from 'react';
-import { viewCurrency } from '../../../helpers/helper';
-import IconTrash from '../../../components/Icon/IconTrash';
-import axiosClient from '../../../store/axiosClient';
-import {ButtonLoader} from '../../../components/loading/ButtonLoader';
-import { useAppointmentContext } from '../../../context/AppointmentContext';
-import { SmallDangerLoader } from '../../../components/loading/SmallCirculeLoader';
+import { viewCurrency } from '../../helpers/helper';
+import IconTrash from '../../components/Icon/IconTrash';
+import axiosClient from '../../store/axiosClient';
+import {ButtonLoader} from '../../components/loading/ButtonLoader';
+import { useAppointmentContext } from '../../context/AppointmentContext';
+import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
+import { IExpense } from '../../types';
 
-interface IExpense {
-   title: string;
-   amount: number;
-   id: number;
-}
 
 const Expense = (props:any) => {
    const COST_DEFAULT = '$0.00';
 
    const {appointment} = useAppointmentContext();
-   const [expensesList, setExpensesList] = useState<IExpense[]>(appointment?.expanse || []);
+   const [expensesList, setExpensesList] = useState<IExpense[]>(appointment?.expenses || []);
    const [formData, setFormData] = useState<IExpense>({title: '', amount: 0, id: 0});
    const [cost, setCost] = useState(COST_DEFAULT);
-   const appointmentId = props.appointmentId || 0;
+   
    const [storeStatus, setStoreStatus] = useState(false)
    const [removeExpenseId, setRemoveExpenseId] = useState(0);
 
@@ -42,7 +38,7 @@ const Expense = (props:any) => {
       if(storeStatus) return;
       if(formData.title === '' || formData.amount === 0) return;
       setStoreStatus(true);
-      axiosClient.post(`/appointment/expanse/${appointmentId}`, formData)
+      axiosClient.post(`/appointment/expense/${appointment?.job_id}`, formData)
       .then((res) => {
          if(res.status === 200){
             console.log(res.data.expanse);
@@ -61,7 +57,7 @@ const Expense = (props:any) => {
 
    const removeExpense = (id:number) => {
       setRemoveExpenseId(id);
-      axiosClient.delete(`/appointment/expanse/${appointmentId}/${id}`)
+      axiosClient.delete(`/appointment/expense/${id}`)
       .then((res) => {
          if(res.status === 200){
             setExpensesList(expensesList.filter((expense) => expense.id !== id));
