@@ -32,7 +32,7 @@ const calculateRemaining = (payments:any, total:number) => {
 }
 
 const Header = () => {
-   const {appointment, setAppointment,updateStatus, updatePayments} = useAppointmentContext();
+   const {appointment,updateStatus, updatePayments} = useAppointmentContext();
    const [updateAppointmentLoading, setUpdateAppointmentLoading] = useState<boolean>(false);
    const [modal, setModal] = useState(false);
    const [paymentsLoading, setPaymentsLoading] = useState(false);
@@ -74,7 +74,7 @@ const Header = () => {
    const addPayment = () => {
       setPaymentsLoading(true);
       if(amountPay > 0) {
-         axiosClient.post(`appointment/payment/${appointment?.id}`, {
+         axiosClient.post(`appointment/payment/${appointment?.job_id}`, {
             amount: amountPay,
             payment_type: patmentsType[selectedPaymentType]
          })

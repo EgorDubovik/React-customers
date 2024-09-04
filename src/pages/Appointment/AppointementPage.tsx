@@ -84,7 +84,7 @@ const AppointmentPage = () => {
 
                      {/* Images for mobile*/}
                      <div className='panel p-0 block md:hidden'>
-                        {/* <Images appointmentId={appointment?.id}/> */}
+                        <Images appointmentId={appointment?.id}/>
                      </div>
                   </div>
                </div>

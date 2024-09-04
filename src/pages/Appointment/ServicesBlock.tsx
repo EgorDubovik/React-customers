@@ -19,7 +19,7 @@ const ServicesBlock = (props:any) => {
 
    const handleSaveService = (service:any) => {
       setServiceFormLoading(true);
-      if(service.id !==''){ // update
+      if(service.id !==0){ // update
          console.log('update service:')
          axiosClient.put(`appointment/service/${appointment?.job_id}/${service.id}`, service)
             .then((res:any) => {

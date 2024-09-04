@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { IExpense } from '../types';
-interface Payments{
+import { IExpense, IServices } from '../types';
+
+interface IPayments{
   id: number,
   appointment_id: number,
   amount: number,
@@ -35,8 +36,8 @@ interface Appointment {
   start : string;
   end : string;
   notes : Notes[];
-  payments : Payments[];  
-  services : any[];
+  payments : IPayments[];  
+  services : IServices[];
   customer : any;
   address : any;
   techs: Techs[];
@@ -49,7 +50,7 @@ interface AppointmentContextType {
   setAppointment: (appointment: Appointment | null) => void;
   updateStatus: (status: number) => void;
   updateNotes: (notes: Notes[]) => void;
-  updatePayments: (payments: Payments[]) => void;
+  updatePayments: (payments: IPayments[]) => void;
   updateServices: (services: any[]) => void;
   updateTime: (start: string, end: string) => void;
   updateImages: (images: any[]) => void;
@@ -81,7 +82,7 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
     }
   }
 
-  const updatePayments = (payments: Payments[]) => {
+  const updatePayments = (payments: IPayments[]) => {
     if (appointment) {
       setAppointment({ ...appointment, payments:payments });
     }

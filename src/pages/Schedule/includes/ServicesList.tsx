@@ -9,6 +9,8 @@ import {SmallDangerLoader} from '../../../components/loading/SmallCirculeLoader'
 import { ButtonLoader } from '../../../components/loading/ButtonLoader';
 import AutoComplete from '../../../components/plugin/autocomplite/AutoComplete';
 import axiosClient from '../../../store/axiosClient';
+import { IServices } from '../../../types';
+
 const ServicesList = (props:any) => {
 
    const isEditble = props.isEditble;
@@ -19,20 +21,20 @@ const ServicesList = (props:any) => {
    const [companyServices, setCompanyServices] = useState([]); 
    const [isEditMode, setIsEditMode] = useState(false);
    const priceRef = useRef(null);
-   const [serviceForm, setServiceForm] = useState(
+   const [serviceForm, setServiceForm] = useState<IServices>(
       {
-         id: '',
+         id: 0,
          title:'', 
          description:'', 
-         price:'', 
+         price:0, 
          taxable:true
       });
    const addNewService = () => {
       setServiceForm({
-         id: '',
+         id: 0,
          title:'', 
          description:'', 
-         price:'', 
+         price:0, 
          taxable:true
       });
       setIsEditMode(false);
@@ -47,8 +49,8 @@ const ServicesList = (props:any) => {
    }
 
    const handleSaveService = () => {
-      if(serviceForm.title === '' || serviceForm.price === '') return;
-      if(serviceForm.id === ''){
+      if(serviceForm.title === '' || !serviceForm.price ) return;
+      if(serviceForm.id === 0){
          onSaveService(serviceForm);
       }else{
          onUpdateService(serviceForm);

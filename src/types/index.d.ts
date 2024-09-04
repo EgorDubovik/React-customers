@@ -35,3 +35,11 @@ export interface IExpense {
    amount: number;
    id: number;
 }
+
+export interface IServices{
+	id: number,
+	title: string,
+	description: string,
+	price: number,
+	taxable: boolean,
+ }
