@@ -9,6 +9,7 @@ import TechBlock from "./TechBlock";
 import Images from "./Images";
 import NotesBlock from "./NotesBlock";
 import Expense from "./Expense";
+import ServicesBlock from "./ServicesBlock";
 
 const AppointmentPage = () => {
    const navigate = useNavigate();
@@ -68,7 +69,7 @@ const AppointmentPage = () => {
                   <div className='grid grid-flow-row gap-5'>
                      
                      {/* Services */}
-                     {/* <ServicesBlock /> */}
+                     <ServicesBlock />
 
                      {/* Costs */}
                      <Expense />
