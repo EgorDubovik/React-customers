@@ -5,11 +5,12 @@ import IconPencilPaper from '../../components/Icon/IconPencilPaper';
 import IconMapPin from '../../components/Icon/IconMapPin';
 import IconPhone from '../../components/Icon/IconPhone';
 import IconMail from '../../components/Icon/IconMail';
-import { viewCurrency } from '../../helpers/helper';
+import { formatDate, viewCurrency } from '../../helpers/helper';
 import moment from 'moment';
 import IconPlus from '../../components/Icon/IconPlus';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
 import { PageLoadError } from '../../components/loading/Errors';
+import IconCalendar from '../../components/Icon/IconCalendar';
 
 const ViewCustomer = () => {
 	const { id } = useParams();
@@ -21,7 +22,7 @@ const ViewCustomer = () => {
 			.get(`/customers/${id}`)
 			.then((res) => {
 				setLoadingStatus('success');
-				console.log('data:', res.data);
+				console.log('data:', res.data.jobs);
 				setCustomer(res.data);
 			})
 			.catch((err) => {
@@ -83,35 +84,39 @@ const ViewCustomer = () => {
 						<div className="grid grid-flow-row gap-3">
 							<div className="panel p-4">
 								<div className="flex items-center justify-between">
-									<h3 className="font-semibold text-lg dark:text-white-light">Appointments history</h3>
+									<h3 className="font-semibold text-lg dark:text-white-light">Jobs history</h3>
 									<Link to={`/appointment/create/${customer.id}`} className="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
 										<IconPlus className="w-4 h-4" />
 									</Link>
 								</div>
 
 								<div className="appointments-list py-4">
-									{customer?.appointments?.map((appointment: any, index: number) => (
-										<Link
-											to={`/appointment/${appointment.id}`}
-											key={index}
-											className="flex justify-start items-center p-2 dark:bg-slate-950 rounded border-l mb-3"
-											style={{ borderColor: appointment.techs.length > 0 ? appointment.techs[0].color : '#1565c0' }}
-										>
-											<div className="text-center px-4 whitespace-nowrap">
-												<p>{moment(appointment.start).format('DD MMM')}</p>
-												<p>{moment(appointment.start).format('hh:mm A')}</p>
-											</div>
-											<div className="border-l border-gray-700 h-full px-4 flex justify-between w-full items-center">
-												<div>
-													<p className="font-bold dark:text-gray-300">{appointment?.services[0]?.title}</p>
-													<p>{appointment?.services[0]?.description}</p>
+									{customer?.jobs?.map((job: any, index: number) => (
+										<Link to={`/appointment/${job.id}`} key={index}>
+											<div
+												className="p-2 shadow bg-[#f4f4f4] dark:bg-white-dark/20 rounded border-l-2 mb-3"
+												style={{ borderColor: job.appointments[job.appointments.length - 1].techs.length > 0 ? job.appointments[job.appointments.length - 1].techs[0].color : '#1565c0' }}
+											>
+												<div className="px-4 flex items-center justify-between w-full ">
+													<div>
+														<p className="font-bold dark:text-gray-300">{job?.services[0]?.title}</p>
+														<p className='w-full max-w-xs whitespace-nowrap overflow-hidden text-ellipsis'>{job?.services[0]?.description}</p>
+													</div>
+													{job.remaining_balance > 0 ? (
+														<div className="text-danger text-center text-[12px]">{viewCurrency(job.remaining_balance)}</div>
+													) : (
+														<div className="text-success text-center text-[12px]">{viewCurrency(job.total_paid)}</div>
+													)}
 												</div>
-
-												{appointment.remainingBalance > 0 ? (
-													<div className="text-danger text-center text-[12px]">{viewCurrency(appointment.remainingBalance)}</div>
-												) : (
-													<div className="text-success text-center text-[12px]">{viewCurrency(appointment.totalPaid)}</div>
-												)}
+												<div className="flex items-center justify-between px-4 mt-2">
+													<div className="flex items-center">
+														<IconCalendar className="w-4 h-4" />
+														<span className="ml-2">{formatDate(job.appointments[job.appointments.length - 1].start, 'MMM DD, YYYY')}</span>
+													</div>
+													<div className=''>
+														{job.appointments.length} Visits
+													</div>
+												</div>
 											</div>
 										</Link>
 									))}
