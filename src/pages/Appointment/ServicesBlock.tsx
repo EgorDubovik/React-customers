@@ -12,7 +12,6 @@ const ServicesBlock = (props:any) => {
 
    const [modal, setModal] = useState(false);
    const [serviceFormLoading, setServiceFormLoading] = useState(false);
-   const appointmentId = appointment?.id;
 
    const {total} = calculateTaxTotal(services);
    const remaining = calculateRemaining(payments, total);
@@ -110,8 +109,8 @@ const ServicesBlock = (props:any) => {
                         payments.map((payment:any, index:number) => (
                            <tr key={index}>
                               <td>{moment(payment.created_at).format('MMM DD YYYY h:mm A')}</td>
-                              <td>{payment.payment_type}</td>
-                              <td>${ payment.amount}</td>
+                              <td>{payment.type_text}</td>
+                              <td>{viewCurrency(payment.amount)}</td>
                            </tr>
                         ))
                      }

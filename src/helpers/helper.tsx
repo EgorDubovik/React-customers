@@ -58,7 +58,8 @@ export const showMessage = (msg = '', type = 'success') => {
 	});
 };
 
-export const formatDate = (date: Date | string, format: string) => {
+export const formatDate = (date: Date | string | undefined, format: string) => {
+	if(date === undefined || !date) return '';
 	if (typeof date === 'string') date = new Date(date);
 	if (!(date instanceof Date)) {
 		throw new Error('Invalid date object');

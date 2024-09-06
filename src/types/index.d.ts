@@ -111,4 +111,5 @@ export interface IInvoice {
 	tax: number;
 	services: IService[];
 	payments: IPayment[];
+	created_at: string;
 }

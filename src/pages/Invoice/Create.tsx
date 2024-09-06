@@ -100,23 +100,29 @@ const Create = () => {
 			)}
 			{!loading && (
 				<div className="conteiner w-full md:w-2/3 m-auto">
-					<div className="flex items-center lg:justify-end justify-center flex-wrap gap-4 mb-6">
-						<button type="button" className="btn btn-info gap-2" onClick={sendInvoice}>
-							<IconSend />
-							Send Invoice
-							{sendLoading && <ButtonLoader />}
-						</button>
-
-						<button type="button" className="btn btn-primary gap-2">
-							<IconPrinter />
-							Print
-						</button>
-
-						<button type="button" className="btn btn-success gap-2" onClick={downloadInvoice}>
-							<IconDownload />
-							Download
-						</button>
+					<div className="flex gap-2 md:justify-end justify-around mb-4">
+						<div className='flex-auto md:flex-none'>
+							<button type="button" className="btn btn-info gap-1 px-0 md:px-4 w-full whitespace-nowrap overflow-hidden text-ellipsis" onClick={sendInvoice}>
+								<IconSend />
+								Send Invoice
+								{sendLoading && <ButtonLoader />}
+							</button>
+						</div>
+						
+						<div className='flex-auto md:flex-none '>
+							<button type="button" className="btn btn-primary gap-1 px-0 md:px-4 w-full whitespace-nowrap overflow-hidden text-ellipsis">
+								<IconPrinter />
+								Print
+							</button>
+						</div>
+						<div className='flex-auto md:flex-none'>
+							<button type="button" className="btn btn-success gap-1 px-0 md:px-4 w-full whitespace-nowrap overflow-hidden text-ellipsis" onClick={downloadInvoice}>
+								<IconDownload />
+								Download
+							</button>
+						</div>
 					</div>
+					
 					<div className="panel">
 						<div className="panel-logo flex justify-between">
 							<img src={'https://edservice.s3.us-east-2.amazonaws.com/' + invoice?.company?.logo} alt="logo" className="h-[50px]" />
@@ -137,10 +143,22 @@ const Create = () => {
 								<p>{invoice?.customer?.email}</p>
 							</div>
 							<div className="payment-due">
-								<h3 className="font-bold text-xl">Payment Details:</h3>
-								<p className="text-right mt-2 text-lg">
-									Total Due: {viewCurrency(invoice?.due)}
-								</p>
+								<table>
+									<tbody>
+										<tr>
+											<td>Invoice#:</td>
+											<td>{invoice?.id}</td>
+										</tr>
+										<tr>
+											<td>Invoice Date:</td>
+											<td>{formatDate(new Date(), 'MMM DD YYYY')}</td>
+										</tr>
+										<tr>
+											<td>Balance:</td>
+											<td>{viewCurrency(invoice?.due)}</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 						<div className="table-responsive mt-10">
