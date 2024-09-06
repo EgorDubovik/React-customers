@@ -10,7 +10,7 @@ import IconPlus from '../../components/Icon/IconPlus';
 import axiosClient from '../../store/axiosClient';
 import { ButtonLoader } from '../../components/loading/ButtonLoader';
 import {IInvoice} from '../../types';
-import { formatDate } from '../../helpers/helper';
+import { formatDate, viewCurrency } from '../../helpers/helper';
 
 const Create = () => {
 	const { appointmentId } = useParams();
@@ -139,12 +139,7 @@ const Create = () => {
 							<div className="payment-due">
 								<h3 className="font-bold text-xl">Payment Details:</h3>
 								<p className="text-right mt-2 text-lg">
-									Total Due:{' '}
-									{invoice?.due?.toLocaleString('en-US', {
-										style: 'currency',
-										currency: 'USD',
-										minimumFractionDigits: 2,
-									})}
+									Total Due: {viewCurrency(invoice?.due)}
 								</p>
 							</div>
 						</div>
@@ -160,7 +155,7 @@ const Create = () => {
 									</tr>
 								</thead>
 								<tbody>
-									{invoice?.services?.map((service: any, index: number) => (
+									{invoice?.services?.map((service, index: number) => (
 										<tr key={index}>
 											<td>{index + 1}</td>
 											<td style={{ width: '70%' }}>
@@ -168,7 +163,7 @@ const Create = () => {
 												<p className="dark:text-gray-600">{service.description}</p>
 											</td>
 											<td className="text-right dark:text-white" style={{ textAlign: 'right' }}>
-												${service.price}
+												{viewCurrency(service.price)}
 											</td>
 										</tr>
 									))}
@@ -178,7 +173,7 @@ const Create = () => {
 											TAX:
 										</td>
 										<td className="text-right dark:text-white" style={{ textAlign: 'right' }}>
-											${invoice?.tax}
+											{viewCurrency(invoice?.tax)}
 										</td>
 									</tr>
 									<tr>
@@ -187,7 +182,7 @@ const Create = () => {
 											TOTAL:
 										</td>
 										<td className="text-right dark:text-white font-bold" style={{ textAlign: 'right' }}>
-											${invoice?.total}
+											{viewCurrency(invoice?.total)}
 										</td>
 									</tr>
 								</tbody>
@@ -203,7 +198,7 @@ const Create = () => {
 												<td>{formatDate(payment.created_at,'MMM DD YYYY, hh:mm A')}</td>
 												<td>{payment.type_text}</td>
 												<td className="text-right" style={{ textAlign: 'right' }}>
-													${payment.amount}
+													{viewCurrency(payment.amount)}
 												</td>
 											</tr>
 										))}
