@@ -91,16 +91,41 @@ const ViewCustomer = () => {
 								</div>
 
 								<div className="appointments-list py-4">
-									{customer?.jobs?.map((job: any, index: number) => (
-										<Link to={`/appointment/${job.id}`} key={index}>
-											<div
-												className="p-2 shadow bg-[#f4f4f4] dark:bg-white-dark/20 rounded border-l-2 mb-3"
-												style={{ borderColor: job.appointments[job.appointments.length - 1].techs.length > 0 ? job.appointments[job.appointments.length - 1].techs[0].color : '#1565c0' }}
-											>
+									{customer?.jobs?.map((job: any, index: number) =>
+										job.appointments.length > 0 ? (
+											<Link to={`/appointment/${job.appointments[job.appointments.length - 1].id}`} key={index}>
+												<div
+													className="p-2 shadow bg-[#f4f4f4] dark:bg-white-dark/20 rounded border-l-2 mb-3"
+													style={{
+														borderColor: job.appointments[job.appointments.length - 1].techs.length > 0 ? job.appointments[job.appointments.length - 1].techs[0].color : '#1565c0',
+													}}
+												>
+													<div className="px-4 flex items-center justify-between w-full ">
+														<div>
+															<p className="font-bold dark:text-gray-300">{job?.services[0]?.title}</p>
+															<p className="w-full max-w-xs whitespace-nowrap overflow-hidden text-ellipsis">{job?.services[0]?.description}</p>
+														</div>
+														{job.remaining_balance > 0 ? (
+															<div className="text-danger text-center text-[12px]">{viewCurrency(job.remaining_balance)}</div>
+														) : (
+															<div className="text-success text-center text-[12px]">{viewCurrency(job.total_paid)}</div>
+														)}
+													</div>
+													<div className="flex items-center justify-between px-4 mt-2">
+														<div className="flex items-center">
+															<IconCalendar className="w-4 h-4" />
+															<span className="ml-2">{formatDate(job.appointments[job.appointments.length - 1].start, 'MMM DD, YYYY')}</span>
+														</div>
+														<div className="">{job.appointments.length} Visits</div>
+													</div>
+												</div>
+											</Link>
+										) : (
+											<div className="p-2 shadow bg-[#f4f4f4] dark:bg-white-dark/20 rounded border-l-2 mb-3 border-gray-500">
 												<div className="px-4 flex items-center justify-between w-full ">
 													<div>
 														<p className="font-bold dark:text-gray-300">{job?.services[0]?.title}</p>
-														<p className='w-full max-w-xs whitespace-nowrap overflow-hidden text-ellipsis'>{job?.services[0]?.description}</p>
+														<p className="w-full max-w-xs whitespace-nowrap overflow-hidden text-ellipsis">{job?.services[0]?.description}</p>
 													</div>
 													{job.remaining_balance > 0 ? (
 														<div className="text-danger text-center text-[12px]">{viewCurrency(job.remaining_balance)}</div>
@@ -111,15 +136,15 @@ const ViewCustomer = () => {
 												<div className="flex items-center justify-between px-4 mt-2">
 													<div className="flex items-center">
 														<IconCalendar className="w-4 h-4" />
-														<span className="ml-2">{formatDate(job.appointments[job.appointments.length - 1].start, 'MMM DD, YYYY')}</span>
+														<Link to={`/appointment/create/${customer.id}?job_id=${job.id}`} className="ml-2 text-primary">
+															Create appointment
+														</Link>
 													</div>
-													<div className=''>
-														{job.appointments.length} Visits
-													</div>
+													<div className="">{job.appointments.length} Visits</div>
 												</div>
 											</div>
-										</Link>
-									))}
+										)
+									)}
 								</div>
 							</div>
 							<div className="panel">
