@@ -120,11 +120,12 @@ export const formatDate = (date: Date | string, format: string) => {
 		h: date.getHours() % 12 || 12,
 		mm: zeroPad(date.getMinutes()),
 		m: date.getMinutes(),
+		A: date.getHours() < 12 ? "AM" : "PM",
 		ss: zeroPad(date.getSeconds()),
 	};
 
 	return format.replace(
-      /YYYY|YY|MMMM|MMM|MM|M|DDDD|DDD|DD|D|HH|H|hh|h|mm|m|ss/g,
+      /YYYY|YY|MMMM|MMM|MM|M|DDDD|DDD|DD|D|HH|H|hh|h|mm|m|A|ss/g,
       (match) => replacements[match as keyof typeof replacements].toString()
    );
 };

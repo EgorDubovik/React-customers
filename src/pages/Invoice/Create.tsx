@@ -8,41 +8,15 @@ import IconDownload from '../../components/Icon/IconDownload';
 import IconEdit from '../../components/Icon/IconEdit';
 import IconPlus from '../../components/Icon/IconPlus';
 import axiosClient from '../../store/axiosClient';
-import moment from 'moment';
 import { ButtonLoader } from '../../components/loading/ButtonLoader';
-
-interface Appointment {
-	id: number;
-	company: {
-		name: string;
-		logo: string;
-		address: {
-			full: string;
-		};
-		phone: string;
-		email: string;
-	};
-	customer: {
-		name: string;
-		phone: string;
-		email: string;
-	};
-	address: {
-		full: string;
-	};
-	services: any[];
-	tax: number;
-	subtotal: number;
-	total: number;
-	due: number;
-	payments: any[];
-}
+import {IInvoice} from '../../types';
+import { formatDate } from '../../helpers/helper';
 
 const Create = () => {
 	const { appointmentId } = useParams();
 	const dispatch = useDispatch();
 	const navigator = useNavigate();
-	const [appointment, setAppointment] = useState<Appointment>();
+	const [invoice, setInvoice] = useState<IInvoice>();
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
 	const [sendLoading, setSendLoading] = useState(false);
@@ -57,7 +31,7 @@ const Create = () => {
 			.then((res) => {
 				console.log(res.data);
 
-				setAppointment(res.data.appointment);
+				setInvoice(res.data.invoice);
 			})
 			.catch((err) => {
 				setError(true);
@@ -145,28 +119,28 @@ const Create = () => {
 					</div>
 					<div className="panel">
 						<div className="panel-logo flex justify-between">
-							<img src={'https://edservice.s3.us-east-2.amazonaws.com/' + appointment?.company?.logo} alt="logo" className="h-[50px]" />
-							<h2 className="text-2xl font-bold">#INV-{appointment?.id}</h2>
+							<img src={'https://edservice.s3.us-east-2.amazonaws.com/' + invoice?.company?.logo} alt="logo" className="h-[50px]" />
+							<h2 className="text-2xl font-bold">#INV-{invoice?.id}</h2>
 						</div>
 						<div className="company-info pt-10 space-y-2">
-							<h3 className="font-bold text-xl">{appointment?.company?.name}</h3>
-							<p>{appointment?.company?.address.full}</p>
-							<p>{appointment?.company?.phone}</p>
-							<p>{appointment?.company?.email}</p>
+							<h3 className="font-bold text-xl">{invoice?.company?.name}</h3>
+							<p>{invoice?.company?.fullAddress}</p>
+							<p>{invoice?.company?.phone}</p>
+							<p>{invoice?.company?.email}</p>
 						</div>
 						<div className="invoice-to flex justify-between mt-10">
 							<div className="customer-info space-y-2">
 								<h3 className="font-bold text-xl">Invoice To</h3>
-								<p>{appointment?.customer?.name}</p>
-								<p>{appointment?.address?.full}</p>
-								<p>{appointment?.customer?.phone}</p>
-								<p>{appointment?.customer?.email}</p>
+								<p>{invoice?.customer?.name}</p>
+								<p>{invoice?.address}</p>
+								<p>{invoice?.customer?.phone}</p>
+								<p>{invoice?.customer?.email}</p>
 							</div>
 							<div className="payment-due">
 								<h3 className="font-bold text-xl">Payment Details:</h3>
 								<p className="text-right mt-2 text-lg">
 									Total Due:{' '}
-									{appointment?.due?.toLocaleString('en-US', {
+									{invoice?.due?.toLocaleString('en-US', {
 										style: 'currency',
 										currency: 'USD',
 										minimumFractionDigits: 2,
@@ -186,7 +160,7 @@ const Create = () => {
 									</tr>
 								</thead>
 								<tbody>
-									{appointment?.services?.map((service: any, index: number) => (
+									{invoice?.services?.map((service: any, index: number) => (
 										<tr key={index}>
 											<td>{index + 1}</td>
 											<td style={{ width: '70%' }}>
@@ -204,7 +178,7 @@ const Create = () => {
 											TAX:
 										</td>
 										<td className="text-right dark:text-white" style={{ textAlign: 'right' }}>
-											${appointment?.tax}
+											${invoice?.tax}
 										</td>
 									</tr>
 									<tr>
@@ -213,7 +187,7 @@ const Create = () => {
 											TOTAL:
 										</td>
 										<td className="text-right dark:text-white font-bold" style={{ textAlign: 'right' }}>
-											${appointment?.total}
+											${invoice?.total}
 										</td>
 									</tr>
 								</tbody>
@@ -224,10 +198,10 @@ const Create = () => {
 							<div className="table-responsive mb-5 w-full md:w-1/2 ml-4">
 								<table>
 									<tbody>
-										{appointment?.payments?.map((payment: any, index: number) => (
+										{invoice?.payments?.map((payment: any, index: number) => (
 											<tr key={index}>
-												<td>{moment(payment.created_at).format('MMM DD YYYY h:mm A')}</td>
-												<td>{payment.payment_type}</td>
+												<td>{formatDate(payment.created_at,'MMM DD YYYY, hh:mm A')}</td>
+												<td>{payment.type_text}</td>
 												<td className="text-right" style={{ textAlign: 'right' }}>
 													${payment.amount}
 												</td>

@@ -6,7 +6,7 @@ export interface TechItemProps {
 	name: string;
 	phone: string;
 	roles: any;
-	addRemovetechFromList?: (id:number) => void;
+	addRemovetechFromList?: (id: number) => void;
 	removeTechHandle?: (id: number) => void;
 	removeTechStatus: number;
 }
@@ -18,28 +18,97 @@ export interface ITech {
 	color: string;
 }
 export interface TechListBlockProps {
-   techs: Itech[];
-   companyTechs: any;
-   modal: boolean;
-   setModal: (modal: boolean) => void;
-   techsIds: any;
-   removeTech: (id: number) => void;
-   removeTechStatus: number;
-   addRemovetechFromList: (id: number) => void;
-   saveNewTechs: () => void;
-   saveNewTechStatus?: boolean;
+	techs: Itech[];
+	companyTechs: any;
+	modal: boolean;
+	setModal: (modal: boolean) => void;
+	techsIds: any;
+	removeTech: (id: number) => void;
+	removeTechStatus: number;
+	addRemovetechFromList: (id: number) => void;
+	saveNewTechs: () => void;
+	saveNewTechStatus?: boolean;
 }
 
 export interface IExpense {
-   title: string;
-   amount: number;
-   id: number;
+	title: string;
+	amount: number;
+	id: number;
 }
 
-export interface IServices{
-	id: number,
-	title: string,
-	description: string,
-	price: number,
-	taxable: boolean,
- }
+export interface IService {
+	id: number;
+	title: string;
+	description: string;
+	price: number;
+	taxable: boolean;
+}
+
+export interface IPayment {
+	id: number;
+	appointment_id: number;
+	amount: number;
+	payment_type: string;
+	type_text: string;
+	created_at: string;
+	updated_at: string;
+	company_id: number;
+}
+export interface ITech {
+	id: number;
+	name: string;
+	color: string;
+	created_at: string;
+	updated_at: string;
+	company_id: number;
+}
+
+export interface INote {
+	id: number;
+	text: string;
+	updated_at: string;
+	creator: {
+		id: number;
+		name: string;
+	};
+}
+
+export interface IAppointment {
+	id : number;
+	job_id: number;
+	status : number;
+	start : string;
+	end : string;
+	notes : INote[];
+	payments : IPayment[];  
+	services : IService[];
+	customer : any;
+	address : any;
+	techs: ITech[];
+	images: any[];
+	expenses: IExpense[];
+	company: any;
+}
+
+export interface IInvoice {
+	id: number;
+	customer: {
+		name: string;
+		phone: string;
+		email: string;
+		address: string;
+	}
+	company: {
+		name: string;
+		logo: string;
+		fullAddress: string;
+		phone: string;
+		email: string;
+	}
+	address: string;
+	total: number;
+	due: number;
+	tax: number;
+	services: IService[];
+	payments: IPayment[];
+}

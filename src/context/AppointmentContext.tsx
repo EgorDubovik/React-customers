@@ -1,60 +1,22 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { IExpense, IServices } from '../types';
+import { IExpense, IService, IPayment, ITech, INote, IAppointment } from '../types';
 
-interface IPayments{
-  id: number,
-  appointment_id: number,
-  amount: number,
-  payment_type: string,
-  created_at: string,
-  updated_at: string,
-  company_id: number,
-}
-interface Techs{
-  id: number,
-  name: string,
-  color: string,
-  created_at: string,
-  updated_at: string,
-  company_id: number,
-}
 
-interface Notes{
-  id: number,
-  text: string,
-  updated_at: string,
-  creator: {
-    id: number,
-    name: string,
-  }
-}
 
-interface Appointment {
-  id : number;
-  job_id: number;
-  status : number;
-  start : string;
-  end : string;
-  notes : Notes[];
-  payments : IPayments[];  
-  services : IServices[];
-  customer : any;
-  address : any;
-  techs: Techs[];
-  images: any[];
-  expenses: IExpense[];
-}
+
+
+
 
 interface AppointmentContextType {
-  appointment: Appointment | null;
-  setAppointment: (appointment: Appointment | null) => void;
+  appointment: IAppointment | null;
+  setAppointment: (appointment: IAppointment | null) => void;
   updateStatus: (status: number) => void;
-  updateNotes: (notes: Notes[]) => void;
-  updatePayments: (payments: IPayments[]) => void;
+  updateNotes: (notes: INote[]) => void;
+  updatePayments: (payments: IPayment[]) => void;
   updateServices: (services: any[]) => void;
   updateTime: (start: string, end: string) => void;
   updateImages: (images: any[]) => void;
-  updateTechs: (techs: Techs[]) => void;
+  updateTechs: (techs: ITech[]) => void;
 }
 
 const AppointmentContext = createContext<AppointmentContextType | null>(null);
@@ -68,21 +30,21 @@ const useAppointmentContext = () => {
 };
 
 // Appointment provider component
-const AppointmentProvider = ({ children, appointmentData }: { children: ReactNode, appointmentData: Appointment | null }) => {
-  const [appointment, setAppointment] = useState<Appointment | null>(appointmentData);
+const AppointmentProvider = ({ children, appointmentData }: { children: ReactNode, appointmentData: IAppointment | null }) => {
+  const [appointment, setAppointment] = useState<IAppointment | null>(appointmentData);
   
   const updateStatus = (status: number) => {
     if (appointment) {
       setAppointment({ ...appointment, status:status });
     }
   };
-  const updateNotes = (notes: Notes[]) => {
+  const updateNotes = (notes: INote[]) => {
     if (appointment) {
       setAppointment({ ...appointment, notes:notes });
     }
   }
 
-  const updatePayments = (payments: IPayments[]) => {
+  const updatePayments = (payments: IPayment[]) => {
     if (appointment) {
       setAppointment({ ...appointment, payments:payments });
     }
@@ -103,7 +65,7 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
       setAppointment({ ...appointment, images:images });
     }
   }
-  const updateTechs = (techs: Techs[]) => {
+  const updateTechs = (techs: ITech[]) => {
     if (appointment) {
       setAppointment({ ...appointment, techs:techs });
     }
