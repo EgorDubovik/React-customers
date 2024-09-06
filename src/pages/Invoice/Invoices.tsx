@@ -7,26 +7,8 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import IconEye from '../../components/Icon/IconEye';
 import moment from 'moment';
 import axiosClient from '../../store/axiosClient';
-import { viewCurrency } from '../../helpers/helper';
-
-
-interface IInvoice {
-   id: number;
-   invoice: string;
-   appointment: {
-      id: number;
-   };
-   customer_name: string;
-   customer_id: number;
-   creator: {
-      name: string;
-   };
-   email: string;
-   created_at: string;
-   amount: number;
-   pdf_path: string;
-}
-
+import { formatDate, viewCurrency } from '../../helpers/helper';
+import { IInvoice } from '../../types';
 const Invoice = () => {
    const dispatch = useDispatch();
    useEffect(() => {
@@ -95,8 +77,8 @@ const Invoice = () => {
                         {
                            accessor: 'invoice',
                            sortable: true,
-                           render: ({ id, appointment }) => (
-                              <NavLink to={`/appointment/${appointment.id}`}>
+                           render: ({ id}) => (
+                              <NavLink to={`/appointment/${id}`}>
                                  <div className="text-primary underline hover:no-underline font-semibold">{`#Invoice${id}`}</div>
                               </NavLink>
                            ),
@@ -104,9 +86,9 @@ const Invoice = () => {
                         {
                            accessor: 'name',
                            sortable: true,
-                           render: ({ customer_name,customer_id }) => (
+                           render: ({ job }) => (
                               <div className="flex items-center font-semibold">  
-                                    <Link to={`/customer/${customer_id}`} className="text-primary underline hover:no-underline">{customer_name}</Link>
+                                    <Link to={`/customer/${job.customer.id}`} className="text-primary underline hover:no-underline">{job.customer.name}</Link>
                               </div>
                            ),
                         },
@@ -115,7 +97,7 @@ const Invoice = () => {
                            sortable: true,
                            render: ({ creator}) => (
                               <div className="flex items-center font-semibold">  
-                                    <div>{creator?.name}</div>
+                                    <div>{creator.name}</div>
                               </div>
                            ),
                         },
@@ -127,24 +109,24 @@ const Invoice = () => {
                            accessor: 'date',
                            sortable: true,
                            render: ({ created_at }) => (
-                              <div className="font-semibold">{moment(created_at).format('MMMM Do YYYY, h:mm:ss a')}</div>
+                              <div className="font-semibold">{formatDate(created_at,'MMMM Do YYYY, h:mm A')}</div>
                            ),
                         },
                         {
                            accessor: 'amount',
                            sortable: true,
                            titleClassName: 'text-left',
-                           render: ({ amount, id }) => <div className="text-left font-semibold">{viewCurrency(amount)}</div>,
+                           render: ({ job }) => <div className="text-left font-semibold">{viewCurrency(job.total_amount)}</div>,
                         },
                         {
                            accessor: 'action',
                            title: 'Actions',
                            sortable: false,
                            textAlignment: 'center',
-                           render: ({ id, pdf_path }) => (
+                           render: ({ pdf_url }) => (
                               <div className="flex gap-4 items-center w-max mx-auto">
                                     
-                                    <NavLink target='_blank' to={"https://edservice.s3.us-east-2.amazonaws.com/invoices/"+pdf_path} className="flex hover:text-primary">
+                                    <NavLink target='_blank' to={pdf_url} className="flex hover:text-primary">
                                        <IconEye />
                                     </NavLink>
                                    

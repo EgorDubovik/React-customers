@@ -10,6 +10,7 @@ import Images from "./Images";
 import NotesBlock from "./NotesBlock";
 import Expense from "./Expense";
 import ServicesBlock from "./ServicesBlock";
+import { formatDate } from '../../helpers/helper';
 
 const AppointmentPage = () => {
    const navigate = useNavigate();
@@ -45,9 +46,14 @@ const AppointmentPage = () => {
                   <div className='panel p-4'>
                      <h3 className="font-semibold text-lg dark:text-white-light">All Visits</h3>
                      <div className='text-right'>
-                        <div className='rounded-md p-2 '>
-                           <div className='text-sm font-semibold'>9:00 AM - 10:00 AM Jul 23, 2024</div>
-                        </div>
+                        { appointment?.job.appointments.map((jappointment:any,index:number) => (
+                           <div key={index} className='rounded-md p-2 bg-dark-dark-light border-l-2' style={{ borderColor:jappointment.techs[jappointment.techs.length-1].color }}>
+                              <div className='text-sm font-semibold'>
+                                 {formatDate(jappointment.start,'hh:mm A')} - {formatDate(jappointment.end,'hh:mm A')}  {formatDate(jappointment.start,'MMM DD, YYYY')}
+                              </div>
+                           </div>   
+                        ))}
+                        
                      </div>
                   </div>
                </div>

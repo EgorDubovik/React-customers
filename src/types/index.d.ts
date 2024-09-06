@@ -88,28 +88,28 @@ export interface IAppointment {
 	images: any[];
 	expenses: IExpense[];
 	company: any;
+	job: any;
 }
 
 export interface IInvoice {
 	id: number;
-	customer: {
-		name: string;
-		phone: string;
-		email: string;
-		address: string;
+	job: {
+		id: number;
+		services: IService[];
+		payments: IPayment[];
+		customer: any;
+		total_amount: number;
+		total_tax: number;
+		total_paid: number;
+		remainig_balance: number;
+		address: any;
 	}
-	company: {
+	company: any;
+	creator: {
+		id: number;
 		name: string;
-		logo: string;
-		fullAddress: string;
-		phone: string;
-		email: string;
-	}
-	address: string;
-	total: number;
-	due: number;
-	tax: number;
-	services: IService[];
-	payments: IPayment[];
+	};
 	created_at: string;
+	email: string;
+	pdf_url: string;
 }

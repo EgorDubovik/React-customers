@@ -137,10 +137,10 @@ const Create = () => {
 						<div className="invoice-to flex justify-between mt-10">
 							<div className="customer-info space-y-2">
 								<h3 className="font-bold text-xl">Invoice To</h3>
-								<p>{invoice?.customer?.name}</p>
-								<p>{invoice?.address}</p>
-								<p>{invoice?.customer?.phone}</p>
-								<p>{invoice?.customer?.email}</p>
+								<p>{invoice?.job.customer.name}</p>
+								<p>{invoice?.job.address.full}</p>
+								<p>{invoice?.job.customer.phone}</p>
+								<p>{invoice?.email}</p>
 							</div>
 							<div className="payment-due">
 								<table>
@@ -155,7 +155,7 @@ const Create = () => {
 										</tr>
 										<tr>
 											<td>Balance:</td>
-											<td>{viewCurrency(invoice?.due)}</td>
+											<td>{viewCurrency(invoice?.job.remainig_balance)}</td>
 										</tr>
 									</tbody>
 								</table>
@@ -173,7 +173,7 @@ const Create = () => {
 									</tr>
 								</thead>
 								<tbody>
-									{invoice?.services?.map((service, index: number) => (
+									{invoice?.job.services.map((service, index: number) => (
 										<tr key={index}>
 											<td>{index + 1}</td>
 											<td style={{ width: '70%' }}>
@@ -191,7 +191,7 @@ const Create = () => {
 											TAX:
 										</td>
 										<td className="text-right dark:text-white" style={{ textAlign: 'right' }}>
-											{viewCurrency(invoice?.tax)}
+											{viewCurrency(invoice?.job.total_tax)}
 										</td>
 									</tr>
 									<tr>
@@ -200,7 +200,7 @@ const Create = () => {
 											TOTAL:
 										</td>
 										<td className="text-right dark:text-white font-bold" style={{ textAlign: 'right' }}>
-											{viewCurrency(invoice?.total)}
+											{viewCurrency(invoice?.job.total_amount)}
 										</td>
 									</tr>
 								</tbody>
@@ -211,7 +211,7 @@ const Create = () => {
 							<div className="table-responsive mb-5 w-full md:w-1/2 ml-4">
 								<table>
 									<tbody>
-										{invoice?.payments?.map((payment: any, index: number) => (
+										{invoice?.job.payments.map((payment: any, index: number) => (
 											<tr key={index}>
 												<td>{formatDate(payment.created_at,'MMM DD YYYY, hh:mm A')}</td>
 												<td>{payment.type_text}</td>
