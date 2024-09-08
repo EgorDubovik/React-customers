@@ -4,20 +4,20 @@ const LoginBoxed = lazy(() => import('../pages/Authentication/LoginBoxed'));
 import DefaultLayout from '../components/Layouts/DefaultLayout';
 import BlankLayout from '../components/Layouts/BlankLayout';
 import AuthPrivetRoute from '../middleware/AuthPrivetRoute';
-import Customers from '../pages/Customers/Customers';
+import Customers from '../pages/Customers/List/Customers';
 import Services from '../pages/CompanySettings/Services';
 const Schedule = lazy(() => import('../pages/Schedule/Schedule'));
 const Appointment = lazy(() => import('../pages/Appointment/Index'));
 const Error404 = lazy(() => import('../components/Error404'));
-import CreateCustomer from '../pages/Customers/CreateCustomer';
+import CreateCustomer from '../pages/Customers/Create/CreateCustomer';
 import Create from '../pages/Invoice/Create';
-import {Update as CustomerUpdate} from '../pages/Customers/Update';
+import UpdateCustomer from '../pages/Customers/Update/UpdateCustomer';
 import ReviewFeedback from '../pages/ReviewFeedback/Index';
 import GeneralInfo from '../pages/CompanySettings/GeneralInfo';
 const Invoices = lazy(() => import('../pages/Invoice/Invoices'));
 const Employees = lazy(() => import('../pages/Employees'));
 const CreateAppointment = lazy(() => import('../pages/Schedule/CreateAppointment'));
-const ViewCustomer = lazy(() => import('../pages/Customers/ViewCustomer'));
+const ViewCustomer = lazy(() => import('../pages/Customers/View/ViewCustomer'));
 const ProfilePage = lazy(() => import('../pages/Profile/ProfilePage'));
 const PaymentsIndex = lazy(() => import('../pages/Payments/PaymentsIndex'));
 const BookAppointment = lazy(()=> import('../pages/BookAppointment'));
@@ -70,7 +70,7 @@ const routes = [
             },
             {
                 path: '/customer/update/:id',
-                element : <DefaultLayout> <CustomerUpdate /></DefaultLayout>,
+                element : <DefaultLayout> <UpdateCustomer /></DefaultLayout>,
             },
             {
                 path: '/customers/create',

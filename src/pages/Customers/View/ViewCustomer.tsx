@@ -1,38 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import axiosClient from '../../store/axiosClient';
-import IconPencilPaper from '../../components/Icon/IconPencilPaper';
-import IconMapPin from '../../components/Icon/IconMapPin';
-import IconPhone from '../../components/Icon/IconPhone';
-import IconMail from '../../components/Icon/IconMail';
-import { formatDate, viewCurrency } from '../../helpers/helper';
-import moment from 'moment';
-import IconPlus from '../../components/Icon/IconPlus';
-import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
-import { PageLoadError } from '../../components/loading/Errors';
-import IconCalendar from '../../components/Icon/IconCalendar';
-
+import { Link } from 'react-router-dom';
+import IconPencilPaper from '../../../components/Icon/IconPencilPaper';
+import IconMapPin from '../../../components/Icon/IconMapPin';
+import IconPhone from '../../../components/Icon/IconPhone';
+import IconMail from '../../../components/Icon/IconMail';
+import { formatDate, viewCurrency } from '../../../helpers/helper';
+import IconPlus from '../../../components/Icon/IconPlus';
+import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading';
+import { PageLoadError } from '../../../components/loading/Errors';
+import IconCalendar from '../../../components/Icon/IconCalendar';
+import { useViewCustomer } from './useViewCustomer';
 const ViewCustomer = () => {
-	const { id } = useParams();
-	const [customer, setCustomer] = useState<any>({});
-	const [loadingStatus, setLoadingStatus] = useState('loading');
-
-	useEffect(() => {
-		axiosClient
-			.get(`/customers/${id}`)
-			.then((res) => {
-				setLoadingStatus('success');
-				console.log('data:', res.data.jobs);
-				setCustomer(res.data);
-			})
-			.catch((err) => {
-				setLoadingStatus('error');
-				console.log(err);
-			})
-			.finally(() => {
-				console.log('finally');
-			});
-	}, []);
+	const {customer, loadingStatus} = useViewCustomer();
 	return (
 		<>
 			{loadingStatus === 'loading' && <PageCirclePrimaryLoader />}

@@ -113,3 +113,12 @@ export interface IInvoice {
 	email: string;
 	pdf_url: string;
 }
+
+export interface ICustomerRecord {
+	id: number;
+	name: string;
+	phone: string;
+	email: string;
+	address: any;
+	created_at: string;
+}

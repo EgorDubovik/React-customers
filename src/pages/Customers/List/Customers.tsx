@@ -1,33 +1,22 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setPageTitle } from '../../store/themeConfigSlice';
-import IconUserPlus from '../../components/Icon/IconUserPlus';
-import IconListCheck from '../../components/Icon/IconListCheck';
-import IconLayoutGrid from '../../components/Icon/IconLayoutGrid';
-import IconSearch from '../../components/Icon/IconSearch';
-import axiosClient from '../../store/axiosClient';
+import { setPageTitle } from '../../../store/themeConfigSlice';
+import IconUserPlus from '../../../components/Icon/IconUserPlus';
+import IconListCheck from '../../../components/Icon/IconListCheck';
+import IconLayoutGrid from '../../../components/Icon/IconLayoutGrid';
+import IconSearch from '../../../components/Icon/IconSearch';
 import { Link, useNavigate } from 'react-router-dom';
-import { DataTable, DataTableSortStatus } from 'mantine-datatable';
-import sortBy from 'lodash/sortBy';
+import { DataTable } from 'mantine-datatable';
 import moment from 'moment';
-import IconMapPin from '../../components/Icon/IconMapPin';
-import Pagination from './Includes/Pagination';
-import { SmallPrimaryLoader } from '../../components/loading/SmallCirculeLoader';
-import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
-import { PageLoadError } from '../../components/loading/Errors';
-import Dropdown from '../../components/Dropdown';
-import IconPencilPaper from '../../components/Icon/IconPencilPaper';
-import IconTrashLines from '../../components/Icon/IconTrashLines';
-import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
-import IconEye from '../../components/Icon/IconEye';
-interface Record {
-	id: number;
-	name: string;
-	phone: string;
-	email: string;
-	address: any;
-	created_at: string;
-}
+import IconMapPin from '../../../components/Icon/IconMapPin';
+import { SmallPrimaryLoader } from '../../../components/loading/SmallCirculeLoader';
+import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading';
+import { PageLoadError } from '../../../components/loading/Errors';
+import Dropdown from '../../../components/Dropdown';
+import IconPencilPaper from '../../../components/Icon/IconPencilPaper';
+import IconHorizontalDots from '../../../components/Icon/IconHorizontalDots';
+import IconEye from '../../../components/Icon/IconEye';
+import { useCustomersList } from './useCustomersList';
 
 const Contacts = () => {
 	const dispatch = useDispatch();
@@ -36,86 +25,7 @@ const Contacts = () => {
 		dispatch(setPageTitle('Customers'));
 	});
 
-	const [viewType, setViewType] = useState<string>(localStorage.getItem('customerViewType') || 'grid');
-
-	const changeViewType = (type: string) => {
-		localStorage.setItem('customerViewType', type);
-		setViewType(type);
-	};
-
-	const addNewCustomer = () => {
-		navigator('/customers/create');
-	};
-
-	const [search, setSearch] = useState<any>('');
-	const [page, setPage] = useState(1);
-	const [totalRecords, setTotalRecords] = useState(0);
-	const PAGE_SIZES = [10, 20, 30, 50, 100];
-	const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-	const [initialRecords, setInitialRecords] = useState([]);
-	const [loadingStatus, setLoadingStatus] = useState('loading');
-	const [records, setRecords] = useState<Record[]>(initialRecords);
-	const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
-		columnAccessor: 'firstName',
-		direction: 'asc',
-	});
-
-	useEffect(() => {
-		setPage(1);
-	}, [pageSize]);
-
-	useEffect(() => {
-		const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
-		setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
-	}, [sortStatus, initialRecords]);
-
-	// load Ivocies
-	useEffect(() => {
-		setLoadingStatus('loading');
-		axiosClient
-			.get('/customers?page=' + page + '&limit=' + pageSize)
-			.then((res: any) => {
-				console.log('data:', res.data);
-				setInitialRecords(res.data.data);
-				setTotalRecords(res.data.total);
-				setLoadingStatus('success');
-			})
-			.catch((err) => {
-				setLoadingStatus('error');
-				console.log(err);
-			});
-	}, [page, pageSize]);
-
-	const editUser = (customer: any = null) => {
-		navigator('/customer/update/' + customer.id);
-	};
-
-	const debounceRef = useRef<NodeJS.Timeout | null>(null);
-	const [searchLoading, setSearchLoading] = useState(false);
-
-	const searchData = async (s: string) => {
-		console.log('sending:', s);
-		setSearchLoading(true);
-		const respons = await axiosClient.get('/customers', {
-			params: { search: s },
-		});
-		setSearchLoading(false);
-		setInitialRecords(respons.data.data);
-		setTotalRecords(respons.data.total);
-	};
-
-	const searchHandler = (e: any) => {
-		setSearch(e.target.value);
-		const s = e.target.value.trim();
-		if (s.length < 3)
-			if (s.length === 0) searchData('');
-			else return;
-
-		if (debounceRef.current) clearTimeout(debounceRef.current);
-		debounceRef.current = setTimeout(() => {
-			searchData(s);
-		}, 300);
-	};
+	const { viewType, changeViewType, search, searchHandler, searchLoading, loadingStatus, records, totalRecords, page, setPage, pageSize, setPageSize, sortStatus, setSortStatus, PAGE_SIZES } = useCustomersList();
 
 	return (
 		<div>
@@ -124,7 +34,7 @@ const Contacts = () => {
 				<div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
 					<div className="flex gap-3">
 						<div>
-							<button type="button" className="btn btn-primary" onClick={() => addNewCustomer()}>
+							<button type="button" className="btn btn-primary" onClick={() => navigator('/customers/create')}>
 								<IconUserPlus className="ltr:mr-2 rtl:ml-2" />
 								Add Customer
 							</button>
@@ -149,11 +59,7 @@ const Contacts = () => {
 				</div>
 			</div>
 			{loadingStatus === 'loading' && <PageCirclePrimaryLoader />}
-			{loadingStatus === 'error' && (
-				<div className="mt-4">
-					<PageLoadError />
-				</div>
-			)}
+			{loadingStatus === 'error' && <PageLoadError />}
 			{loadingStatus === 'success' && (
 				<>
 					{records.length === 0 ? (
@@ -218,7 +124,7 @@ const Contacts = () => {
 													textAlignment: 'center',
 													render: ({ id }) => (
 														<div className="flex gap-4 items-center w-max mx-auto">
-															<button type="button" className="btn btn-sm btn-outline-warning" onClick={() => editUser({ id })}>
+															<button type="button" className="btn btn-sm btn-outline-warning" onClick={() => navigator('/customer/update/' + id)}>
 																Edit
 															</button>
 															<button type="button" className="btn btn-sm btn-outline-info" onClick={() => navigator('/customer/' + id)}>
@@ -256,7 +162,7 @@ const Contacts = () => {
 																	<Dropdown offset={[0, 5]} btnClassName="align-middle" button={<IconHorizontalDots className="rotate-90 opacity-70" />}>
 																		<ul className="whitespace-nowrap">
 																			<li>
-																				<button type="button" onClick={() => editUser(customer)}>
+																				<button type="button" onClick={() => navigator('/customer/update/' + customer.id)}>
 																					<IconPencilPaper className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
 																					Edit
 																				</button>
@@ -277,7 +183,6 @@ const Contacts = () => {
 																</Link>
 																<div className="">{customer.phone}</div>
 															</div>
-															{/* <div className='text-center px-4 text-[12px]'>paid $126.56</div> */}
 														</div>
 														<div className="user-address mt-3 ml-1 flex overflow-hidden">
 															<IconMapPin />
@@ -288,7 +193,7 @@ const Contacts = () => {
 											);
 										})}
 									</div>
-									<Pagination />
+									
 								</>
 							)}
 						</>
