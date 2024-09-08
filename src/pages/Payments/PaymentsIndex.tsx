@@ -3,7 +3,7 @@ import axiosClient from '../../store/axiosClient';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { viewCurrency } from '../../helpers/helper';
+import { formatDate, viewCurrency } from '../../helpers/helper';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
 import { PageLoadError } from '../../components/loading/Errors';
 import { getTechAbr } from '../../helpers/helper';
@@ -32,7 +32,7 @@ const PaymentsIndex = () => {
 	const [checkTransaction, setCheckTransaction] = useState(0);
 	const [paymentRemoveStatus, setPaymentRemoveStatus] = useState(0);
 	const isDark = useSelector((state: IRootState) => state.themeConfig.isDarkMode);
-
+	const user = useSelector((state: IRootState) => state.themeConfig.user);
 	const [series, setSeries] = useState<any[]>([]);
 	const [options, setOptions] = useState<any>({
 		chart: {
@@ -419,14 +419,15 @@ const PaymentsIndex = () => {
 													<Link to={'/customer/' + payment.job?.customer?.id ?? 0}>{payment.job?.customer ? payment.job?.customer.name : 'Unknow'}</Link>
 												</td>
 												<td className="text-primary whitespace-nowrap">
-													<Link to={'/appointment/' + payment.appointment?.id ?? 0}>
-														Appointment at {payment.appointment ? moment(payment.appointment.created_at).format('d-m-Y') : 'Unknow'}
+													<Link to={'/appointment/' + payment.job.appointments[payment.job.appointments?.length-1]?.id ?? 0}>
+														Appointment at {payment.job.appointments[payment.job.appointments?.length-1] ? formatDate(payment.job.appointments[payment.job.appointments?.length-1].start,'MMM DD YYYY') : 'Unknow'}
 													</Link>
 												</td>
 												<td className={'whitespace-nowrap' + (payment.amount > 0) ? 'text-success' : 'text-danger'}>{viewCurrency(payment.amount)}</td>
 												<td>{moment(payment.created_at).format('DD MMM YYYY')}</td>
 												<td>{payment.type_text}</td>
 												<td>
+													{user.isAdmin && (
 													<div className="flex justify-center">
 														{paymentRemoveStatus === payment.id ? (
 															<SmallDangerLoader />
@@ -436,6 +437,7 @@ const PaymentsIndex = () => {
 															</span>
 														)}
 													</div>
+													)}
 												</td>
 											</tr>
 										);

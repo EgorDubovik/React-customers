@@ -7,6 +7,8 @@ import IconTrash from '../../components/Icon/IconTrash';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
 import { Dialog, Transition } from '@headlessui/react';
 import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
+import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
+import { PageLoadError } from '../../components/loading/Errors';
 
 
 interface Address {
@@ -28,7 +30,8 @@ interface Customer {
 const Update = () => {
 	const customerId = useParams().id ?? 0;
 	const cancelButtonRef = React.useRef(null);
-	const [loadingPage, setLoadingPage] = useState(true);
+	// const [loadingPage, setLoadingPage] = useState(true);
+	const [loadingStatus, setLoadingStatus] = useState('loading');
 	const [modal, setModal] = useState(false);
 	const [addressFormLoading, setAddressFormLoading] = useState(false);
 	const [removeAddressLoading, setRemoveAddressLoading] = useState(0);
@@ -55,19 +58,19 @@ const Update = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		setLoadingPage(true);
+		setLoadingStatus('loading');
 		axiosClient
 			.get('/customers/' + customerId)
 			.then((res) => {
 				console.log(res.data);
 				setCustomer(res.data);
+				setLoadingStatus('success');
 			})
 			.catch((err) => {
 				console.log(err);
+				setLoadingStatus('error');
 			})
-			.finally(() => {
-				setLoadingPage(false);
-			});
+			
 	}, []);
 
 	const addAddress = () => {
@@ -162,7 +165,18 @@ const Update = () => {
 	const handleChangeParse = (e: any) => {
 		setParseAddressValue(e.target.value);
 	};
-	const handleParseAddress = () => {};
+	const handleParseAddress = () => {
+		const result = parseAddress(parseAddressValue);
+		if (result.addressLine1) {
+			dataAddress.address1 = result.addressLine1;
+			
+		}
+		if (result.addressLine2) dataAddress.address2 = result.addressLine2;
+		if (result.placeName) dataAddress.city = result.placeName;
+		if (result.stateAbbreviation) dataAddress.state = result.stateAbbreviation;
+		if (result.zipCode) dataAddress.zip = result.zipCode;
+		setDataAddress({ ...dataAddress });
+	};
 
 	const updateCustomer = (e: any) => {
 		e.preventDefault();
@@ -190,12 +204,9 @@ const Update = () => {
 			<div className="flex items-center justify-between flex-wrap gap-4">
 				<h2 className="text-xl">Create new customer</h2>
 			</div>
-			{loadingPage && (
-				<div className="text-center mt-10">
-					<span className="animate-spin border-4 border-primary border-l-transparent rounded-full w-10 h-10 inline-block align-middle m-auto mb-10"></span>
-				</div>
-			)}
-			{!loadingPage && (
+			{loadingStatus === 'loading' && <PageCirclePrimaryLoader />}
+			{loadingStatus === 'error' && <PageLoadError />}
+			{loadingStatus === 'success' && (
 				<div className="container w-full md:w-1/2 lg:w-1/3 mx-auto px-4 sm:px-8">
 					<div className="panel">
 						<div className="flex items-center justify-between mb-5">
@@ -315,7 +326,7 @@ const Update = () => {
 											</div>
 
 											<div>
-												<label htmlFor="gridAddress2">Address2</label>
+												<label htmlFor="gridAddress2">Address 2</label>
 												<input
 													id="gridAddress2"
 													type="text"
