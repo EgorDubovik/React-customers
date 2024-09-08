@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { IExpense, IService, IPayment, ITech, INote, IAppointment } from '../types';
-
+import {IPayment, ITech, INote, IAppointment } from '../types';
+import axiosClient from '../store/axiosClient';
+import moment from 'moment';
 
 
 
@@ -17,6 +18,8 @@ interface AppointmentContextType {
   updateTime: (start: string, end: string) => void;
   updateImages: (images: any[]) => void;
   updateTechs: (techs: ITech[]) => void;
+  fetchAppointmentData: (id: number) => void;
+  loadingStatus: string;
 }
 
 const AppointmentContext = createContext<AppointmentContextType | null>(null);
@@ -32,7 +35,7 @@ const useAppointmentContext = () => {
 // Appointment provider component
 const AppointmentProvider = ({ children, appointmentData }: { children: ReactNode, appointmentData: IAppointment | null }) => {
   const [appointment, setAppointment] = useState<IAppointment | null>(appointmentData);
-  
+  const [loadingStatus, setLoadingStatus] = useState<string>('loading');
   const updateStatus = (status: number) => {
     if (appointment) {
       setAppointment({ ...appointment, status:status });
@@ -71,6 +74,26 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
     }
   }
 
+  const fetchAppointmentData = (id: number) => {
+    setLoadingStatus('loading');
+		console.log('fetching appointment');
+		axiosClient
+			.get(`/appointment/${id}`)
+			.then((res) => {
+				console.log(res.data);
+				let appointment = res.data.appointment;
+				appointment.start = moment(appointment.start);
+				appointment.end = moment(appointment.end);
+				setAppointment(appointment);
+
+				setLoadingStatus('success');
+			})
+			.catch((err) => {
+				console.log(err);
+				setLoadingStatus('error');
+			});
+  }
+
   const value: AppointmentContextType = {
     appointment,
     setAppointment,
@@ -81,6 +104,8 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
     updateTime,
     updateImages,
     updateTechs,
+    fetchAppointmentData,
+    loadingStatus
   };
 
   return (
