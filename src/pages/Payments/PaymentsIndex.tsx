@@ -318,7 +318,7 @@ const PaymentsIndex = () => {
 					<div className='flex justify-start items-center text-lg'>
 						<h1>Payments</h1>
 						<div className='ml-3 p-2 dark:bg-gray-900 bg-gray-200 rounded cursor-pointer'>
-							{/* from: {startDate} <span className='ml-2'>to: {endDate}</span> */}
+							
 							From:
 							<Flatpickr
 								options={{ dateFormat: 'm/d/Y' }}
@@ -416,7 +416,7 @@ const PaymentsIndex = () => {
 											<tr key={payment.id}>
 												<td>{payment.id}</td>
 												<td className="text-primary whitespace-nowrap">
-													<Link to={'/customer/' + payment.appointment?.customer?.id ?? 0}>{payment.appointment?.customer ? payment.appointment?.customer.name : 'Unknow'}</Link>
+													<Link to={'/customer/' + payment.job?.customer?.id ?? 0}>{payment.job?.customer ? payment.job?.customer.name : 'Unknow'}</Link>
 												</td>
 												<td className="text-primary whitespace-nowrap">
 													<Link to={'/appointment/' + payment.appointment?.id ?? 0}>
@@ -425,7 +425,7 @@ const PaymentsIndex = () => {
 												</td>
 												<td className={'whitespace-nowrap' + (payment.amount > 0) ? 'text-success' : 'text-danger'}>{viewCurrency(payment.amount)}</td>
 												<td>{moment(payment.created_at).format('DD MMM YYYY')}</td>
-												<td>{payment.payment_type}</td>
+												<td>{payment.type_text}</td>
 												<td>
 													<div className="flex justify-center">
 														{paymentRemoveStatus === payment.id ? (
