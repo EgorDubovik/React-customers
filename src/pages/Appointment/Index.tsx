@@ -4,7 +4,7 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import { useParams } from 'react-router-dom';
 import { AppointmentProvider } from '../../context/AppointmentContext';
 import AppointmentPage from './AppointementPage';
-import {PageLoadError} from '../../components/loading/Errors';
+import { PageLoadError } from '../../components/loading/Errors';
 import { IAppointment } from '../../types';
 
 const Index = () => {
@@ -17,40 +17,11 @@ const Index = () => {
 		dispatch(setPageTitle('Appointment'));
 	});
 
-	// useEffect(() => {
-	// 	setLoadingStatus('loading');
-	// 	console.log('fetching appointment');
-	// 	axiosClient
-	// 		.get(`/appointment/${id}`)
-	// 		.then((res) => {
-	// 			console.log(res.data);
-	// 			let appointment = res.data.appointment;
-	// 			appointment.start = moment(appointment.start);
-	// 			appointment.end = moment(appointment.end);
-	// 			setAppointment(appointment);
-
-	// 			setLoadingStatus('success');
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err);
-	// 			setLoadingStatus('error');
-	// 		});
-	// }, []);
-
 	return (
 		<div>
-			{/* {loadingStatus === 'loading' && (
-				<div className="text-center mt-10">
-					<span className="animate-spin border-4 border-primary border-l-transparent rounded-full w-10 h-10 inline-block align-middle m-auto mb-10"></span>
-				</div>
-			)}
-			{loadingStatus === 'error' && <PageLoadError /> }
-			
-			{loadingStatus === 'success' && ( */}
-				<AppointmentProvider appointmentData={appointment}>
-					<AppointmentPage />
-				</AppointmentProvider>
-			{/* )} */}
+			<AppointmentProvider appointmentData={appointment}>
+				<AppointmentPage />
+			</AppointmentProvider>
 		</div>
 	);
 };
