@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import IconPlus from '../../components/Icon/IconPlus';
 import axiosClient from '../../store/axiosClient';
-import { useAppointmentContext } from '../../context/AppointmentContext';
+import { useAppointmentContext } from './context/AppointmentContext';
 const Images = (props: any) => {
 	const { appointment, updateImages } = useAppointmentContext();
 	

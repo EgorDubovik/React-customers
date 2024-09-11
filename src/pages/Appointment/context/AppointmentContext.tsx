@@ -1,12 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import {IPayment, ITech, INote, IAppointment } from '../types';
-import axiosClient from '../store/axiosClient';
+import {IPayment, ITech, INote, IAppointment } from '../../../types';
+import axiosClient from '../../../store/axiosClient';
 import moment from 'moment';
-
-
-
-
-
 
 interface AppointmentContextType {
   appointment: IAppointment | null;

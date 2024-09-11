@@ -1,7 +1,7 @@
 import { useState} from 'react'
 import moment from 'moment'
 import axiosClient from '../../store/axiosClient'
-import { useAppointmentContext } from '../../context/AppointmentContext'
+import { useAppointmentContext } from './context/AppointmentContext'
 import { calculateRemaining, calculateTaxTotal, viewCurrency } from '../../helpers/helper'
 import ServicesList from './components/ServicesList'
 
@@ -23,7 +23,7 @@ const ServicesBlock = (props:any) => {
          axiosClient.put(`appointment/service/${appointment?.job_id}/${service.id}`, service)
             .then((res:any) => {
                if(res.status === 200){
-                  const updatedServices = services.map((s) => {
+                  const updatedServices = services.map((s:any) => {
                      if(s.id === service.id){
                         return service;
                      }
@@ -65,7 +65,7 @@ const ServicesBlock = (props:any) => {
       axiosClient.delete(`appointment/service/${appointment?.job_id}/${serviceId}`)
          .then((res) => {
             if(res.status === 200){
-               updateServices(services.filter((service) => service.id !== serviceId));
+               updateServices(services.filter((service:any) => service.id !== serviceId));
             }
          })
          .catch((err) => {

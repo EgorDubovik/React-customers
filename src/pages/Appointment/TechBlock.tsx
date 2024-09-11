@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axiosClient from '../../store/axiosClient';
 import TechListBlock from '../../components/PagesLayout/TechListBlock';
-import { useAppointmentContext } from '../../context/AppointmentContext';
+import { useAppointmentContext } from './context/AppointmentContext';
 
 const TechBlock = () => {
 

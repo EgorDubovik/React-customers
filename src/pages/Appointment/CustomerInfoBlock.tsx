@@ -5,7 +5,7 @@ import IconMapPin from '../../components/Icon/IconMapPin';
 import IconPhone from '../../components/Icon/IconPhone';
 import IconMail from '../../components/Icon/IconMail';
 import IconSend from '../../components/Icon/IconSend';
-import { useAppointmentContext } from '../../context/AppointmentContext';
+import { useAppointmentContext } from './context/AppointmentContext';
 
 const CustomerInfoBlock = (props: any) => {
 	const navigate = useNavigate();

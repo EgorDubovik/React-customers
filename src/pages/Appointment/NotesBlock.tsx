@@ -4,7 +4,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import axiosClient from '../../store/axiosClient';
 import { ButtonLoader } from '../../components/loading/ButtonLoader';
 import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
-import { useAppointmentContext } from '../../context/AppointmentContext';
+import { useAppointmentContext } from './context/AppointmentContext';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 

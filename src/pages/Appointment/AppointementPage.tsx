@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from './Header';
-import { useAppointmentContext } from '../../context/AppointmentContext';
+import { useAppointmentContext } from './context/AppointmentContext';
 import axiosClient from '../../store/axiosClient';
 import CalendarBlock from './CalendarBlock';
 import CustomerInfoBlock from './CustomerInfoBlock';

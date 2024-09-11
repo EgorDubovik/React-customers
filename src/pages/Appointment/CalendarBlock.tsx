@@ -2,7 +2,7 @@ import { useEffect, useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import AppointmentsScheduler from '../../components/plugin/sheduler/AppointmentsScheduler';
 import IconPencilPaper from '../../components/Icon/IconPencilPaper';
-import { useAppointmentContext } from '../../context/AppointmentContext';
+import { useAppointmentContext } from './context/AppointmentContext';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';

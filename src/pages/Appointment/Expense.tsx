@@ -3,7 +3,7 @@ import { viewCurrency } from '../../helpers/helper';
 import IconTrash from '../../components/Icon/IconTrash';
 import axiosClient from '../../store/axiosClient';
 import {ButtonLoader} from '../../components/loading/ButtonLoader';
-import { useAppointmentContext } from '../../context/AppointmentContext';
+import { useAppointmentContext } from './context/AppointmentContext';
 import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
 import { IExpense } from '../../types';
 
