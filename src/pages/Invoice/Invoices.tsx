@@ -88,7 +88,7 @@ const Invoice = () => {
                            sortable: true,
                            render: ({ job }) => (
                               <div className="flex items-center font-semibold">  
-                                    <Link to={`/customer/${job.customer.id}`} className="text-primary underline hover:no-underline">{job.customer.name}</Link>
+                                    <Link to={`/customer/${job?.customer?.id}`} className="text-primary underline hover:no-underline">{job?.customer.name}</Link>
                               </div>
                            ),
                         },
@@ -97,7 +97,7 @@ const Invoice = () => {
                            sortable: true,
                            render: ({ creator}) => (
                               <div className="flex items-center font-semibold">  
-                                    <div>{creator.name}</div>
+                                    <div>{creator?.name}</div>
                               </div>
                            ),
                         },
@@ -116,7 +116,7 @@ const Invoice = () => {
                            accessor: 'amount',
                            sortable: true,
                            titleClassName: 'text-left',
-                           render: ({ job }) => <div className="text-left font-semibold">{viewCurrency(job.total_amount)}</div>,
+                           render: ({ job }) => <div className="text-left font-semibold">{viewCurrency(job?.total_amount)}</div>,
                         },
                         {
                            accessor: 'action',
