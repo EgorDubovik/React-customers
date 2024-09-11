@@ -1,17 +1,16 @@
 import {useState, useEffect, Fragment} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-// import MyTimePicker from '../../components/plugin/mytimepicker/src';
 import TimePicker from 'edtimepicker';
 import moment from 'moment';
-import IconEdit from '../../components/Icon/IconEdit';
+import IconEdit from '../../../components/Icon/IconEdit';
 import { Dialog, Transition } from '@headlessui/react';
-import { manualIsoString } from '../../helpers/helper';
+import { manualIsoString } from '../../../helpers/helper';
 import { useSelector } from 'react-redux';
-import { IRootState } from '../../store';
-import ServicesList from './includes/ServicesList';
-import TechList from './includes/TechList';
-import axiosClient from '../../store/axiosClient';
-import {ButtonLoader} from '../../components/loading/ButtonLoader';
+import { IRootState } from '../../../store';
+import ServicesList from '../components/ServicesList';
+import TechList from '../components/TechList';
+import axiosClient from '../../../store/axiosClient';
+import {ButtonLoader} from '../../../components/loading/ButtonLoader';
 
 const CreateAppointment = () => {
 

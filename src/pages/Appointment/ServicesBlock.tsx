@@ -3,7 +3,7 @@ import moment from 'moment'
 import axiosClient from '../../store/axiosClient'
 import { useAppointmentContext } from '../../context/AppointmentContext'
 import { calculateRemaining, calculateTaxTotal, viewCurrency } from '../../helpers/helper'
-import ServicesList from '../Schedule/includes/ServicesList'
+import ServicesList from './components/ServicesList'
 
 const ServicesBlock = (props:any) => {
    const {appointment, updateServices} = useAppointmentContext();

@@ -9,7 +9,7 @@ import {SmallDangerLoader} from '../../../components/loading/SmallCirculeLoader'
 import { ButtonLoader } from '../../../components/loading/ButtonLoader';
 import AutoComplete from '../../../components/plugin/autocomplite/AutoComplete';
 import axiosClient from '../../../store/axiosClient';
-import { IServices } from '../../../types';
+import { IService } from '../../../types';
 
 const ServicesList = (props:any) => {
 
@@ -21,7 +21,7 @@ const ServicesList = (props:any) => {
    const [companyServices, setCompanyServices] = useState([]); 
    const [isEditMode, setIsEditMode] = useState(false);
    const priceRef = useRef(null);
-   const [serviceForm, setServiceForm] = useState<IServices>(
+   const [serviceForm, setServiceForm] = useState<IService>(
       {
          id: 0,
          title:'', 

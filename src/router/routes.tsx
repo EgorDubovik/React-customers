@@ -16,7 +16,7 @@ import ReviewFeedback from '../pages/ReviewFeedback/Index';
 import GeneralInfo from '../pages/CompanySettings/GeneralInfo';
 const Invoices = lazy(() => import('../pages/Invoice/Invoices'));
 const Employees = lazy(() => import('../pages/Employees'));
-const CreateAppointment = lazy(() => import('../pages/Schedule/CreateAppointment'));
+const CreateAppointment = lazy(() => import('../pages/Appointment/Create/CreateAppointment'));
 const ViewCustomer = lazy(() => import('../pages/Customers/View/ViewCustomer'));
 const ProfilePage = lazy(() => import('../pages/Profile/ProfilePage'));
 const PaymentsIndex = lazy(() => import('../pages/Payments/PaymentsIndex'));
@@ -40,10 +40,6 @@ const routes = [
                 path: '/schedule',
                 element : <DefaultLayout> <Schedule /></DefaultLayout>,
             },
-            // {
-            //     path: '/appointment/:id',
-            //     element : <DefaultLayout> <Appointment /></DefaultLayout>,
-            // },
             {
                 path: '/appointment/:id',
                 element : <DefaultLayout> <Appointment /></DefaultLayout>,
