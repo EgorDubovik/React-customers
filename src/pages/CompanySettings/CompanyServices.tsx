@@ -13,7 +13,7 @@ import { showMessage } from '../../helpers/helper';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
 import { PageLoadError } from '../../components/loading/Errors';
 
-const Services = () => {
+const CompanyServices = () => {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(setPageTitle('Company Services'));
@@ -270,12 +270,12 @@ const Services = () => {
 												/>
 											</div>
 											<div className="mb-5">
-												<label htmlFor="address">Dfescription</label>
+												<label htmlFor="address">Description</label>
 												<textarea
 													name="description"
 													value={service.description}
 													rows={2}
-													placeholder="Enter Address"
+													placeholder="Enter Description"
 													className="form-textarea resize-none min-h-[70px]"
 													onChange={(e) => {
 														onChange(e);
@@ -307,4 +307,4 @@ const Services = () => {
 	);
 };
 
-export default Services;
+export default CompanyServices;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
 import { PageLoadError } from '../../components/loading/Errors';
-const GeneralInfo = () => {
+const CompanyGeneralInfo = () => {
    const [loadingStatus, setLoadingStatus] = useState('success');
     return (
       <div>
@@ -19,4 +19,4 @@ const GeneralInfo = () => {
     );
 }
 
-export default GeneralInfo;
+export default CompanyGeneralInfo;

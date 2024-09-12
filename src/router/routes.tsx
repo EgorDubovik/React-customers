@@ -5,7 +5,6 @@ import DefaultLayout from '../components/Layouts/DefaultLayout';
 import BlankLayout from '../components/Layouts/BlankLayout';
 import AuthPrivetRoute from '../middleware/AuthPrivetRoute';
 import Customers from '../pages/Customers/List/Customers';
-import Services from '../pages/CompanySettings/Services';
 const Schedule = lazy(() => import('../pages/Schedule/Schedule'));
 const Appointment = lazy(() => import('../pages/Appointment/Index'));
 const Error404 = lazy(() => import('../components/Error404'));
@@ -13,7 +12,6 @@ import CreateCustomer from '../pages/Customers/Create/CreateCustomer';
 import Create from '../pages/Invoice/Create';
 import UpdateCustomer from '../pages/Customers/Update/UpdateCustomer';
 import ReviewFeedback from '../pages/ReviewFeedback/Index';
-import GeneralInfo from '../pages/CompanySettings/GeneralInfo';
 const Invoices = lazy(() => import('../pages/Invoice/Invoices'));
 const Employees = lazy(() => import('../pages/Employees'));
 const CreateAppointment = lazy(() => import('../pages/Appointment/Create/CreateAppointment'));
@@ -25,6 +23,10 @@ const ViewAppointment = lazy(()=> import('../pages/BookAppointment/ViewAppointme
 const AppointmentCanceled = lazy(()=> import('../pages/BookAppointment/AppointmentCanceled'));
 const BookAppointmentSettings = lazy(() => import('../pages/CompanySettings/BookAppointment/Index'));
 const Storage = lazy(() => import('../pages/Storage/index'));
+// Company Settings
+const CompanyGeneralInfo = lazy(() => import('../pages/CompanySettings/CompanyGeneralInfo'));
+const CompanyServices = lazy(() => import('../pages/CompanySettings/CompanyServices'));
+const CompanyTags = lazy(() => import('../pages/CompanySettings/CompanyTags'));
 
 const routes = [
     // dashboard
@@ -74,7 +76,7 @@ const routes = [
             },
             {
                 path: '/company-settings/services',
-                element : <DefaultLayout> <Services /></DefaultLayout>,
+                element : <DefaultLayout> <CompanyServices /></DefaultLayout>,
             },
             {
                 path: '/company-settings/book-online',
@@ -82,7 +84,11 @@ const routes = [
             },
             {
                 path: '/company-settings/general',
-                element : <DefaultLayout> <GeneralInfo /></DefaultLayout>,
+                element : <DefaultLayout> <CompanyGeneralInfo /></DefaultLayout>,
+            },
+            {
+                path: '/company-settings/tags',
+                element : <DefaultLayout> <CompanyTags /></DefaultLayout>,
             },
             {
                 path: '/employees',
