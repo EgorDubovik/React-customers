@@ -12,6 +12,12 @@ export const useCompanyTags = () => {
 	const [newTagTitle, setNewTagTitle] = useState<string>('');
 	const [storeStatus, setStoreStatus] = useState<boolean>(false);
    const [deleteStatus, setDeleteStatus] = useState<number>(0);
+	const [tag, setTag] = useState<ITag>({
+		id: 0,
+		title: '',
+		color: 'primary',
+		company_id: 0,
+	});
 	useEffect(() => {
 		setLoadingStatus('loading');
 		axiosClient
@@ -35,22 +41,50 @@ export const useCompanyTags = () => {
 	};
 
 	const selectColor = (color: string) => {
-		setSelectedColor(color);
+		setTag({ ...tag,['color']:color });
 		setIsDropdownOpen(false); // Close the dropdown after selecting
 	};
 
-	const storeNewTag = () => {
+	const saveTagHandle = () => {
+		if(tag.id === 0){
+			saveTag();
+		} else {
+			updateTag();
+		}
+	};
+   const handelEditTag = (tagId:number) => {
+		const tag = tags.find((tag) => tag.id === tagId);
+		setTag(tag ? tag : { id: 0, title: '', color: 'primary', company_id: 0 });
+   }
+
+	const saveTag = () => {
 		if (storeStatus) return;
-		const data = {
-			title: newTagTitle,
-			color: selectedColor,
-		};
-		setStoreStatus(true);
-		axiosClient
-			.post('company/settings/tags', data)
+			const data = {
+				title: tag.title,
+				color: tag.color,
+			};
+			setStoreStatus(true);
+			axiosClient
+				.post('company/settings/tags', data)
+				.then((res) => {
+					setTags([...tags, res.data]);
+					setNewTagTitle('');
+				})
+				.catch((err) => {
+					alert('Something went wrong. Please try again later');
+					console.log(err);
+				})
+				.finally(() => {
+					setStoreStatus(false);
+				});
+	}
+	const updateTag = () => {
+		if (storeStatus) return;
+		axiosClient.put(`company/settings/tags/${tag.id}`, tag)
 			.then((res) => {
-				setTags([...tags, res.data]);
-				setNewTagTitle('');
+				if (res.status === 200) {
+					setTags(tags.map((t) => t.id === tag.id ? tag : t));
+				}
 			})
 			.catch((err) => {
 				alert('Something went wrong. Please try again later');
@@ -58,11 +92,15 @@ export const useCompanyTags = () => {
 			})
 			.finally(() => {
 				setStoreStatus(false);
+				setTag({
+					id: 0,
+					title: '',
+					color: 'primary',
+					company_id: 0,
+				});
 			});
-	};
-   const handelEditTag = (tagId:number) => {
-
-   }
+		
+	}
 
    const handleDeleteTag = (tagId:number) => {
       setDeleteStatus(tagId);
@@ -81,5 +119,6 @@ export const useCompanyTags = () => {
             setDeleteStatus(0);
          });
    }
-   return { tags, loadingStatus, newTagTitle, setNewTagTitle, storeNewTag, isDropdownOpen, handleColorClick, colors, selectColor, selectedColor, storeStatus, deleteStatus, handelEditTag, handleDeleteTag };
+
+   return { tags, loadingStatus, tag, setTag, saveTagHandle, isDropdownOpen, handleColorClick, colors, selectColor, selectedColor, storeStatus, deleteStatus, handelEditTag, handleDeleteTag };
 }

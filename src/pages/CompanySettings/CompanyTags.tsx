@@ -8,7 +8,7 @@ import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
 import { useCompanyTags } from './hooks/useCompanyTags';
 
 const CompanyTags = () => {
-	const { loadingStatus, newTagTitle, selectColor, selectedColor, isDropdownOpen,setNewTagTitle,colors,storeStatus, storeNewTag, handelEditTag, handleColorClick,deleteStatus, handleDeleteTag, tags } = useCompanyTags();
+	const { loadingStatus, tag, setTag, selectColor, selectedColor, isDropdownOpen,colors,storeStatus, saveTagHandle, handelEditTag, handleColorClick,deleteStatus, handleDeleteTag, tags } = useCompanyTags();
 	return (
 		<div>
 			{loadingStatus === 'loading' && <PageCirclePrimaryLoader />}
@@ -17,18 +17,19 @@ const CompanyTags = () => {
 				<div className="panel md:w-1/2 w-full m-auto">
 					<h3 className="font-semibold text-lg dark:text-white-light">Create or remove company tags</h3>
 					<div className="flex items-center gap-2">
-						<input type="text" value={newTagTitle} onChange={(e) => setNewTagTitle(e.target.value)} className="form-input w-3/4" placeholder="Enter tag title" />
-						<div id="color" className={`w-1/4 bg-${selectedColor} h-10 rounded cursor-pointer relative`} onClick={handleColorClick}>
+						<input type="text" value={tag.title} onChange={(e) => setTag({...tag,['title']:e.target.value})} className="form-input w-3/4" placeholder="Enter tag title" />
+						<div id="color" className={`w-1/4 bg-${tag.color} h-10 rounded cursor-pointer relative`} onClick={handleColorClick}>
 							{isDropdownOpen && (
 								<div className="absolute w-full top-8 shadow-lg mt-2 rounded">
 									{colors.map(
-										(color, index) => selectedColor !== color && <div key={index} className={`p-2 mt-2 cursor-pointer bg-${color} h-10 rounded`} onClick={() => selectColor(color)}></div>
+										(color, index) => tag.color !== color && <div key={index} className={`p-2 mt-2 cursor-pointer bg-${color} h-10 rounded`} onClick={() => selectColor(color)}></div>
 									)}
 								</div>
 							)}
 						</div>
-						<button className="btn btn-primary" onClick={storeNewTag}>
-							{storeStatus ? <ButtonLoader /> : 'Add'}
+						<button className="btn btn-primary" onClick={saveTagHandle}>
+							{ storeStatus ? <ButtonLoader /> : tag.id === 0 ? 'Add' : 'Update'}
+							{/* {storeStatus ? <ButtonLoader /> : 'Add'} */}
 						</button>
 					</div>
 					<div className="mt-4">
