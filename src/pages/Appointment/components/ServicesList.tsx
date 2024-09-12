@@ -21,13 +21,14 @@ const ServicesList = (props:any) => {
    const [companyServices, setCompanyServices] = useState([]); 
    const [isEditMode, setIsEditMode] = useState(false);
    const priceRef = useRef(null);
+   const isTaxble = localStorage.getItem('isTaxable') === 'true' ? true : false;
    const [serviceForm, setServiceForm] = useState<IService>(
       {
          id: 0,
          title:'', 
          description:'', 
          price:0, 
-         taxable:true
+         taxable: isTaxble
       });
    const addNewService = () => {
       setServiceForm({
@@ -35,7 +36,7 @@ const ServicesList = (props:any) => {
          title:'', 
          description:'', 
          price:0, 
-         taxable:true
+         taxable:isTaxble
       });
       setIsEditMode(false);
       setModal(true);
@@ -50,6 +51,7 @@ const ServicesList = (props:any) => {
 
    const handleSaveService = () => {
       if(serviceForm.title === '' || !serviceForm.price ) return;
+      localStorage.setItem('isTaxable', serviceForm.taxable.toString());
       if(serviceForm.id === 0){
          onSaveService(serviceForm);
       }else{
