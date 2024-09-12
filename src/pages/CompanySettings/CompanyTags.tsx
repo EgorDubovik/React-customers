@@ -1,87 +1,14 @@
-import { useEffect, useState } from 'react';
-import axiosClient from '../../store/axiosClient';
 import { PageCirclePrimaryLoader } from '../../components/loading/PageLoading';
 import { PageLoadError } from '../../components/loading/Errors';
 import { ButtonLoader } from '../../components/loading/ButtonLoader';
 import Dropdown from '../../components/Dropdown';
 import IconEdit from '../../components/Icon/IconEdit';
 import IconTrash from '../../components/Icon/IconTrash';
-interface ITag {
-	id: number;
-	title: string;
-	color: string;
-	company_id: number;
-}
+import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
+import { useCompanyTags } from './hooks/useCompanyTags';
 
 const CompanyTags = () => {
-	const [tags, setTags] = useState<ITag[]>([]);
-	const [loadingStatus, setLoadingStatus] = useState<string>('loading');
-	const [newTagTitle, setNewTagTitle] = useState<string>('');
-	const [storeStatus, setStoreStatus] = useState<boolean>(false);
-	useEffect(() => {
-		setLoadingStatus('loading');
-		axiosClient
-			.get('company/settings/tags')
-			.then((res) => {
-				setTags(res.data);
-				setLoadingStatus('success');
-			})
-			.catch((err) => {
-				setLoadingStatus('error');
-				console.log(err);
-			});
-	}, []);
-
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const [selectedColor, setSelectedColor] = useState('primary'); // Default color
-
-	const colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
-	const handleColorClick = () => {
-		setIsDropdownOpen(!isDropdownOpen);
-	};
-
-	const selectColor = (color: string) => {
-		setSelectedColor(color);
-		setIsDropdownOpen(false); // Close the dropdown after selecting
-	};
-
-	const storeNewTag = () => {
-		if (storeStatus) return;
-		const data = {
-			title: newTagTitle,
-			color: selectedColor,
-		};
-		setStoreStatus(true);
-		axiosClient
-			.post('company/settings/tags', data)
-			.then((res) => {
-				setTags([...tags, res.data]);
-				setNewTagTitle('');
-			})
-			.catch((err) => {
-				alert('Something went wrong. Please try again later');
-				console.log(err);
-			})
-			.finally(() => {
-				setStoreStatus(false);
-			});
-	};
-   const handelEditTag = (tagId:number) => {
-
-   }
-
-   const handleDeleteTag = (tagId:number) => {
-      axiosClient.delete(`company/settings/tags/${tagId}`)
-         .then((res) => {
-            if(res.status === 200){
-               setTags(tags.filter((tag) => tag.id !== tagId));
-            }
-         })
-         .catch((err) => {
-            alert('Something went wrong. Please try again later');
-            console.log(err);
-         });
-   }
+	const { loadingStatus, newTagTitle, selectColor, selectedColor, isDropdownOpen,setNewTagTitle,colors,storeStatus, storeNewTag, handelEditTag, handleColorClick,deleteStatus, handleDeleteTag, tags } = useCompanyTags();
 	return (
 		<div>
 			{loadingStatus === 'loading' && <PageCirclePrimaryLoader />}
@@ -106,9 +33,12 @@ const CompanyTags = () => {
 					</div>
 					<div className="mt-4">
 						{tags.map((tag, index: number) => (
-							<div className="inline-flex ml-4">
-								<button className={`btn btn-sm btn-${tag.color} ltr:rounded-r-none rtl:rounded-l-none`}>{tag.title}</button>
+							<div className="inline-flex ml-4" key={index}>
+								<button className={`btn btn-sm btn-${tag.color} ltr:rounded-r-none rtl:rounded-l-none`}>
+                           {deleteStatus === tag.id ? <SmallDangerLoader /> : tag.title}
+                        </button>
 								<div className="dropdown">
+                           
 									<Dropdown
 										placement={'bottom-start'}
 										btnClassName={`btn btn-sm dropdown-toggle btn-${tag.color} ltr:rounded-l-none rtl:rounded-r-none before:border-[5px] before:border-l-transparent before:border-r-transparent before:border-t-inherit before:border-b-0 before:inline-block before:border-t-white-light h-full`}
@@ -124,6 +54,7 @@ const CompanyTags = () => {
 											
 										</ul>
 									</Dropdown>
+                           
 								</div>
 							</div>
 						))}
