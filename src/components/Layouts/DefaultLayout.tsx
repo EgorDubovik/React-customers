@@ -2,7 +2,7 @@ import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import App from '../../App';
 import { IRootState } from '../../store';
-import { toggleSidebar, setUserInformation } from '../../store/themeConfigSlice';
+import { toggleSidebar, setUserInformation, setCompanySettings } from '../../store/themeConfigSlice';
 import Footer from './Footer';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -19,6 +19,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
         axiosClient.get('/user')
         .then((res)=>{
             if(res.status == 200){
+                
                 const user = {
                     id : res.data.user.id,
                     name: res.data.user.name,
@@ -28,6 +29,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     color: res.data.user.color,
                 }
                 dispatch(setUserInformation(user));
+                dispatch(setCompanySettings(res.data.companySettings || {}));
             }
         });
     }

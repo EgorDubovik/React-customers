@@ -53,6 +53,9 @@ const themeConfigSlice = createSlice({
             if(payload.roles.includes(1))
                 state.user.isAdmin = true;
         },
+        setCompanySettings(state, { payload }) {
+            state.companyInfo = payload;
+        },
         toggleTheme(state, { payload }) {
             payload = payload || state.theme; // light | dark | system
             localStorage.setItem('theme', payload);
@@ -113,6 +116,6 @@ const themeConfigSlice = createSlice({
     },
 });
 
-export const { toggleTheme, toggleMenu, toggleLayout, toggleRTL, toggleAnimation, toggleNavbar, toggleSemidark, toggleSidebar, setPageTitle, setUserInformation } = themeConfigSlice.actions;
+export const { toggleTheme, toggleMenu, toggleLayout, toggleRTL, toggleAnimation, toggleNavbar, toggleSemidark, toggleSidebar, setPageTitle, setUserInformation, setCompanySettings } = themeConfigSlice.actions;
 
 export default themeConfigSlice.reducer;
