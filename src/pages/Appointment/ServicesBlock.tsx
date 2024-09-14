@@ -2,19 +2,16 @@ import { useState} from 'react'
 import moment from 'moment'
 import axiosClient from '../../store/axiosClient'
 import { useAppointmentContext } from './context/AppointmentContext'
-import { calculateRemaining, calculateTaxTotal, viewCurrency } from '../../helpers/helper'
+import { viewCurrency } from '../../helpers/helper'
 import ServicesList from './components/ServicesList'
+import Refund from './Refund'
 
-const ServicesBlock = (props:any) => {
+const ServicesBlock = () => {
    const {appointment, updateServices} = useAppointmentContext();
-   const payments = appointment?.payments || [];
-   const services = appointment?.services || [];
-
+   const services = appointment?.job.services || [];
    const [modal, setModal] = useState(false);
    const [serviceFormLoading, setServiceFormLoading] = useState(false);
-
-   const {total} = calculateTaxTotal(services);
-   const remaining = calculateRemaining(payments, total);
+   const remaining = appointment?.job?.remaining_balance || 0;
 
    const handleSaveService = (service:any) => {
       setServiceFormLoading(true);
@@ -100,13 +97,13 @@ const ServicesBlock = (props:any) => {
                   { remaining > 0 && <span className='text-danger ml-2'>Remaining: {viewCurrency(remaining)}</span> }
                   { remaining <= 0 && services.length>0 && <span className='text-success ml-2'>Paid full</span>}
                </div>
-               <button type="button" className="btn btn-outline-dark btn-sm">Issue refund</button>
+               <Refund />
             </div>
             <div className='table-responsive text-[#515365] dark:text-white-light font-semibold'>
                <table className="whitespace-nowrap">
                   <tbody className="dark:text-white-dark">
                      {
-                        payments.map((payment:any, index:number) => (
+                        appointment?.job.payments.map((payment:any, index:number) => (
                            <tr key={index}>
                               <td>{moment(payment.created_at).format('MMM DD YYYY h:mm A')}</td>
                               <td>{payment.type_text}</td>

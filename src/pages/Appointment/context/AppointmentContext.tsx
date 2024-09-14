@@ -2,6 +2,7 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 import {IPayment, ITech, INote, IAppointment } from '../../../types';
 import axiosClient from '../../../store/axiosClient';
 import moment from 'moment';
+import { calculateRemaining, calculateTaxAndTotal, calculateTotalPaid } from '../../../helpers/helper';
 
 interface AppointmentContextType {
   appointment: IAppointment | null;
@@ -44,12 +45,26 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
 
   const updatePayments = (payments: IPayment[]) => {
     if (appointment) {
-      setAppointment({ ...appointment, payments:payments });
+      const updatedJob = {
+        ...appointment.job,
+        payments: payments,
+        total_paid: calculateTotalPaid(payments),
+        remaining_balance: calculateRemaining(payments, appointment.job.total_amount)
+      };
+      setAppointment({ ...appointment, job: updatedJob });
     }
   }
   const updateServices = (services: any[]) => {
     if (appointment) {
-      setAppointment({ ...appointment, services:services });
+      const { tax, total} = calculateTaxAndTotal(services);
+      const updatedJob = {
+        ...appointment.job,
+        services: services,
+        total_amount: total,
+        total_tax: tax,
+        remaining_balance: calculateRemaining(appointment.job.payments, total)
+      };
+      setAppointment({ ...appointment, job: updatedJob });
     }
   }
 

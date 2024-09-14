@@ -2,7 +2,7 @@
 import IconTrashLines from '../../../components/Icon/IconTrashLines';
 import IconPlus from '../../../components/Icon/IconPlus';
 import IconPencil from '../../../components/Icon/IconPencil';
-import { viewCurrency, calculateTaxTotal } from '../../../helpers/helper';
+import { viewCurrency, calculateTaxAndTotal } from '../../../helpers/helper';
 import { useState, Fragment, useEffect, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {SmallDangerLoader} from '../../../components/loading/SmallCirculeLoader';
@@ -17,7 +17,7 @@ const ServicesList = (props:any) => {
    const [loadingRemove, setLoadingRemove] = useState(0);
    const loadingStatus = props.loadingStatus || false;
    const { services, onRemoveService, onSaveService, onUpdateService, modal, setModal} = props;
-   const { tax, total } = calculateTaxTotal(services);
+   const { tax, total } = calculateTaxAndTotal(services);
    const [companyServices, setCompanyServices] = useState([]); 
    const [isEditMode, setIsEditMode] = useState(false);
    const priceRef = useRef(null);

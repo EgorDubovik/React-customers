@@ -10,7 +10,14 @@ export const viewCurrency = (amount: number | undefined) => {
 	});
 };
 
-export const calculateTaxTotal = (services: any) => {
+export const calculateTotalPaid = (payments: any) => {
+	return payments.reduce((acc: any, payment: any) => {
+		const amount = parseFloat(payment.amount);
+		return acc + amount;
+	}, 0);
+};
+
+export const calculateTaxAndTotal = (services: any) => {
 	let tax = 0;
 	let total = 0;
 	services.forEach((service: any) => {

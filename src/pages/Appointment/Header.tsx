@@ -12,43 +12,19 @@ import { viewCurrency, formatDate, manualIsoString } from '../../helpers/helper'
 import TimePicker from 'edtimepicker';
 
 
-
-// Переделать так что бы тут небыло этих вычислений, а только отображение
-const calculateTaxTotal = (services: any) => {
-	let tax = 0;
-	let total = 0;
-	services.forEach((service: any) => {
-		const price = parseFloat(service.price);
-		total += price;
-		if (service.taxable) tax += price * 0.0825;
-	});
-	total += tax;
-	total = Math.round(total * 100) / 100;
-	return { tax, total };
-};
-
-const calculateRemaining = (payments: any, total: number) => {
-	const totalPaid = payments.reduce((acc: any, payment: any) => {
-		const amount = parseFloat(payment.amount);
-		return acc + amount;
-	}, 0);
-	let remaining = total - totalPaid;
-	remaining = remaining < 0 ? 0 : remaining;
-	return Math.round(remaining * 100) / 100;
-};
-
 const Header = () => {
 	const { appointment, updateStatus, updatePayments } = useAppointmentContext();
+	const total = appointment?.job?.total_amount || 0;
+	const remaining = appointment?.job?.remaining_balance || 0;
+	
 	const [updateAppointmentLoading, setUpdateAppointmentLoading] = useState<boolean>(false);
 	const [modal, setModal] = useState(false);
 	const [paymentsLoading, setPaymentsLoading] = useState(false);
 	const patmentsType = ['Credit', 'Transfer', 'Check', 'Cash'];
 	const [selectedPaymentType, setSelectedPaymentType] = useState<number>(0);
 	const [typeOfAmount, setTypeOfAmount] = useState<string>('full');
-	const [amountPay, setAmountPay] = useState<number>(0);
-	const [tax, setTax] = useState<number>(0);
-	const [total, setTotal] = useState<number>(0);
-	const [remaining, setRemaining] = useState<number>(0);
+	const [amountPay, setAmountPay] = useState<number>(remaining);
+
 	const navigate = useNavigate();
    // Для создания копии апоинтмента
    const [appointmentCopyModal, setAppointmentCopyModal] = useState(false);
@@ -57,6 +33,11 @@ const Header = () => {
 	const [timeTo, setTimeTo] = useState<Date>(new Date());
 	const [timeToIsSelected, setTimeToIsSelected] = useState<boolean>(false);
    const [isFinishCurerentAppointment, setIsFinishCurerentAppointment] = useState<boolean>(true);
+
+	useEffect(() => {
+		setAmountPay(remaining);
+	}, [remaining]);
+
 	const onTimeFromChanged = (date: Date) => {
 		setTimeFrom(new Date(date));
 		if (!timeToIsSelected) setTimeTo(new Date(date.getTime() + 60 * 120 * 1000));
@@ -65,15 +46,6 @@ const Header = () => {
 		setTimeToIsSelected(true);
 		setTimeTo(new Date(date));
 	};
-	useEffect(() => {
-		const { tax, total } = calculateTaxTotal(appointment?.services || []);
-		setTax(tax);
-		setTotal(total);
-		const remainingTotal = calculateRemaining(appointment?.payments || [], total);
-		setRemaining(remainingTotal);
-		setAmountPay(remainingTotal);
-		setTypeOfAmount('full');
-	}, [appointment]);
 
 	const changeAmount = (e: any) => {
 		if (isNaN(e.target.value)) return;
@@ -101,12 +73,7 @@ const Header = () => {
 					payment_type: patmentsType[selectedPaymentType],
 				})
 				.then((res) => {
-					//TODO: С типом оплаты необходимо все переделать как на сервере так и на клиенте ибо разногласия полные
-					const payments = appointment?.payments;
-					let newPayment = res.data.payment;
-					newPayment.payment_type = patmentsType[selectedPaymentType];
-					payments?.push(newPayment);
-					updatePayments(payments || []);
+					updatePayments([...appointment?.job.payments || [], res.data.payment]);
 					setModal(false);
 				})
 				.catch((err) => {
