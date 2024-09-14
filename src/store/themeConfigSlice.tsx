@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import i18next from 'i18next';
 import themeConfig from '../theme.config';
 
 const defaultState = {
@@ -38,6 +37,9 @@ const initialState = {
         roles: [0],
         color: '#ccc',
         isAdmin: false,
+    },
+    companyInfo: {
+        taxRate: 0.0825,
     },
 };
 

@@ -3,6 +3,7 @@ import {IPayment, ITech, INote, IAppointment } from '../../../types';
 import axiosClient from '../../../store/axiosClient';
 import moment from 'moment';
 import { calculateRemaining, calculateTaxAndTotal, calculateTotalPaid } from '../../../helpers/helper';
+import { useSelector } from 'react-redux';
 
 interface AppointmentContextType {
   appointment: IAppointment | null;
@@ -32,6 +33,7 @@ const useAppointmentContext = () => {
 const AppointmentProvider = ({ children, appointmentData }: { children: ReactNode, appointmentData: IAppointment | null }) => {
   const [appointment, setAppointment] = useState<IAppointment | null>(appointmentData);
   const [loadingStatus, setLoadingStatus] = useState<string>('loading');
+  const taxRate = useSelector((state: any) => state.themeConfig.companyInfo.taxRate);
   const updateStatus = (status: number) => {
     if (appointment) {
       setAppointment({ ...appointment, status:status });
@@ -56,7 +58,8 @@ const AppointmentProvider = ({ children, appointmentData }: { children: ReactNod
   }
   const updateServices = (services: any[]) => {
     if (appointment) {
-      const { tax, total} = calculateTaxAndTotal(services);
+      
+      const { tax, total} = calculateTaxAndTotal(services, taxRate);
       const updatedJob = {
         ...appointment.job,
         services: services,

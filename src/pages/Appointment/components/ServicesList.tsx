@@ -10,6 +10,7 @@ import { ButtonLoader } from '../../../components/loading/ButtonLoader';
 import AutoComplete from '../../../components/plugin/autocomplite/AutoComplete';
 import axiosClient from '../../../store/axiosClient';
 import { IService } from '../../../types';
+import { useSelector } from 'react-redux';
 
 const ServicesList = (props:any) => {
 
@@ -17,7 +18,8 @@ const ServicesList = (props:any) => {
    const [loadingRemove, setLoadingRemove] = useState(0);
    const loadingStatus = props.loadingStatus || false;
    const { services, onRemoveService, onSaveService, onUpdateService, modal, setModal} = props;
-   const { tax, total } = calculateTaxAndTotal(services);
+   const taxRate = useSelector((state: any) => state.themeConfig.companyInfo.taxRate);
+   const { tax, total } = calculateTaxAndTotal(services, taxRate);
    const [companyServices, setCompanyServices] = useState([]); 
    const [isEditMode, setIsEditMode] = useState(false);
    const priceRef = useRef(null);

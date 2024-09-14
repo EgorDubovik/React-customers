@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 export const viewCurrency = (amount: number | undefined) => {
 	if (typeof amount === 'string') amount = parseFloat(amount);
@@ -17,13 +18,13 @@ export const calculateTotalPaid = (payments: any) => {
 	}, 0);
 };
 
-export const calculateTaxAndTotal = (services: any) => {
-	let tax = 0;
+export const calculateTaxAndTotal = (services: any, taxRate:number) => {
+	let tax = 0;	
 	let total = 0;
 	services.forEach((service: any) => {
 		const price = parseFloat(service.price);
 		total += price;
-		if (service.taxable) tax += price * 0.0825;
+		if (service.taxable) tax += price * taxRate;
 	});
 	total += tax;
 	return { tax, total };
