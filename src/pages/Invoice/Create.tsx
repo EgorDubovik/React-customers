@@ -9,7 +9,7 @@ import IconEdit from '../../components/Icon/IconEdit';
 import IconPlus from '../../components/Icon/IconPlus';
 import axiosClient from '../../store/axiosClient';
 import { ButtonLoader } from '../../components/loading/ButtonLoader';
-import {IInvoice} from '../../types';
+import { IInvoice } from '../../types';
 import { formatDate, viewCurrency } from '../../helpers/helper';
 
 const Create = () => {
@@ -60,14 +60,14 @@ const Create = () => {
 		axiosClient
 			.get('/invoice/download/' + appointmentId, { responseType: 'blob' })
 			.then((res) => {
-            const blob = new Blob([res.data], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
+				const blob = new Blob([res.data], { type: 'application/pdf' });
+				const url = window.URL.createObjectURL(blob);
 
-        // Open the PDF in a new tab
-        window.open(url, '_blank');
+				// Open the PDF in a new tab
+				window.open(url, '_blank');
 
-        // Optional: Revoke the object URL after some time to free up memory
-        setTimeout(() => window.URL.revokeObjectURL(url), 10000);
+				// Optional: Revoke the object URL after some time to free up memory
+				setTimeout(() => window.URL.revokeObjectURL(url), 10000);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -101,28 +101,28 @@ const Create = () => {
 			{!loading && (
 				<div className="conteiner w-full md:w-2/3 m-auto">
 					<div className="flex gap-2 md:justify-end justify-around mb-4">
-						<div className='flex-auto md:flex-none'>
+						<div className="flex-auto md:flex-none">
 							<button type="button" className="btn btn-info gap-1 px-0 md:px-4 w-full whitespace-nowrap overflow-hidden text-ellipsis" onClick={sendInvoice}>
 								<IconSend />
 								Send Invoice
 								{sendLoading && <ButtonLoader />}
 							</button>
 						</div>
-						
-						<div className='flex-auto md:flex-none '>
+
+						<div className="flex-auto md:flex-none ">
 							<button type="button" className="btn btn-primary gap-1 px-0 md:px-4 w-full whitespace-nowrap overflow-hidden text-ellipsis">
 								<IconPrinter />
 								Print
 							</button>
 						</div>
-						<div className='flex-auto md:flex-none'>
+						<div className="flex-auto md:flex-none">
 							<button type="button" className="btn btn-success gap-1 px-0 md:px-4 w-full whitespace-nowrap overflow-hidden text-ellipsis" onClick={downloadInvoice}>
 								<IconDownload />
 								Download
 							</button>
 						</div>
 					</div>
-					
+
 					<div className="panel">
 						<div className="panel-logo flex justify-between">
 							<img src={'https://edservice.s3.us-east-2.amazonaws.com/' + invoice?.company?.logo} alt="logo" className="h-[50px]" />
@@ -155,7 +155,7 @@ const Create = () => {
 										</tr>
 										<tr>
 											<td>Balance:</td>
-											<td>{viewCurrency(invoice?.job.remainig_balance)}</td>
+											<td>{viewCurrency(invoice?.job.remaining_balance)}</td>
 										</tr>
 									</tbody>
 								</table>
@@ -213,7 +213,7 @@ const Create = () => {
 									<tbody>
 										{invoice?.job.payments.map((payment: any, index: number) => (
 											<tr key={index}>
-												<td>{formatDate(payment.created_at,'MMM DD YYYY, hh:mm A')}</td>
+												<td>{formatDate(payment.created_at, 'MMM DD YYYY, hh:mm A')}</td>
 												<td>{payment.type_text}</td>
 												<td className="text-right" style={{ textAlign: 'right' }}>
 													{viewCurrency(payment.amount)}

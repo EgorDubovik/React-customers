@@ -19,6 +19,7 @@ export const calculateTotalPaid = (payments: any) => {
 };
 
 export const calculateTaxAndTotal = (services: any, taxRate:number) => {
+	taxRate = taxRate / 100;
 	let tax = 0;	
 	let total = 0;
 	services.forEach((service: any) => {
@@ -107,3 +108,31 @@ export const formatDate = (date: Date | string | undefined, format: string) => {
 
 	return format.replace(/YYYY|YY|MMMM|MMM|MM|M|DDDD|DDD|DD|D|HH|H|hh|h|mm|m|A|ss/g, (match) => replacements[match as keyof typeof replacements].toString());
 };
+
+export const alertSuccsess =(text:string) =>{
+	const toast = Swal.mixin({
+		toast: true,
+		position: 'top',
+		showConfirmButton: false,
+		timer: 3000,
+	});
+	toast.fire({
+		icon: 'success',
+		title: text,
+		padding: '10px 20px',
+	});
+}
+
+export const alertError =(text:string) =>{
+	const toast = Swal.mixin({
+		toast: true,
+		position: 'top',
+		showConfirmButton: false,
+		timer: 3000,
+	});
+	toast.fire({
+		icon: 'error',
+		title: text,
+		padding: '10px 20px',
+	});
+}

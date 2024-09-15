@@ -24,7 +24,7 @@ const AppointmentCanceled = lazy(()=> import('../pages/BookAppointment/Appointme
 const BookAppointmentSettings = lazy(() => import('../pages/CompanySettings/BookAppointment/Index'));
 const Storage = lazy(() => import('../pages/Storage/index'));
 // Company Settings
-const CompanyGeneralInfo = lazy(() => import('../pages/CompanySettings/CompanyGeneralInfo'));
+const CompanyGeneralInfo = lazy(() => import('../pages/CompanySettings/GeneralInfo/CompanyGeneralInfo'));
 const CompanyServices = lazy(() => import('../pages/CompanySettings/CompanyServices'));
 const CompanyTags = lazy(() => import('../pages/CompanySettings/CompanyTags'));
 

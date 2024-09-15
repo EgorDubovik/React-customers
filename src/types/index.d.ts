@@ -81,8 +81,11 @@ export interface IJob{
 	remaining_balance: number;
 	total_paid: number;
 	total_amount: number;
+	total_tax: number;
 	appointments: any;
 	services: IService[];
+	customer: any;
+	address: any;
 }
 
 export interface IAppointment {
@@ -103,17 +106,18 @@ export interface IAppointment {
 
 export interface IInvoice {
 	id: number;
-	job: {
-		id: number;
-		services: IService[];
-		payments: IPayment[];
-		customer: any;
-		total_amount: number;
-		total_tax: number;
-		total_paid: number;
-		remainig_balance: number;
-		address: any;
-	}
+	job: IJob;
+	// job: {
+	// 	id: number;
+	// 	services: IService[];
+	// 	payments: IPayment[];
+	// 	customer: any;
+	// 	total_amount: number;
+	// 	total_tax: number;
+	// 	total_paid: number;
+	// 	remaining_balance: number;
+	// 	address: any;
+	// }
 	company: any;
 	creator: {
 		id: number;
