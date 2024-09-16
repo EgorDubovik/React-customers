@@ -125,7 +125,7 @@ const Create = () => {
 
 					<div className="panel">
 						<div className="panel-logo flex justify-between">
-							<img src={'https://edservice.s3.us-east-2.amazonaws.com/' + invoice?.company?.logo} alt="logo" className="h-[50px]" />
+							<img src={invoice?.company?.logo} alt="logo" className="h-[50px]" />
 							<h2 className="text-2xl font-bold">#INV-{invoice?.id}</h2>
 						</div>
 						<div className="company-info pt-10 space-y-2">

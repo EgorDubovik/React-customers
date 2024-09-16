@@ -2,6 +2,7 @@ import '../../../assets/css/file-upload-preview.css';
 import { useEffect, useRef, useState } from 'react';
 import axiosClient from '../../../store/axiosClient';
 import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading';
+import { alertError, alertSuccsess } from '../../../helpers/helper';
 const CompanyLogo = (props: any) => {
 	const { companySettings, setCompanySettings } = props;
 	const fileInputRef = useRef(null);
@@ -37,13 +38,15 @@ const CompanyLogo = (props: any) => {
 					'Content-Type': 'multipart/form-data',
 				},
 			});
-
+			alertSuccsess('Company Logo Updated');
 			console.log('File uploaded successfully:', response.data);
 			setCompanySettings({ ...companySettings, companyLogo: response.data.newPath });
 		} catch (error) {
+			alertError('Something went wrong, Please try again later');
 			console.error('Error uploading file:', error);
 		} finally {
 			setUploadingStatus(false);
+			setSelectedFile(undefined);
 		}
 	};
    useEffect(() => {
