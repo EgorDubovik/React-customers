@@ -3,6 +3,7 @@ import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading
 import { PageLoadError } from '../../../components/loading/Errors';
 import axiosClient from '../../../store/axiosClient';
 import TaxRate from './TaxRate';
+import CompanyLogo from './CompanyLogo';
 const CompanyGeneralInfo = () => {
 	const [loadingStatus, setLoadingStatus] = useState('loading');
    const [companySettings, setCompanySettings] = useState<any>({});
@@ -10,6 +11,7 @@ const CompanyGeneralInfo = () => {
       setLoadingStatus('loading');
       axiosClient.get('/company/settings')
       .then((res) => {
+         console.log(res.data);
          setCompanySettings(res.data.companySettings);
          setLoadingStatus('success');
       })
@@ -28,8 +30,14 @@ const CompanyGeneralInfo = () => {
 			{loadingStatus === 'error' && <PageLoadError />}
 			{loadingStatus === 'success' && (
 				<div className="py-4">
-					<div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-						<TaxRate companySettings={companySettings} setCompanySettings={setCompanySettings} />
+					<div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <div className='grid grid-rows-none gap-3'>
+                     <CompanyLogo companySettings={companySettings} setCompanySettings={setCompanySettings}/>
+                  </div>
+                  <div className='grid grid-rows-none gap-3'>
+						   <TaxRate companySettings={companySettings} setCompanySettings={setCompanySettings} />
+                     
+                  </div>
 					</div>
 				</div>
 			)}
