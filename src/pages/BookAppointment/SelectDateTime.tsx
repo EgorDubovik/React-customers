@@ -44,10 +44,10 @@ const SelectDateTime = () => {
       const daysInMonth = new Date(year, month, 0).getDate();
       const firstDayOfMonth = new Date(year, month - 1, 1).getDay(); 
       const daysArray = [];
-
-      const previousMonthDays = (firstDayOfMonth === 0 ? 6 : firstDayOfMonth);
+      console.log(firstDayOfMonth);
+      const previousMonthDays = (firstDayOfMonth === 0 ? 7 : firstDayOfMonth);
       const previousMonthLastDay = new Date(year, month - 1, 0).getDate(); 
-      for (let i = previousMonthLastDay - previousMonthDays + 1; i <= previousMonthLastDay; i++) {
+      for (let i = previousMonthLastDay - previousMonthDays +1 ; i <= previousMonthLastDay; i++) {
          daysArray.push({ day: i, isActive: false, isSelected: false});
       }
       for (let i = 1; i <= daysInMonth; i++) {
