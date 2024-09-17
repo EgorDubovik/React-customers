@@ -65,6 +65,7 @@ const ViewAppointment = () => {
          else return response.json();
       })
       .then(data => {
+         console.log(data);
          navigate('/appointment/book/cancel/'+data.key);
       }).catch((error) => {
          console.error('Error:', error);

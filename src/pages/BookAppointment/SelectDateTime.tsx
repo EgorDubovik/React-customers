@@ -37,9 +37,7 @@ const SelectDateTime = () => {
       }
       return timeArray;
    }
-
-
-
+   
    function getDaysArrayForCalendar(year:number, month:number) {
       const daysInMonth = new Date(year, month, 0).getDate();
       const firstDayOfMonth = new Date(year, month - 1, 1).getDay(); 

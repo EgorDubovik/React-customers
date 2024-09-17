@@ -60,6 +60,7 @@ const CustomerInfo = () => {
       })
          .then(response => response.json())
          .then(data => {
+            console.log(data);
             let providerKey = data.providerKey;
             navigate('/appointment/book/view/'+providerKey);
       }).catch((error) => {
