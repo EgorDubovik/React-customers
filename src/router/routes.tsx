@@ -12,6 +12,7 @@ import CreateCustomer from '../pages/Customers/Create/CreateCustomer';
 import Create from '../pages/Invoice/Create';
 import UpdateCustomer from '../pages/Customers/Update/UpdateCustomer';
 import ReviewFeedback from '../pages/ReviewFeedback/Index';
+import SingUp from '../pages/Authentication/SingUp';
 const Invoices = lazy(() => import('../pages/Invoice/Invoices'));
 const Employees = lazy(() => import('../pages/Employees'));
 const CreateAppointment = lazy(() => import('../pages/Appointment/Create/CreateAppointment'));
@@ -112,6 +113,10 @@ const routes = [
     {
         path: '/auth/signin',
         element: <BlankLayout><LoginBoxed /></BlankLayout>,
+    },
+    {
+        path: '/auth/signup',
+        element: <BlankLayout><SingUp /></BlankLayout>,
     },
     {
         path: '/appointment/book/:paramKey',
