@@ -35,7 +35,7 @@ const CompanyGeneralInfo = () => {
 				<div className="py-4">
 					<div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div className='grid grid-rows-none gap-3'>
-                     <CompanyLogo companySettings={companySettings} setCompanySettings={setCompanySettings}/>
+                     <CompanyLogo company={company} setCompany={setCompany}/>
                   </div>
                   <div className='grid grid-rows-none gap-3'>
 						   <TaxRate companySettings={companySettings} setCompanySettings={setCompanySettings} />

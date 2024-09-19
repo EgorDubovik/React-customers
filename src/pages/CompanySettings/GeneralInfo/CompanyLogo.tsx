@@ -4,7 +4,7 @@ import axiosClient from '../../../store/axiosClient';
 import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading';
 import { alertError, alertSuccsess } from '../../../helpers/helper';
 const CompanyLogo = (props: any) => {
-	const { companySettings, setCompanySettings } = props;
+	const { company, setCompany } = props;
 	const fileInputRef = useRef(null);
 	const [uploadingStatus, setUploadingStatus] = useState(false);
 	const [selectedFile, setSelectedFile] = useState<File>();
@@ -40,7 +40,7 @@ const CompanyLogo = (props: any) => {
 			});
 			alertSuccsess('Company Logo Updated');
 			console.log('File uploaded successfully:', response.data);
-			setCompanySettings({ ...companySettings, companyLogo: response.data.newPath });
+			setCompany({ ...company, logo: response.data.newPath });
 		} catch (error) {
 			alertError('Something went wrong, Please try again later');
 			console.error('Error uploading file:', error);
@@ -62,7 +62,7 @@ const CompanyLogo = (props: any) => {
 					<div className="flex justify-center items-center w-3/4 py-4">
 						{uploadingStatus 
 							? <PageCirclePrimaryLoader /> 
-							: <img src={companySettings.companyLogo ?? '/assets/images/file-preview.svg' } alt="company logo" className="w-full" />
+							: <img src={company.logo ?? '/assets/images/file-preview.svg' } alt="company logo" className="w-full" />
 						}
 					</div>
 				</div>
