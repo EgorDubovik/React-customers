@@ -8,12 +8,14 @@ import CompanyInfo from './CompanyInfo';
 const CompanyGeneralInfo = () => {
 	const [loadingStatus, setLoadingStatus] = useState('loading');
    const [companySettings, setCompanySettings] = useState<any>({});
+   const [company, setCompany] = useState<any>({});
    useEffect(() => {
       setLoadingStatus('loading');
       axiosClient.get('/company/settings')
       .then((res) => {
          console.log(res.data);
          setCompanySettings(res.data.companySettings);
+         setCompany(res.data.company);
          setLoadingStatus('success');
       })
       .catch((err) => {
@@ -37,7 +39,7 @@ const CompanyGeneralInfo = () => {
                   </div>
                   <div className='grid grid-rows-none gap-3'>
 						   <TaxRate companySettings={companySettings} setCompanySettings={setCompanySettings} />
-                     <CompanyInfo companySettings={companySettings} setCompanySettings={setCompanySettings}/>
+                     <CompanyInfo company={company} setCompany={setCompany}/>
                   </div>
 					</div>
 				</div>
