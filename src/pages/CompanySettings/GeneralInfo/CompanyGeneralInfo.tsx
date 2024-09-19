@@ -4,6 +4,7 @@ import { PageLoadError } from '../../../components/loading/Errors';
 import axiosClient from '../../../store/axiosClient';
 import TaxRate from './TaxRate';
 import CompanyLogo from './CompanyLogo';
+import CompanyInfo from './CompanyInfo';
 const CompanyGeneralInfo = () => {
 	const [loadingStatus, setLoadingStatus] = useState('loading');
    const [companySettings, setCompanySettings] = useState<any>({});
@@ -36,7 +37,7 @@ const CompanyGeneralInfo = () => {
                   </div>
                   <div className='grid grid-rows-none gap-3'>
 						   <TaxRate companySettings={companySettings} setCompanySettings={setCompanySettings} />
-                     
+                     <CompanyInfo companySettings={companySettings} setCompanySettings={setCompanySettings}/>
                   </div>
 					</div>
 				</div>
