@@ -56,7 +56,7 @@ const UpdateUserInfo = (props: any) => {
 					<label>User Phone</label>
 					<input value={user.phone ?? ''} type="text" className="form-input" placeholder="User Phone" onChange={(e) => handleChange('phone', e.target.value)} />
 				</div>
-				<div className="mt-4">
+				<div className="mt-6">
 					<button className="btn btn-primary w-full" onClick={updateUserInfo}>
                   Update User Inforation
                   {loadingStatus && <ButtonLoader />}

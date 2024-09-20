@@ -174,16 +174,16 @@ const PaymentsIndex = () => {
 				if (selectedTechs.includes(payment.tech_id)) {
 					totalPerPeriod += payment.amount;
 					paymentsForTable.push(payment);
-					if (payment.payment_type === 'credit') {
+					if (payment.type_text.toLowerCase() === 'credit') {
 						creditTransaction += payment.amount;
 					}
-					if (payment.payment_type === 'transfer') {
+					if (payment.type_text.toLowerCase() === 'transfer') {
 						transferTransaction += payment.amount;
 					}
-					if (payment.payment_type === 'cash') {
+					if (payment.type_text.toLowerCase() === 'cash') {
 						cashTransaction += payment.amount;
 					}
-					if (payment.payment_type === 'check') {
+					if (payment.type_text.toLowerCase() === 'check') {
 						checkTransaction += payment.amount;
 					}
 					if (dataOneDayByTech[payment.tech_id]) {
