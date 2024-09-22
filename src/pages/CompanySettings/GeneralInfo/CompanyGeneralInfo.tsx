@@ -32,12 +32,18 @@ const CompanyGeneralInfo = () => {
 					<div className="grid grid-cols-1 md:grid-cols-4 gap-3">
 						<div className="grid grid-rows-none gap-3">
 							<CompanyLogo company={company} setCompany={setCompany} />
-							<DepositSettings companySettings={companySettings} setCompanySettings={setCompanySettings}/>
+							
 						</div>
+                  
+                  <div className="grid grid-rows-none gap-3">
+                     <CompanyInfo company={company} setCompany={setCompany} />
+                  </div>
+
 						<div className="grid grid-rows-none gap-3">
 							<TaxRate companySettings={companySettings} setCompanySettings={setCompanySettings} />
-							<CompanyInfo company={company} setCompany={setCompany} />
+                     <DepositSettings companySettings={companySettings} setCompanySettings={setCompanySettings}/>
 						</div>
+                  
 					</div>
 				</div>
 			)}
