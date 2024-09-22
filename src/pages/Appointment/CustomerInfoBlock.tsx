@@ -39,7 +39,7 @@ const CustomerInfoBlock = (props: any) => {
 						<li className="flex items-center gap-2">
 							<IconPhone />
 							<span className="whitespace-nowrap" dir="ltr">
-								{appointment?.customer?.phone}
+								<a href={`tel:${appointment?.customer.phone}`}>{appointment?.customer?.phone}</a>
 							</span>
 						</li>
 						<li>

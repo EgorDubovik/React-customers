@@ -1,29 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading';
 import { PageLoadError } from '../../../components/loading/Errors';
-import axiosClient from '../../../store/axiosClient';
 import TaxRate from './TaxRate';
 import CompanyLogo from './CompanyLogo';
 import CompanyInfo from './CompanyInfo';
+import useFetchData from '../../../hooks/useFetchData';
+import DepositSettings from './DepositSettings';
+
 const CompanyGeneralInfo = () => {
-	const [loadingStatus, setLoadingStatus] = useState('loading');
-   const [companySettings, setCompanySettings] = useState<any>({});
-   const [company, setCompany] = useState<any>({});
-   useEffect(() => {
-      setLoadingStatus('loading');
-      axiosClient.get('/company/settings')
-      .then((res) => {
-         console.log(res.data);
-         setCompanySettings(res.data.companySettings);
-         setCompany(res.data.company);
-         setLoadingStatus('success');
-      })
-      .catch((err) => {
-         console.log(err);
-         setLoadingStatus('error');
-      })
-   }, []);
-   
+	const [companySettings, setCompanySettings] = useState<any>({});
+	const [company, setCompany] = useState<any>({});
+
+	const { loadingStatus, data } = useFetchData('/company/settings');
+
+	useEffect(() => {
+		if (data) {
+			setCompanySettings(data.companySettings);
+			setCompany(data.company);
+		}
+	}, [data]);
+
 	return (
 		<div>
 			<div className="flex justify-start items-center text-lg">
@@ -34,13 +30,14 @@ const CompanyGeneralInfo = () => {
 			{loadingStatus === 'success' && (
 				<div className="py-4">
 					<div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                  <div className='grid grid-rows-none gap-3'>
-                     <CompanyLogo company={company} setCompany={setCompany}/>
-                  </div>
-                  <div className='grid grid-rows-none gap-3'>
-						   <TaxRate companySettings={companySettings} setCompanySettings={setCompanySettings} />
-                     <CompanyInfo company={company} setCompany={setCompany}/>
-                  </div>
+						<div className="grid grid-rows-none gap-3">
+							<CompanyLogo company={company} setCompany={setCompany} />
+							<DepositSettings companySettings={companySettings} setCompanySettings={setCompanySettings}/>
+						</div>
+						<div className="grid grid-rows-none gap-3">
+							<TaxRate companySettings={companySettings} setCompanySettings={setCompanySettings} />
+							<CompanyInfo company={company} setCompany={setCompany} />
+						</div>
 					</div>
 				</div>
 			)}

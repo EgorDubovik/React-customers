@@ -9,14 +9,16 @@ import { PageLoadError } from '../../components/loading/Errors';
 import { getTechAbr } from '../../helpers/helper';
 import ReactApexChart, { Props } from 'react-apexcharts';
 import { useSelector } from 'react-redux';
-import { IRootState } from '../../store';
+import { IRootState, } from '../../store';
+import { setPageTitle } from '../../store/themeConfigSlice';
 import { SmallDangerLoader } from '../../components/loading/SmallCirculeLoader';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/flatpickr.css';
-import { use } from 'i18next';
+import { useDispatch } from 'react-redux';
 import {ButtonLoader} from '../../components/loading/ButtonLoader';
 
 const PaymentsIndex = () => {
+	
 	const [loadingStatus, setLoadingStatus] = useState<string>('success');
 	const [newDateStatus, setNewDateStatus] = useState<string>('success');
 	const [startDate, setstartDate] = useState(moment().subtract(30, 'days').format('MM/DD/YYYY'));
@@ -32,7 +34,12 @@ const PaymentsIndex = () => {
 	const [checkTransaction, setCheckTransaction] = useState(0);
 	const [paymentRemoveStatus, setPaymentRemoveStatus] = useState(0);
 	const isDark = useSelector((state: IRootState) => state.themeConfig.isDarkMode);
-	const user = useSelector((state: IRootState) => state.themeConfig.user);
+	const user = useSelector((state: IRootState) => state.themeConfig.user)
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(setPageTitle('Payments'));
+	}, []);
 	const [series, setSeries] = useState<any[]>([]);
 	const [options, setOptions] = useState<any>({
 		chart: {
