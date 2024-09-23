@@ -17,6 +17,7 @@ import IconPencilPaper from '../../../components/Icon/IconPencilPaper';
 import IconHorizontalDots from '../../../components/Icon/IconHorizontalDots';
 import IconEye from '../../../components/Icon/IconEye';
 import { useCustomersList } from './useCustomersList';
+import { formatDate } from '../../../helpers/helper';
 
 const Contacts = () => {
 	const dispatch = useDispatch();
@@ -114,7 +115,7 @@ const Contacts = () => {
 												{
 													accessor: 'date',
 													sortable: true,
-													render: ({ created_at }) => <div className="font-semibold">{moment(created_at).format('MMMM Do YYYY, h:mm:ss a')}</div>,
+													render: ({ created_at }) => <div className="font-semibold">{ formatDate(created_at,'MMMM DD YYYY, hh:mm A') }</div>,
 												},
 
 												{
