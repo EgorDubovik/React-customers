@@ -6,10 +6,23 @@ import IconPhone from '../../components/Icon/IconPhone';
 import IconMail from '../../components/Icon/IconMail';
 import IconSend from '../../components/Icon/IconSend';
 import { useAppointmentContext } from './context/AppointmentContext';
+import IconCopy from '../../components/Icon/IconCopy';
+import { alertError, alertSuccsess } from '../../helpers/helper';
 
 const CustomerInfoBlock = (props: any) => {
 	const navigate = useNavigate();
 	const { appointment } = useAppointmentContext();
+
+	const copyPhone = (phone:string) => {
+		navigator.clipboard.writeText(phone)
+      .then(() => {
+        alertSuccsess('Phone number copied to clipboard');
+      })
+      .catch((err) => {
+        alertError('Failed to copy phone number');
+      });
+	}
+
 	return (
 		<div className="panel p-0 pb-4">
 			<div className="flex items-center justify-between p-4">
@@ -36,11 +49,17 @@ const CustomerInfoBlock = (props: any) => {
 								{appointment?.address}
 							</a>
 						</li>
-						<li className="flex items-center gap-2">
-							<IconPhone />
-							<span className="whitespace-nowrap" dir="ltr">
-								<a href={`tel:${appointment?.customer.phone}`}>{appointment?.customer?.phone}</a>
-							</span>
+						<li className='flex justify-between'>
+							<div className='flex gap-2'>
+								<IconPhone />
+								<span className="whitespace-nowrap" dir="ltr">
+									<a href={`tel:${appointment?.customer.phone}`}>{appointment?.customer?.phone}</a>
+								</span>
+							</div>
+							<button onClick={()=>copyPhone(appointment?.customer.phone || "")}>
+								<IconCopy className='text-primary cursor-pointer' />
+							</button>
+
 						</li>
 						<li>
 							<button className="flex justify-between w-full" onClick={() => navigate('/invoice/send/' + appointment?.id)}>
@@ -48,10 +67,12 @@ const CustomerInfoBlock = (props: any) => {
 									<IconMail className="w-5 h-5 shrink-0" />
 									<span className="text-primary truncate">{appointment?.customer?.email}</span>
 								</div>
+								{appointment?.customer?.email && (
 								<div className="flex gap-2 text-primary">
 									<IconSend className="w-5 h-5 shrink-0" />
 									Send Invoice
 								</div>
+								)}
 							</button>
 						</li>
 					</ul>
