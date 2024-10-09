@@ -3,14 +3,27 @@ import IconPencilPaper from '../../../components/Icon/IconPencilPaper';
 import IconMapPin from '../../../components/Icon/IconMapPin';
 import IconPhone from '../../../components/Icon/IconPhone';
 import IconMail from '../../../components/Icon/IconMail';
-import { formatDate, viewCurrency } from '../../../helpers/helper';
+import { alertError, alertSuccsess, formatDate, viewCurrency } from '../../../helpers/helper';
 import IconPlus from '../../../components/Icon/IconPlus';
 import { PageCirclePrimaryLoader } from '../../../components/loading/PageLoading';
 import { PageLoadError } from '../../../components/loading/Errors';
 import IconCalendar from '../../../components/Icon/IconCalendar';
 import { useViewCustomer } from './useViewCustomer';
+import IconCopy from '../../../components/Icon/IconCopy';
 const ViewCustomer = () => {
-	const {customer, loadingStatus} = useViewCustomer();
+	const { customer, loadingStatus } = useViewCustomer();
+
+	const copyPhone = (phone: string) => {
+		navigator.clipboard
+			.writeText(phone)
+			.then(() => {
+				alertSuccsess('Phone number copied to clipboard');
+			})
+			.catch((err) => {
+				alertError('Failed to copy phone number');
+			});
+	};
+
 	return (
 		<>
 			{loadingStatus === 'loading' && <PageCirclePrimaryLoader />}
@@ -43,11 +56,16 @@ const ViewCustomer = () => {
 												</a>
 											</li>
 										))}
-										<li className="flex items-center gap-2">
-											<IconPhone />
-											<span className="whitespace-nowrap" dir="ltr">
-												{customer?.phone}
-											</span>
+										<li className="flex justify-between">
+											<div className="flex gap-2">
+												<IconPhone />
+												<span className="whitespace-nowrap" dir="ltr">
+													<a href={`tel:${customer.phone}`}>{customer?.phone}</a>
+												</span>
+											</div>
+											<button onClick={() => copyPhone(customer.phone || '')}>
+												<IconCopy className="text-primary cursor-pointer" />
+											</button>
 										</li>
 										<li>
 											<div className="flex gap-2">
