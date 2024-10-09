@@ -34,7 +34,7 @@ const CompanyTags = () => {
 					</div>
 					<div className="mt-4">
 						{tags.map((tag, index: number) => (
-							<div className="inline-flex ml-4" key={index}>
+							<div className="inline-flex ml-4 mb-2" key={index}>
 								<button className={`btn btn-sm btn-${tag.color} ltr:rounded-r-none rtl:rounded-l-none`}>
                            {deleteStatus === tag.id ? <SmallDangerLoader /> : tag.title}
                         </button>
