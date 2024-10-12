@@ -86,6 +86,7 @@ export interface IJob{
 	services: IService[];
 	customer: any;
 	address: any;
+	invoices: IInvoice[];
 }
 
 export interface IAppointment {

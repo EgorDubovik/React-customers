@@ -7,7 +7,7 @@ import IconMail from '../../components/Icon/IconMail';
 import IconSend from '../../components/Icon/IconSend';
 import { useAppointmentContext } from './context/AppointmentContext';
 import IconCopy from '../../components/Icon/IconCopy';
-import { alertError, alertSuccsess } from '../../helpers/helper';
+import { alertError, alertSuccsess, formatDate } from '../../helpers/helper';
 
 const CustomerInfoBlock = (props: any) => {
 	const navigate = useNavigate();
@@ -75,6 +75,14 @@ const CustomerInfoBlock = (props: any) => {
 								)}
 							</button>
 						</li>
+						<div className="mt-2">
+							<div className='text-right'>Invoices ({ appointment?.job?.invoices.length || 0 })</div>
+							<div className='flex justify-end mt-2'>
+								{appointment?.job?.invoices.map((invoice: any) => (
+									<Link to={'/invoice/' + invoice.id} className='text-primary underline' key={invoice.id}>Invoice #{invoice.id} at {formatDate(invoice.created_at,'MMM DD YYYY')}</Link>
+								))}
+							</div>	
+						</div>
 					</ul>
 				</div>
 			</div>
