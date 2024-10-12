@@ -423,10 +423,10 @@ const PaymentsIndex = () => {
 											<tr key={payment.id}>
 												<td>{payment.id}</td>
 												<td className="text-primary whitespace-nowrap">
-													<Link to={'/customer/' + payment.job?.customer?.id ?? 0}>{payment.job?.customer ? payment.job?.customer.name : 'Unknow'}</Link>
+													<Link to={'/customer/' + payment.job?.customer?.id || '0'}>{payment.job?.customer ? payment.job?.customer.name : 'Unknow'}</Link>
 												</td>
 												<td className="text-primary whitespace-nowrap">
-													<Link to={'/appointment/' + payment.job.appointments[payment.job.appointments?.length-1]?.id ?? 0}>
+													<Link to={'/appointment/' + payment.job.appointments[payment.job.appointments?.length-1]?.id || '0'}>
 														Appointment at {payment.job.appointments[payment.job.appointments?.length-1] ? formatDate(payment.job.appointments[payment.job.appointments?.length-1].start,'MMM DD YYYY') : 'Unknow'}
 													</Link>
 												</td>
